@@ -23,7 +23,7 @@ WebSockets have been integrated using the [sockets.io](https://github.com/socket
 * [Spotify](https://developer.spotify.com/documentation/web-api/) playback to a local device and browse media from logged-in user
 * Traffic route estimation using [NS API](https://apiportal.ns.nl) and [GoogleMaps API](https://mapsplatform.google.com)
 * Home automation control of various [KlikAanKlikUit (KaKu)](https://klikaanklikuit.nl) switches, dimmers, or coloring devices
-    * Energy usage/production monitoring using KaKu ICS-2000 and Smart Meter (P1 port)
+  * Energy usage/production monitoring using KaKu ICS-2000 and Smart Meter (P1 port)
 * Calendars and events browsing
 * Tasks/Todo list
 
@@ -202,3 +202,6 @@ The fronted views are defined in the `views` directory. The `index.ejs` acts as 
 | `views/partials` | contains partial template files to be included in the general layout (`head`, `nav`, `footer`, ...) |
 | `views/pages` | contains the page template files |
 | `views/widgets` | contains small element template files |
+
+## License
+Copyright &copy; 2022. This project is [MIT](LICENSE.md) licensed.
