@@ -1,0 +1,24 @@
+<div class="px-3 py-1">
+    <form class="font-size-ssm" id="addTrainStationForm">
+        <div class="input-group input-group-sm border border-1 border-secondary rounded mb-2">
+            <select name="station" class="form-control form-control-sm border-0">
+                <option disabled selected>Select station...</option>
+                <% trainStations.forEach(function (trainStation) { %>
+                    <option value="<%= trainStation.code %>">
+                        <%= trainStation.name %>
+                    </option>
+                <% }) %>
+            </select>
+            <button class="btn btn-sm btn-dark" type="submit">
+                <span class="load">
+                    <i class="bi bi-plus-circle-fill"></i>
+                </span>
+                <div class="loading spinner-border spinner-border-sm text-white d-none" role="status"></div>
+            </button>
+        </div>
+
+        <div class="row">
+            <div class="col error-message text-danger font-size-ssm fst-italic"></div>
+        </div>
+    </form>
+</div>

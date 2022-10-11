@@ -1,0 +1,74 @@
+<% const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]; %>
+<% const daysAbbrev = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]; %>
+<% const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]; %>
+<% const monthsAbbrev = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]; %>
+<% const now = new Date(); %>
+
+<% if (Object.keys(events.events).length === 0) { %>
+    <% const weekStartDate = new Date(events.weekStart); %>
+    <% const weekEndDate = new Date(events.weekEnd); %>
+    <div class="card rounded-10 px-0 py-2">
+        <div class="text-center">
+            No events scheduled between <span class="text-decoration-underline fst-italic"><%= months[weekStartDate.getMonth()] %> <%= weekStartDate.getDate() %></span> and <span class="text-decoration-underline fst-italic"><%= months[weekEndDate.getMonth()] %> <%= weekEndDate.getDate() %></span>
+        </div>
+    </div>
+<% } %>
+
+<div class="row g-1 row-cols-1">
+<% Object.keys(events.events).forEach(function (groupDate) { %>
+    <% const startDate = new Date(Number(groupDate)); %>
+
+     <div class="col">
+        <div class="card rounded-10 px-0 pt-2">
+            <div class="px-3 mb-1 ">
+                <span class="d-flex align-items-center font-size-ssm">
+                    <% if (startDate.toDateString() === now.toDateString()) { %>
+                        <span class="badge bg-blue text-white text-uppercase fw-bold font-size-sm">Today</span>
+                    <% } else { %>
+                        <span class="text-uppercase fw-bold">
+                            <%= days[startDate.getDay()] %>
+                        </span>
+                    <% } %>
+                    <span class="ms-2 text-light">
+                        <%= months[startDate.getMonth()] %> <%= startDate.getDate() %>
+                    </span>
+                </span>
+            </div>
+
+            <div class="list-group-flush rounded-10">
+                <% events.events[groupDate].forEach(function (event) { %>
+                    <div class="list-group-item border-blue-gray font-size-ssm px-3 d-flex <%= now.getTime() > event.end ? "opacity-25" : "" %> <%= now.getTime() >= event.start && now.getTime() <= event.end ? "bg-blue" : "bg-blue-dark" %>">
+                        <div class="me-2">
+                            <span class="d-block">
+                                <%= event.startTime %>
+                            </span>
+                            <span class="text-muted">
+                                <%= event.endTime %>
+                            </span>
+                        </div>
+                        <div class="rounded-3 pe-1 <%= event.calendar.color %>"></div>
+                        <div class="flex-grow-1 ms-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span style="overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical;">
+                                    <span class="fw-bold">
+                                        <%= event.title %>
+                                        <% if (event.recurring) { %>
+                                            <i class='text-muted bi bi-arrow-repeat'></i>
+                                        <% } %>
+                                    </span>
+                                </span>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-muted">
+                                    <%= event.location %>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+    </div>
+<% }); %>
+</div>

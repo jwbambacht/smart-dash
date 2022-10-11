@@ -1,0 +1,86 @@
+<% if (devices.serviceEnabled && devices.enabled) { %>
+    <% devices.devices.filter(function (device) { return (page === "home") ? device.blacklisted === null : true }).filter(function (device) { return device.deviceTypeName === "color" }).forEach(function (device) { %>
+        <div class="col device-row <%= device.blacklisted !== null ? "device-hidden d-none" : "" %>"
+             data-blacklist-id="<%= device.blacklisted !== null ? device.blacklisted.id : "" %>"
+        >
+            <div class="card devices-color-row rounded-10 p-1">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="rounded-10 me-1 ps-1 flex-grow-1 text-truncate overflow-hidden switch-device cursor-pointer animate"
+                          state="on"
+                          device-id="<%= device.deviceID %>"
+                          id="name-<%= device.deviceID %>"
+                    >
+                        <span class="d-block font-size-esm text-truncate">
+                            <i class="btn btn-sm bi bi-play-fill px-0"></i>
+                            <%= device.name %>
+                        </span>
+                    </span>
+                    <span class="d-flex align-items-center w-100 d-none" id="brightness-<%= device.deviceID%>">
+                        <input type="range"
+                               class="device-slider dim-device"
+                               toggle-type="brightness"
+                               min="<%= device.dim.min %>"
+                               max="<%= device.dim.max %>"
+                               value="<%= device.dim.level %>"
+                               device-id="<%= device.deviceID %>"
+                        >
+                    </span>
+                    <span class="d-flex align-items-center w-100 d-none" id="color-<%= device.deviceID%>">
+                        <input type="range"
+                               class="device-slider color-device"
+                               toggle-type="color"
+                               min="<%= device.color.min %>"
+                               max="<%= device.color.max %>"
+                               value="<%= device.color.level %>"
+                               device-id="<%= device.deviceID %>"
+                        >
+                    </span>
+
+                    <span class="btn-group device-toggles"
+                          id="toggleButtons-<%= device.deviceID %>"
+                    >
+                        <span class="device-toggle toggle-brightness-color btn btn-sm btn-primary rounded-start-10 text-white"
+                              toggle-type="brightness"
+                              device-id="<%= device.deviceID %>"
+                        >
+                            <i class="bi bi-brightness-high"></i>
+                        </span>
+                        <span class="device-toggle toggle-brightness-color btn btn-sm btn-warning text-white"
+                              toggle-type="color"
+                              device-id="<%= device.deviceID %>"
+                        >
+                            <i class="bi bi-brightness-alt-high"></i>
+                        </span>
+                        <span class="device-toggle switch-device btn btn-sm btn-danger rounded-end-10 text-white animate"
+                              state="off"
+                              device-id="<%= device.deviceID %>"
+                        >
+                            <span class="font-size-esm">OFF</span>
+                        </span>
+                    </span>
+
+                    <% if (page === "devices") { %>
+                        <div class="btn-group device-visibility d-none">
+                            <span id="showDevice<%= device.deviceID %>"
+                                  class="toggle-devices-visibility rounded-10 btn btn-sm btn-success text-white <%= device.blacklisted !== null ? "" : "d-none" %>"
+                                  data-id="<%= device.deviceID %>"
+                                  data-toggle="show"
+                                  data-toggle-inverse="#hideDevice<%= device.deviceID %>"
+                            >
+                                <span class="font-size-esm">SHOW</span>
+                            </span>
+                            <span id="hideDevice<%= device.deviceID %>"
+                                  class="toggle-devices-visibility rounded-10 btn btn-sm btn-danger text-white <%= device.blacklisted !== null ? "d-none" : "" %>"
+                                  data-id="<%= device.deviceID %>"
+                                  data-toggle="hide"
+                                  data-toggle-inverse="#showDevice<%= device.deviceID %>"
+                            >
+                                <span class="font-size-esm">HIDE</span>
+                            </span>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    <% }); %>
+<% } %>

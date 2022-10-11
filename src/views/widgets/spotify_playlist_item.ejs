@@ -1,0 +1,60 @@
+<div class="card rounded-10 p-2 cursor-pointer collection-open"
+     collection-type="playlist"
+     collection-id="<%= playlist.id %>"
+>
+    <div class="d-flex justify-content-start align-items-center">
+        <span class="d-flex">
+            <span class="ratio ratio-1x1 w-50p h-50p">
+                <% if (playlist.images && playlist.images.length > 0) { %>
+                    <% const image = playlist.images[0]; %>
+                    <img class="rounded spotify-media-image w-50p h-50p" src="<%= image.url %>" />
+
+                <% } else { %>
+                    <div class="position-absolute top-0 bottom-0 start-0 end-0 w-100 h-100 bg-secondary text-center rounded-10">
+                        <i class="bi bi-music-note-list position-absolute top-50 start-50 translate-middle"></i>
+                    </div>
+
+                <% } %>
+            </span>
+        </span>
+
+        <span class="ms-3 flex-grow-1 text-truncate overflow-hidden">
+            <span class="font-size-ssm">
+                <%= playlist.name; %>
+            </span>
+            <span class="d-block text-muted font-size-esm">
+                <%= playlist.owner.name; %>
+            </span>
+        </span>
+
+        <span class="d-flex align-items-center">
+            <span>
+                <span class="btn btn-sm fs-5 cursor-pointer collection-follow <%= !playlist.following ? "d-none" : "" %>"
+                      id="unfollowPlaylist-<%= playlist.id %>"
+                      collection-type="playlist"
+                      collection-id="<%= playlist.id %>"
+                      collection-following="false"
+                      inverse-target="#followPlaylist-<%= playlist.id %>"
+                >
+                    <i class="bi bi-heart-fill text-success"></i>
+                </span>
+                <span class="btn btn-sm fs-5 cursor-pointer collection-follow <%= playlist.following ? "d-none" : "" %>"
+                      id="followPlaylist-<%= playlist.id %>"
+                      collection-type="playlist"
+                      collection-id="<%= playlist.id %>"
+                      collection-following="true"
+                      inverse-target="#unfollowPlaylist-<%= playlist.id %>"
+                >
+                    <i class="bi bi-heart text-success"></i>
+                </span>
+            </span>
+
+            <span class="btn fs-2 btn-sm py-0 ms-auto collection-play"
+                  collection-uri="<%= playlist.uri %>"
+                  collection-offset="0"
+            >
+                <i class="bi bi-play-circle-fill text-success"></i>
+            </span>
+        </span>
+    </div>
+</div>

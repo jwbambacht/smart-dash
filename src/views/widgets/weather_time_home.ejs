@@ -1,0 +1,13 @@
+<div class="card bg-blue-dark border border-2 border-blue bg-gradient rounded-10 px-3">
+    <div class="row row-cols-1 <%= weather.serviceEnabled && weather.weather.enabled ? "row-cols-lg-2" : "" %>">
+        <div class="col-12 <%= weather.serviceEnabled && weather.weather.enabled ? "col-lg-5 col-xxl-4" : "" %> align-self-center text-center mt-0" id="nowTime">
+            <%- include ('../widgets/time'); %>
+        </div>
+
+        <% if (weather.serviceEnabled && weather.weather.enabled) { %>
+            <div class="col-12 col-lg-7 col-xxl-8 align-self-center mt-0" id="weather">
+                <%- include ('../widgets/weather_today_home') %>
+            </div>
+        <% } %>
+    </div>
+</div>

@@ -1,0 +1,83 @@
+<div class="card rounded-10 p-3">
+    <% if (spotify.isAuthorized) { %>
+        <% if (spotify.error) { %>
+            <div class="d-flex justify-content-center align-items-center text-danger font-size-ssm">
+                <%= spotify.error %>
+            </div>
+        <% } %>
+
+        <div class="d-flex justify-content-start align-items-center">
+            <span>
+                <% if (spotify.player.track !== null && spotify.player.track.images.length > 0) { %>
+                    <% const image = spotify.player.track.images[0]; %>
+                    <img class="rounded spotify-media-image mw-30p mh-30p" src="<%= image.url %>" height="<%= image.height %>" width="<%= image.width %>" />
+                <% } %>
+            </span>
+            <span class="ms-2 font-size-esm overflow-hidden text-truncate">
+                <span class="text-truncate">
+                    <span>
+                        <% if (spotify.player.track !== null) { %>
+                            <%= spotify.player.track.name%>
+                        <% } %>
+                    </span>
+                    <span class="d-block text-muted">
+                        <% if (spotify.player.track !== null && spotify.player.track.artists !== null) { %>
+                            <%- spotify.player.track.artists.map(function (artist) {
+                                return artist.name;
+                            }).join(", "); %>
+                        <% } %>
+                    </span>
+                </span>
+            </span>
+
+            <% if (spotify.player.track !== null) { %>
+                <span class="ms-auto">
+                    <span class="btn fs-6 btn-sm py-0 cursor-pointer collection-follow <%= !spotify.player.track.following ? "d-none" : "" %>"
+                          id="unfollowTrack"
+                          collection-type="track"
+                          collection-id="<%= spotify.player.track.id %>"
+                          collection-following="false"
+                          inverse-target="#followTrack"
+                    >
+                        <i class="bi bi-heart-fill text-success"></i>
+                    </span>
+                    <span class="btn fs-6 btn-sm py-0 cursor-pointer collection-follow <%= spotify.player.track.following ? "d-none" : "" %>"
+                          id="followTrack"
+                          collection-type="track"
+                          collection-id="<%= spotify.player.track.id %>"
+                          collection-following="true"
+                          inverse-target="#unfollowTrack"
+                    >
+                        <i class="bi bi-heart text-success"></i>
+                    </span>
+                </span>
+            <% } %>
+        </div>
+        <div class="d-flex justify-content-center align-items-center">
+            <span class="btn fs-4 spotify-playback-button"
+                  action-type="previous"
+            >
+                <i class=" bi bi-caret-left"></i>
+            </span>
+            <span class="mx-2">
+                <span class="btn py-0 fs-2 spotify-playback-button text-success <%= !spotify.player.isPlaying ? "d-none" : "" %>"
+                      action-type="pause"
+                >
+                    <i class="bi bi-pause-circle-fill"></i>
+                </span>
+                <span class="btn py-0 fs-2 spotify-playback-button text-success <%= spotify.player.isPlaying ? "d-none" : "" %>"
+                      action-type="play"
+                >
+                    <i class="bi bi-play-circle-fill"></i>
+                </span>
+            </span>
+            <span class="btn fs-4 spotify-playback-button"
+                  action-type="next"
+            >
+                <i class="bi bi-caret-right"></i>
+            </span>
+        </div>
+    <% } else { %>
+        <a href="/spotify/login" class="sidebar-link btn btn-success">Login to Spotify</a>
+    <% } %>
+</div>

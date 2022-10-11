@@ -1,0 +1,68 @@
+<div class="accordion-item bg-blue-dark border-body">
+    <h2 class="accordion-header">
+        <button class="accordion-button collapsed bg-blue-dark text-success px-3 py-2"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseTrainRouteAdd"
+                data-bs-parent="#trainRouteAccordion"
+        >
+            <i class="bi bi-plus-circle me-2"></i> Add
+        </button>
+    </h2>
+    <div class="accordion-collapse collapse" id="collapseTrainRouteAdd" data-bs-parent="#trainRouteAccordion">
+        <div class="accordion-body">
+            <form class="font-size-ssm" id="addTrainRouteForm">
+                <div class="mb-2">
+                    <label>Name*</label>
+                    <input type="text"
+                           class="form-control form-control-sm"
+                           name="name"
+                           value=""
+                           required
+                    >
+                </div>
+
+                <div class="d-block mb-2">
+                    <label>Origin</label>
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text" title="origin">
+                            <i class="bi bi-geo-alt"></i>
+                        </span>
+                        <select name="origin" class="form-select form-select-sm">
+                            <% trainStations.forEach((trainStation) => { %>
+                                <option value="<%= trainStation.id %>">
+                                    <%= trainStation.name %>
+                                </option>
+                            <% }) %>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="d-block mb-2">
+                    <label>Destination</label>
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text" title="destination">
+                            <i class="bi bi-geo-alt"></i>
+                        </span>
+                        <select name="destination" class="form-select form-select-sm">
+                            <% trainStations.forEach((trainStation) => { %>
+                                <option value="<%= trainStation.id %>">
+                                    <%= trainStation.name %>
+                                </option>
+                            <% }) %>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="d-block mb-2 error-message text-danger font-size-ssm fst-italic"></div>
+
+                <div class="text-end">
+                    <button class="btn btn-sm btn-dark" type="submit">
+                        <span class="load">Save</span>
+                        <div class="loading spinner-border spinner-border-sm text-white d-none" role="status"></div>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

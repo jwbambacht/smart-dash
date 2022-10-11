@@ -1,0 +1,46 @@
+<% const updatedAt = new Date(weather.updatedAt); %>
+
+<div class="d-flex justify-content-between align-items-center mx-3 m-2">
+    <span class="d-flex align-items-center h4 mb-0 font-no-monospace fw-lighter">
+        Weather
+        <div class="ms-2 spinner-grow text-success spinner-grow-sm font-size-essm update-spinner d-none"
+             data-page="weather"
+             role="status"
+        ></div>
+    </span>
+    <span class="font-size-sm">
+        <span class="badge p-0 bg-blue-dark rounded pe-2 ms-1 cursor-pointer">
+            <div class="d-flex align-items-center">
+                <select class="p-0 form-control bg-blue-dark border-0 font-size-75r text-white ps-2 pe-1"
+                        name="service-status"
+                        service-type="WeatherService"
+                >
+                    <option value="1" <%= weather.serviceEnabled ? "selected" : "" %>>
+                        <%= weather.serviceEnabled ? "Enabled" : "Enable" %>
+                    </option>
+                    <option value="0" <%= !weather.serviceEnabled ? "selected" : "" %>>
+                        <%= !weather.serviceEnabled ? "Disabled" : "Disable" %>
+                    </option>
+                </select>
+                <i class="bi bi-caret-down"></i>
+            </div>
+        </span>
+        <span class="badge bg-blue-dark">
+            <i class="bi bi-pin-map"></i>
+            <%= weather.location.city %>
+        </span>
+        <span class="badge bg-blue-dark">
+            <i class="bi bi-clock-history"></i>
+            <span id="weatherRefreshedAt"
+                  class="refresh-badge"
+                  data-date="<%= weather.updatedAt %>"
+            >
+                <%= ('0'+updatedAt.getHours()).slice(-2) + ":" + ('0'+updatedAt.getMinutes()).slice(-2); %>
+            </span>
+        </span>
+    </span>
+</div>
+
+<div id="weatherForecast">
+    <%- include ('../widgets/weather_forecast'); %>
+</div>

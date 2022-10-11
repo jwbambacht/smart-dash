@@ -1,0 +1,54 @@
+<div class="card rounded-10 p-2 cursor-pointer collection-open" collection-type="artist" collection-id="<%= artist.id %>">
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="d-flex">
+            <span class="ratio ratio-1x1 w-50p h-50p">
+                <% if (artist.images && artist.images.length > 0) { %>
+                    <% const image = artist.images[0]; %>
+                    <img class="rounded-circle spotify-media-image w-50p h-50p" src="<%= image.url %>" />
+
+                <% } else { %>
+                    <div class="w-100 h-100 bg-secondary text-center rounded-circle spotify-media-image fs-4">
+                        <i class="bi bi-person-circle position-absolute start-50 top-50 translate-middle"></i>
+                    </div>
+
+                <% } %>
+            </span>
+        </div>
+
+        <span class="ms-3 flex-grow-1 text-truncate overflow-hidden">
+            <span class="font-size-ssm">
+                <%= artist.name; %>
+            </span>
+            <span class="d-block text-muted font-size-esm">
+                <%= artist.followers.toLocaleString(); %> followers
+            </span>
+        </span>
+
+        <span class="d-flex align-items-center">
+            <span>
+                <span class="btn btn-sm fs-5 cursor-pointer collection-follow <%= !artist.following ? "d-none" : "" %>"
+                      id="unfollowArtist-<%= artist.id %>"
+                      collection-type="artist"
+                      collection-id="<%= artist.id %>"
+                      collection-following="false"
+                      inverse-target="#followArtist-<%= artist.id %>"
+                >
+                    <i class="bi bi-heart-fill text-success"></i>
+                </span>
+                <span class="btn btn-sm fs-5 cursor-pointer collection-follow <%= artist.following ? "d-none" : "" %>"
+                      id="followArtist-<%= artist.id %>"
+                      collection-type="artist"
+                      collection-id="<%= artist.id %>"
+                      collection-following="true"
+                      inverse-target="#unfollowArtist-<%= artist.id %>"
+                >
+                    <i class="bi bi-heart text-success"></i>
+                </span>
+            </span>
+
+            <span class="btn fs-2 btn-sm py-0 ms-auto collection-play" collection-uri="<%= artist.uri %>" collection-offset="0">
+                <i class="bi bi-play-circle-fill text-success"></i>
+            </span>
+        </span>
+    </div>
+</div>

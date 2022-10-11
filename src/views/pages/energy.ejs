@@ -1,0 +1,49 @@
+<div class="d-flex justify-content-between align-items-center mx-3 m-2">
+    <span class="d-flex align-items-center h4 mb-0 font-no-monospace fw-lighter">
+        Energy
+        <div class="ms-2 spinner-grow text-success spinner-grow-sm font-size-essm update-spinner d-none"
+             data-page="energy"
+             role="status"
+        ></div>
+    </span>
+</div>
+
+<% if (!devicesStatus.serviceEnabled) { %>
+    <div class="col flex-grow-1">
+        <div class="card p-0 rounded-10 bg-blue-dark py-3">
+            <div class="d-flex align-items-center justify-content-center">
+                <span class="text-center font-size-ssm">
+                    <span class="h5 fw-bold d-block">DEVICES SERVICE NOT ENABLED</span>
+                    <span class="d-block">Enable the service at the top right of the <a href="/devices">devices</a> page.</span>
+                </span>
+            </div>
+        </div>
+    </div>
+<% } %>
+
+<% if (devicesStatus.serviceEnabled && !devicesStatus.enabled) { %>
+    <div class="col flex-grow-1">
+        <div class="card p-0 rounded-10 bg-blue-dark py-3">
+            <div class="d-flex align-items-center justify-content-center">
+                <span class="text-center font-size-ssm">
+                    <span class="h5 fw-bold d-block">
+                        <i class="bi bi-exclamation-triangle text-danger"></i>
+                        DEVICES NOT ENABLED
+                    </span>
+                    <span class="d-block"><%= devicesStatus.error %></span>
+                    <span class="d-block">Go to <a href="/settings">settings</a> to check or edit your keys.</span>
+                </span>
+            </div>
+        </div>
+    </div>
+<% } %>
+
+<% if (devicesStatus.serviceEnabled && devicesStatus.enabled) { %>
+    <div class="row g-1 row-cols-3 row-cols-lg-4 mt-2" id="liveEnergyReadings">
+        <%- include ('../widgets/energy_meter_readings'); %>
+    </div>
+<% } %>
+
+<div class="col-12 mt-2 m-0" id="energyWrapper">
+    <%- include ('../widgets/energy_historical'); %>
+</div>

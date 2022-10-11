@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-set-darkmode-onload="true">
+
+<%- include ('partials/head') %>
+
+<body class="color-scheme-dark font-monospace bg-body bg-gradient" data-page="<%= page %>">
+    <div class="d-md-none mb-1">
+        <div class="d-flex bg-dark w-100 h5 m-0">
+            <%- include ('partials/nav', {position: 'top'}) %>
+        </div>
+    </div>
+
+    <div class="container-fluid m-0 p-0">
+        <div class="row m-0 p-0">
+            <nav class="col-auto sticky-top p-0 m-0 vh-100 min-vh-100 max-vh-100 h2 mt-2">
+                <div class="flex-column sidebar-width h-100 d-none d-md-flex pt-1">
+                    <%- include ('partials/nav', {position: 'side'}) %>
+                </div>
+            </nav>
+            <main class="col m-0 p-3 vh-100 min-vh-100 max-vh-100 overflow-auto" id="pageContent">
+                <%- include ('pages/' + page) %>
+            </main>
+        </div>
+    </div>
+
+    <script src="/events/ScriptsBundled.js"></script>
+</body>

@@ -1,0 +1,7 @@
+<div class="row row-cols-1 g-1">
+    <% albums.forEach(function (album) { %>
+        <div class="col">
+            <%- include ("../widgets/spotify_album_item", { album: album }); %>
+        </div>
+    <% }); %>
+</div>

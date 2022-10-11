@@ -1,0 +1,76 @@
+<% if (weather.serviceEnabled && !weather.weather.enabled) { %>
+    <div class="col flex-grow-1">
+        <div class="card p-0 rounded-10 bg-blue-dark py-3">
+            <div class="d-flex align-items-center justify-content-center">
+                <span class="text-center font-size-ssm">
+                    <span class="h5 fw-bold d-block">WEATHER FORECAST SERVICE NOT ENABLED</span>
+                    <span class="d-block"><%= weather.weather.error %></span>
+                    <span class="d-block">Go to <a href="/settings">settings</a> to check or edit your keys.</span>
+                </span>
+            </div>
+        </div>
+    </div>
+<% } %>
+
+<% if (weather.serviceEnabled && weather.weather.enabled && weather.weather.forecast) { %>
+    <% const today = weather.weather.today;  %>
+
+    <div id="weatherToday" class="position-relative z-index-100 py-1 mb-2 mb-lg-0">
+        <div class="d-flex justify-content-between font-monospace">
+            <span class="my-auto">
+                <span class="d-flex align-items-center">
+                    <img src="<%= today.weather[0].icon %>" class="bg-blue rounded-10 w-50p h-50p">
+
+                    <span class="ms-2">
+                        <span class="d-block">
+                            <span class="h2 temp-celsius text-muted" data-type="today-temp-min"><%= today.temp.min %></span>
+                            <span class="h2">/</span>
+                            <span class="h2 temp-celsius" data-type="today-temp-max"><%= today.temp.max %></span>
+                            <div class="ms-2 spinner-grow text-success spinner-grow-sm font-size-essm update-spinner mb-1 d-none" data-page="weather" role="status"></div>
+                        </span>
+                        <span class="d-block font-size-ssm"
+                              data-type="today-desc"
+                        >
+                            <%= today.weather[0].description %>
+                        </span>
+                    </span>
+                </span>
+            </span>
+            <span class="my-auto font-size-sm">
+                <span class="d-block text-end mb-1">
+                    <span class="badge bg-blue text-white">
+                        <%= today.pop %><i class="bi bi-percent"></i> / <%= today.rain %>mm <i class="bi bi-cloud-rain"></i>
+                    </span>
+                    <span class="badge bg-blue text-white">
+                        <%= today.wind %>
+                        <i class="bi bi-wind"></i>
+                    </span>
+                </span>
+                <span class="d-block text-end">
+                    <span class="badge bg-blue text-white">
+                        <%= today.humidity %>%
+                        <i class="bi bi-droplet-half"></i>
+                    </span>
+                    <span class="badge bg-blue text-white">
+                        <%= today.clouds %>%
+                        <i class="bi bi-clouds"></i>
+                    </span>
+                    <span class="badge bg-blue text-white">
+                        <%= today.uvi %> UV
+                        <i class="bi"></i>
+                    </span>
+                </span>
+            </span>
+        </div>
+    </div>
+
+    <% if (weather.rain.total > 0 && weather.rain.svg !== "") { %>
+        <div id="weatherRain" class="position-relative z-index-10 mt-25px">
+            <div class="w-100">
+                <div id="rainChart" class="w-100">
+                    <%- weather.rain.svg %>
+                </div>
+            </div>
+        </div>
+    <% } %>
+<% } %>

@@ -1,0 +1,95 @@
+<div class="d-flex justify-content-between align-items-center mx-3 m-2">
+    <span class="d-flex align-items-center h4 mb-0 font-no-monospace fw-lighter">
+        Tasks
+        <div class="ms-2 spinner-grow text-success spinner-grow-sm font-size-essm update-spinner d-none"
+             data-page="tasks" role="status"
+        ></div>
+    </span>
+    <span class="font-size-sm">
+        <span id="showUnflaggedTasks"
+              class="badge btn-blue-dark cursor-pointer toggle-unflagged d-none"
+              data-toggle="show"
+              data-toggle-inverse="#hideUnflaggedTasks"
+              data-target="#unflaggedTasks"
+        >
+            <i class="bi bi-eye-fill" ></i>
+            Unflagged
+        </span>
+        <span id="hideUnflaggedTasks"
+              class="badge btn-blue cursor-pointer toggle-unflagged"
+              data-toggle="hide"
+              data-toggle-inverse="#showUnflaggedTasks"
+              data-target="#unflaggedTasks"
+        >
+            <i class="bi bi-eye-slash-fill"></i>
+            Unflagged
+        </span>
+
+        <span id="showHiddenTasks"
+              class="badge btn-blue-dark cursor-pointer toggle-task-visibility"
+              data-toggle="show"
+              data-toggle-inverse="#hideHiddenTasks"
+        >
+            <i class="bi bi-eye-fill" ></i>
+            Completed
+        </span>
+        <span id="hideHiddenTasks"
+              class="badge btn-blue cursor-pointer toggle-task-visibility d-none"
+              data-toggle="hide"
+              data-toggle-inverse="#showHiddenTasks"
+        >
+            <i class="bi bi-eye-slash-fill"></i>
+            Completed
+        </span>
+
+        <span id="showDeleteTasks"
+              class="badge btn-blue-dark cursor-pointer toggle-delete"
+              data-toggle="show"
+              data-toggle-inverse="#hideDeleteTasks"
+        >
+            <i class="bi bi-eye-fill" ></i>
+            Delete
+        </span>
+        <span id="hideDeleteTasks"
+              class="badge btn-blue cursor-pointer toggle-delete d-none"
+              data-toggle="hide"
+              data-toggle-inverse="#showDeleteTasks"
+        >
+            <i class="bi bi-eye-slash-fill"></i>
+            Delete
+        </span>
+        <span class="badge p-0 bg-blue-dark rounded me-2 pe-2 cursor-pointer">
+            <div class="d-flex align-items-center">
+                <select class="p-0 form-control bg-blue-dark border-0 font-size-75r text-white ps-2 pe-1"
+                        name="service-status"
+                        service-type="TaskService"
+                >
+                    <option value="1" <%= tasks.serviceEnabled ? "selected" : "" %>>
+                        <%= tasks.serviceEnabled ? "Enabled" : "Enable" %>
+                    </option>
+                    <option value="0" <%= !tasks.serviceEnabled ? "selected" : "" %>>
+                        <%= !tasks.serviceEnabled ? "Disabled" : "Disable" %>
+                    </option>
+                </select>
+                <i class="bi bi-caret-down"></i>
+            </div>
+        </span>
+    </span>
+</div>
+
+<% if (!tasks.serviceEnabled) { %>
+    <div class="col flex-grow-1">
+        <div class="card p-0 rounded-10 bg-blue-dark py-3">
+            <div class="d-flex align-items-center justify-content-center">
+                <span class="text-center font-size-ssm">
+                    <span class="h5 fw-bold d-block">TASK SERVICE NOT ENABLED</span>
+                    <span class="d-block">Enable the service at the top right of the page.</span>
+                </span>
+            </div>
+        </div>
+    </div>
+<% } %>
+
+<% if (tasks.serviceEnabled) { %>
+    <%- include ('../widgets/tasks'); %>
+<% } %>

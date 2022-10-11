@@ -1,0 +1,58 @@
+<div class="card rounded-10 p-2 cursor-pointer collection-open" collection-type="album" collection-id="<%= album.id %>">
+    <div class="d-flex justify-content-start align-items-center">
+        <div class="d-flex">
+            <span class="ratio ratio-1x1 w-50p h-50p">
+                <% if (album.images && album.images.length > 0) { %>
+                    <% const image = album.images[0]; %>
+                    <img class="rounded spotify-media-image w-50p h-50p" src="<%= image.url %>" />
+
+                <% } else { %>
+                    <div class="w-100 h-100 bg-secondary text-center rounded align-middle">
+                        <i class="bi bi-music-note-list"></i>
+                    </div>
+                <% } %>
+            </span>
+        </div>
+
+        <span class="ms-3 flex-grow-1 text-truncate overflow-hidden">
+            <span class="font-size-ssm">
+                <%= album.name; %>
+            </span>
+            <span class="d-block text-muted font-size-esm">
+                <%- album.artists.map(function (artist) {
+                    return "<span class='text-decoration-underline cursor-pointer collection-open' collection-type='artist' collection-id='" + artist.id + "'>" + artist.name + "</span>";
+                }).join(", "); %>
+            </span>
+        </span>
+
+        <span class="d-flex align-items-center">
+            <span>
+                <span class="btn btn-sm fs-5 cursor-pointer collection-follow <%= !album.following ? "d-none" : "" %>"
+                      id="unfollowAlbum-<%= album.id %>"
+                      collection-type="album"
+                      collection-id="<%= album.id %>"
+                      collection-following="false"
+                      inverse-target="#followAlbum-<%= album.id %>"
+                >
+                    <i class="bi bi-heart-fill text-success"></i>
+                </span>
+                <span class="btn btn-sm fs-5 cursor-pointer collection-follow <%= album.following ? "d-none" : "" %>"
+                      id="followAlbum-<%= album.id %>"
+                      collection-type="album"
+                      collection-id="<%= album.id %>"
+                      collection-following="true"
+                      inverse-target="#unfollowAlbum-<%= album.id %>"
+                >
+                    <i class="bi bi-heart text-success"></i>
+                </span>
+            </span>
+
+            <span class="btn fs-2 btn-sm py-0 ms-auto cursor-pointer collection-play"
+                  collection-uri="<%= album.uri %>"
+                  collection-offset="0"
+            >
+                <i class="bi bi-play-circle-fill text-success"></i>
+            </span>
+        </span>
+    </div>
+</div>

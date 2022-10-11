@@ -1,0 +1,52 @@
+<% if (spotify.serviceEnabled && spotify.enabled && spotify.isAuthorized && spotify.deviceForSpotify !== null) { %>
+    <span class="spotify-device-switch rounded badge btn-blue-dark animate text-white cursor-pointer me-1"
+          state="on"
+          device-id="<%= spotify.deviceForSpotify ? spotify.deviceForSpotify.deviceID : "" %>"
+    >
+        <i class="bi bi-speaker"></i> ON
+    </span>
+    <span class="spotify-device-switch rounded badge btn-blue-dark animate cursor-pointer text-white"
+          state="off"
+          device-id="<%= spotify.deviceForSpotify ? spotify.deviceForSpotify.deviceID : "" %>"
+    >
+        <i class="bi bi-speaker"></i> OFF
+    </span>
+<% } %>
+
+<% if (page === "spotify") { %>
+    <% if (spotify.devices !== undefined) { %>
+        <span class="badge p-0 d-flex bg-blue-dark rounded align-items-center pe-2 ms-1 cursor-pointer">
+            <select class="p-0 form-control bg-blue-dark border-0 font-size-75r text-white ps-2 pe-1"
+                    name="select-device"
+            >
+                <option disabled <%= spotify.deviceForSpotify === null ? "selected" : "" %>>
+                    Select device
+                </option>
+                <% spotify.devices.forEach(function (device) { %>
+                    <option value="<%= device.deviceID %>"
+                        <%= spotify.deviceForSpotify !== null && device.deviceID === spotify.deviceForSpotify.deviceID ? "selected" : ""; %>
+                >
+                        <%= device.name %>
+                    </option>
+                <% }); %>
+            </select>
+            <i class="bi bi-caret-down"></i>
+        </span>
+    <% } %>
+    <span class="badge p-0 bg-blue-dark rounded me-2 pe-2 ms-1 cursor-pointer">
+        <div class="d-flex align-items-center">
+            <select class="p-0 form-control bg-blue-dark border-0 font-size-75r text-white ps-2 pe-1"
+                    name="service-status"
+                    service-type="SpotifyService"
+            >
+                <option value="1" <%= spotify.serviceEnabled ? "selected" : "" %>>
+                    <%= spotify.serviceEnabled ? "Enabled" : "Enable" %>
+                </option>
+                <option value="0" <%= !spotify.serviceEnabled ? "selected" : "" %>>
+                    <%= !spotify.serviceEnabled ? "Disabled" : "Disable" %>
+                </option>
+            </select>
+            <i class="bi bi-caret-down"></i>
+        </div>
+    </span>
+<% } %>

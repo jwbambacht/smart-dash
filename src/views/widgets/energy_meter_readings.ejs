@@ -1,0 +1,117 @@
+<% const readings = current.readings; %>
+
+<div class="col order-0">
+    <div class="card border border-2 border-blue rounded-10 py-3 text-center">
+        <span class="h6 d-block mb-2">
+            <%= readings.power; %> W
+        </span>
+        <span>
+            <span class="badge rounded-pill bg-secondary">
+                <i class="bi bi-lightning-fill"></i>
+                Current Power
+            </span>
+        </span>
+    </div>
+</div>
+
+<div class="col order-1">
+    <div class="card border border-2 border-blue  rounded-10 py-3 text-center">
+        <span class="h6 d-block mb-2">
+            <%= readings.powerHigh / 1000; %> kWh
+        </span>
+        <span>
+            <span class="badge rounded-pill bg-info">
+                <i class="bi bi-lightning-fill"></i>
+                Power Usage
+                <i class="bi bi-arrow-up-circle"></i>
+            </span>
+        </span>
+    </div>
+</div>
+
+<div class="col order-2">
+    <div class="card border border-2 border-blue  rounded-10 py-3 text-center">
+        <span class="h6 d-block mb-2">
+            <%= readings.powerLow / 1000; %> kWh
+        </span>
+        <span>
+            <span class="badge rounded-pill bg-warning">
+                <i class="bi bi-lightning-fill"></i>
+                Power Usage
+                <i class="bi bi-arrow-down-circle"></i>
+            </span>
+        </span>
+    </div>
+</div>
+
+<div class="col order-3 order-lg-4">
+    <div class="card border border-2 border-blue  rounded-10 py-3 text-center">
+        <span class="h6 d-block mb-2">
+            <%= readings.solar; %> W
+        </span>
+        <span>
+            <span class="badge rounded-pill bg-secondary">
+                <i class="bi bi-lightning-fill"></i>
+                Current Solar
+            </span>
+        </span>
+    </div>
+</div>
+
+<div class="col order-4 order-lg-5">
+    <div class="card border border-2 border-blue  rounded-10 py-3 text-center">
+        <span class="h6 d-block mb-2">
+            <%= readings.solarHigh / 1000; %> kWh
+        </span>
+        <span>
+            <span class="badge rounded-pill bg-success">
+                <i class="bi bi-lightning-fill"></i>
+                Solar Power
+                <i class="bi bi-arrow-up-circle"></i>
+            </span>
+        </span>
+    </div>
+</div>
+
+<div class="col order-5 order-lg-6">
+    <div class="card border border-2 border-blue  rounded-10 py-3 text-center">
+        <span class="h6 d-block mb-2">
+            <%= readings.solarLow / 1000; %> kWh
+        </span>
+        <span>
+            <span class="badge rounded-pill bg-light">
+                <i class="bi bi-lightning-fill"></i>
+                Solar Power
+                <i class="bi bi-arrow-down-circle"></i>
+            </span>
+        </span>
+    </div>
+</div>
+
+<div class="col order-last order-lg-3">
+    <div class="card border border-2 border-blue  rounded-10 py-3 text-center">
+        <span class="h6 d-block mb-2">
+            <%= readings.gas / 1000; %> m3
+        </span>
+        <span>
+            <span class="badge rounded-pill bg-danger">
+                <i class="bi bi-thermometer-half"></i>
+                Gas
+            </span>
+        </span>
+    </div>
+</div>
+
+<div class="col order-last">
+    <div class="card border border-2 border-blue  rounded-10 py-3 text-center">
+        <span class="h6 d-block mb-2">
+            <%= readings.water / 1000; %> m3
+        </span>
+        <span>
+            <span class="badge rounded-pill bg-primary">
+                <i class="bi bi-droplet-half"></i>
+                Water
+            </span>
+        </span>
+    </div>
+</div>

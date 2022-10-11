@@ -1,0 +1,18 @@
+<div class="card border border-2 border-success rounded-10 ratio ratio-1x1 cursor-pointer collection-open" collection-type="category" collection-id="<%= category.id %>">
+    <span class="position-absolute bottom-0 end-0 w-100 h-100 border-0 rounded-10 overflow-hidden">
+        <div class="overflow-hidden px-3 py-2 text-wrap">
+            <% if (category.images && category.images.length > 0) { %>
+                <% const image = category.images[0]; %>
+                <img class="position-absolute top-0 start-0 end-0 bottom-0 spotify-media-image w-100 h-auto" src="<%= image.url %>">
+
+            <% } else { %>
+                <i class="bi bi-music-note-list position-absolute top-50 start-50 translate-middle"></i>
+
+            <% } %>
+
+                <span class="position-relative font-size-esm fw-bold">
+                <%= category.name %>
+            </span>
+        </div>
+    </span>
+</div>

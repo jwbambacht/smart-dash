@@ -1,0 +1,54 @@
+<div class="d-flex justify-content-between align-items-center me-3 m-2">
+    <span>
+        <i class="bi bi-list-check fs-5 text-secondary"></i>
+        <span class="fs-5 mb-0 font-no-monospace fw-lighter">
+            Tasks
+        </span>
+        <div class="ms-2 spinner-grow text-success spinner-grow-sm font-size-essm update-spinner d-none" data-page="tasks" role="status"></div>
+    </span>
+    <span class="font-size-sm">
+        <span id="showUnflaggedTasks"
+              class="badge btn-blue-dark cursor-pointer toggle-unflagged"
+              data-toggle="show"
+              data-toggle-inverse="#hideUnflaggedTasks"
+              data-target="#unflaggedTasks"
+        >
+            <i class="bi bi-flag" ></i>
+        </span>
+        <span id="hideUnflaggedTasks" class="badge btn-blue cursor-pointer toggle-unflagged d-none"
+              data-toggle="hide"
+              data-toggle-inverse="#showUnflaggedTasks"
+              data-target="#unflaggedTasks">
+            <i class="bi bi-flag"></i>
+        </span>
+
+        <span id="showHiddenTasks"
+              class="badge btn-blue-dark cursor-pointer toggle-task-visibility"
+              data-toggle="show"
+              data-toggle-inverse="#hideHiddenTasks"
+        >
+            <i class="bi bi-check-square" ></i>
+        </span>
+        <span id="hideHiddenTasks" class="badge btn-blue cursor-pointer toggle-task-visibility d-none"
+              data-toggle="hide"
+              data-toggle-inverse="#showHiddenTasks"
+        >
+            <i class="bi bi-check-square"></i>
+        </span>
+
+        <span id="showDeleteTasks" class="badge btn-blue-dark cursor-pointer toggle-delete"
+              data-toggle="show"
+              data-toggle-inverse="#hideDeleteTasks"
+        >
+            <i class="bi bi-trash" ></i>
+        </span>
+        <span id="hideDeleteTasks" class="badge btn-blue cursor-pointer toggle-delete d-none"
+              data-toggle="hide"
+              data-toggle-inverse="#showDeleteTasks"
+        >
+            <i class="bi bi-trash"></i>
+        </span>
+    </span>
+</div>
+
+<%- include ('../widgets/tasks'); %>

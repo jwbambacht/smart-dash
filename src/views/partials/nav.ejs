@@ -1,0 +1,64 @@
+<ul class="nav nav-pills nav-flush mb-md-auto me-auto text-center fs-3">
+    <% if (position === "side") { %>
+        <li class="nav-item">
+            <a href="/home" class="nav-link sidebar-link py-3 mx-2 rounded-10 sidebar-width <%= (page === "home") ? "active" : "" %>">
+                <% if (page === "home") { %>
+                    <img src="/assets/img/favicon/favicon_white_transparent.svg" width="100%" height="auto" />
+                <% } else { %>
+                    <img src="/assets/img/favicon/favicon_blue_transparent.svg" width="100%" height="auto" />
+                <% } %>%>
+            </a>
+        </li>
+    <% } else { %>
+        <li class="nav-item">
+            <a href="/home" class="nav-link sidebar-link py-3 mx-2 rounded-10 <%= page === "home" ? "active" : "" %>">
+                <i class="bi <%= (page === 'home' ? 'bi-grid-fill' : 'bi-grid') %>"></i>
+            </a>
+        </li>
+    <% } %>
+    <li class="nav-item">
+        <a href="/spotify" class="nav-link sidebar-link py-3 mx-2 rounded-10 <%= (position === "side") ? "sidebar-width" : "" %> <%= page === "spotify" ? "active" : "" %>">
+            <i class="bi <%= (page === 'spotify' ? 'bi-spotify' : 'bi-spotify') %>"></i>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="/weather" class="nav-link sidebar-link py-3 mx-2 rounded-10 <%= (position === "side") ? "sidebar-width" : "" %> <%= page === "weather" ? "active" : "" %>">
+            <i class="bi <%= (page === 'weather' ? 'bi-cloud-sun-fill' : 'bi-cloud-sun') %>"></i>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="/travel" class="nav-link sidebar-link py-3 mx-2 rounded-10 <%= (position === "side") ? "sidebar-width" : "" %>  <%= page === "travel" ? "active" : "" %>">
+            <i class="bi <%= (page === 'travel' ? 'bi-stoplights-fill' : 'bi-stoplights') %>"></i>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="/devices" class="nav-link sidebar-link py-3 mx-2 rounded-10 <%= (position === "side") ? "sidebar-width" : "" %> <%= page === "devices" ? "active" : "" %>">
+            <i class="bi <%= (page === 'devices' ? 'bi-lightbulb-fill' : 'bi-lightbulb') %>"></i>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="/energy" class="nav-link sidebar-link py-3 mx-2 rounded-10 <%= (position === "side") ? "sidebar-width" : "" %> <%= page === "energy" ? "active" : "" %>">
+            <i class="bi <%= (page === 'energy' ? 'bi-plug-fill' : 'bi-plug') %>"></i>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="/calendar" class="nav-link sidebar-link py-3 mx-2 rounded-10 <%= (position === "side") ? "sidebar-width" : "" %> <%= page === "calendar" ? "active" : "" %>">
+            <i class="bi <%= (page === 'calendar' ? 'bi-calendar-date-fill' : 'bi-calendar-date') %>"></i>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="/tasks" class="nav-link sidebar-link py-3 mx-2 rounded-10 <%= (position === "side") ? "sidebar-width" : "" %> <%= page === "tasks" ? "active" : "" %>">
+            <i class="bi <%= (page === 'tasks' ? 'bi-list-check' : 'bi-list-task') %>"></i>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="/settings" class="nav-link sidebar-link py-3 mx-2 rounded-10 <%= (position === "side") ? "sidebar-width" : "" %> <%= page === "settings" ? "active" : "" %>">
+            <i class="bi <%= (page === 'settings' ? 'bi-gear-fill' : 'bi-gear') %>"></i>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link py-3 mx-2 rounded-10 <%= (position === "side") ? "sidebar-width" : "" %> text-secondary refresh-page">
+            <i class="bi-arrow-clockwise"></i>
+        </a>
+    </li>
+</ul>

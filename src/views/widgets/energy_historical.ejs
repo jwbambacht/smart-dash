@@ -1,0 +1,111 @@
+<div class="d-flex justify-content-between align-self-center px-3 py-2">
+    <div class="h6 font-no-monospace fw-lighter">
+        Historical
+    </div>
+    <span class="font-size-sm">
+        <span class="badge bg-blue-dark btn pe-none">
+            <span id="monthName">
+                <%= history.monthText %> <%= String(history.year).slice(-2) %>
+            </span>
+        </span>
+
+        <% if (history.hasPrevious) { %>
+            <span class="badge btn-blue-dark change-month" data-next="false">
+                <i class="bi bi-arrow-left"></i>
+            </span>
+        <% } %>
+        <% if (history.hasNext) { %>
+            <span class="badge btn-blue-dark change-month" data-next="true">
+                <i class="bi bi-arrow-right change-month"></i>
+            </span>
+        <% } %>
+    </span>
+</div>
+
+<div id="energyData"
+     class="d-none"
+     data-year="<%= history.year %>"
+     data-month="<%= history.month %>">
+    <%= JSON.stringify(history) %>
+</div>
+
+<div class="row row-cols-1 row-cols-lg-2 g-1">
+    <div class="col order-first chart-wrapper" data-type="power-usage">
+        <div class="card rounded-10 px-3 pt-2 pb-1">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="badge rounded-pill bg-secondary">
+                    <i class="bi bi-lightning-fill"></i>
+                    Power Usage (kWh)
+                </span>
+                <span>
+                    <span class="badge bg-info">
+                        <i class="bi bi-arrow-up-circle"></i>
+                        <%= Math.round(history.totals.powerHigh * 1000) / 1000 %> kWh
+                    </span>
+                    <span class="badge bg-warning">
+                        <i class="bi bi-arrow-down-circle"></i>
+                        <%= Math.round(history.totals.powerLow * 1000) / 1000 %> kWh
+                    </span>
+                </span>
+            </div>
+            <canvas class="energy-chart" data-type="power-usage" width="800" height="300"></canvas>
+        </div>
+    </div>
+
+    <div class="col order-1 order-lg-2 chart-wrapper" data-type="solar">
+        <div class="card rounded-10 px-3 pt-2 pb-1">
+            <div class="d-flex justify-content-between align-items-center mb-0">
+                <span class="badge rounded-pill bg-secondary">
+                    <i class="bi bi-lightning-fill"></i>
+                    Solar Power (kWh)
+                </span>
+                <span>
+                    <span class="badge bg-success">
+                        <i class="bi bi-arrow-up-circle"></i>
+                        <%= Math.round(history.totals.solarHigh * 1000) / 1000 %> kWh
+
+                    </span>
+                    <span class="badge bg-light">
+                        <i class="bi bi-arrow-down-circle"></i>
+                        <%= Math.round(history.totals.solarLow) / 1000 %> kWh
+                    </span>
+                </span>
+            </div>
+            <canvas class="energy-chart" data-type="solar" width="800" height="300"></canvas>
+        </div>
+    </div>
+
+    <div class="col order-2 order-lg-1 chart-wrapper" data-type="gas">
+        <div class="card rounded-10 px-3 pt-2 pb-1">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="badge rounded-pill bg-secondary">
+                    <i class="bi bi-thermometer-half"></i>
+                    Gas Usage (m3)
+                </span>
+                <span>
+                    <span class="badge bg-danger">
+                        <%= Math.round(history.totals.gas * 1000) / 1000 %> m3
+                    </span>
+                </span>
+            </div>
+            <canvas class="energy-chart" data-type="gas" width="800" height="300"></canvas>
+        </div>
+    </div>
+
+    <div class="col order-last chart-wrapper" data-type="water">
+        <div class="card rounded-10 px-3 pt-2 pb-1">
+            <div class="d-flex justify-content-between align-items-center mb-0">
+                <span class="badge rounded-pill bg-secondary">
+                    <i class="bi bi-droplet-half"></i>
+                    Water Usage (m3)
+                </span>
+                <span>
+                    <span class="badge bg-primary">
+                        <%= Math.round(history.totals.water * 1000) / 1000 %> m3
+                    </span>
+                </span>
+            </div>
+            <canvas class="energy-chart" data-type="water" width="800" height="300"></canvas>
+        </div>
+    </div>
+</div>

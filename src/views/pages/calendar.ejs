@@ -1,0 +1,111 @@
+<% const updatedAt = new Date(events.updatedAt); %>
+<div class="d-flex justify-content-between align-items-center mx-3 m-2">
+    <span class="d-flex align-items-center h4 mb-0 font-no-monospace fw-lighter">
+        Calendar
+        <div class="ms-2 spinner-grow text-success spinner-grow-sm font-size-essm update-spinner d-none"
+             data-page="calendar"
+             role="status"
+        ></div>
+    </span>
+    <span class="font-size-sm">
+        <span class="badge p-0 bg-blue-dark rounded pe-2 ms-1 cursor-pointer">
+            <div class="d-flex align-items-center">
+                <select class="p-0 form-control bg-blue-dark border-0 font-size-75r text-white ps-2 pe-1"
+                        name="service-status"
+                        service-type="CalendarService"
+                >
+                    <option value="1" <%= events.serviceEnabled ? "selected" : "" %>>
+                        <%= events.serviceEnabled ? "Enabled" : "Enable" %>
+                    </option>
+                    <option value="0" <%= !events.serviceEnabled ? "selected" : "" %>>
+                        <%= !events.serviceEnabled ? "Disabled" : "Disable" %>
+                    </option>
+                </select>
+                <i class="bi bi-caret-down"></i>
+            </div>
+        </span>
+        <span class="badge bg-blue-dark">
+            <i class="bi bi-clock-history"></i>
+            <span id="calendarRefreshedAt"
+                  class="refresh-badge"
+                  data-date="<%= events.updatedAt %>"
+            >
+                <%= ('0'+updatedAt.getHours()).slice(-2) + ":" + ('0'+updatedAt.getMinutes()).slice(-2); %>
+            </span>
+        </span>
+    </span>
+</div>
+
+<% if (!events.serviceEnabled) { %>
+    <div class="col flex-grow-1">
+        <div class="card p-0 rounded-10 bg-blue-dark py-3">
+            <div class="d-flex align-items-center justify-content-center">
+                <span class="text-center font-size-ssm">
+                    <span class="h5 fw-bold d-block">CALENDAR SERVICE NOT ENABLED</span>
+                    <span class="d-block">Enable the service at the top right of the page.</span>
+                </span>
+            </div>
+        </div>
+    </div>
+<% } %>
+
+<% if (events.serviceEnabled) { %>
+    <div class="row g-1">
+        <div class="col-xl-4 col-lg-5 col-md-6 col-12 m-0">
+            <div class="row">
+                <div class="col">
+                    <div class="card rounded-10 px-3 py-2" id="calendarWrapper">
+                        <%- include ('../widgets/calendar_month'); %>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card rounded-10 px-0 pt-2 pb-0" id="calendarsWrapper">
+                        <div class="d-flex justify-content-between align-items-center px-3 mb-1">
+                            <span class="fs-6 font-no-monospace fw-lighter mb-0">Calendars</span>
+                            <span class="link-light fs-5" id="newCalendarToggle">
+                                <i class="bi bi-plus-square-fill"></i>
+                            </span>
+                        </div>
+
+                        <div class="d-none" id="calendarNewUpdateWrapper">
+                            <%- include ('../widgets/calendar_new_update', { cal: null }); %>
+                        </div>
+
+                        <div id="calendarList">
+                            <%- include ('../widgets/calendar_calendars'); %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-8 col-lg-7 col-md-6 col-12 m-0">
+            <div class="row">
+                <div class="col">
+                    <div class="card rounded-10 px-3 py-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="fs-6 font-no-monospace fw-lighter">
+                                Events Week <span id="calendarEventsWeekNumber"><%= events.week %></span>
+                            </span>
+                            <span>
+                                <span class="link-light events-change-week fs-5" data-next="false">
+                                    <i class="bi bi-arrow-left-square-fill"></i>
+                                </span>
+                                <span class="link-light events-change-week fs-5" data-next="true">
+                                    <i class="bi bi-arrow-right-square-fill"></i>
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="mt-1" id="calendarEventsWrapper" data-year="<%= events.year %>" data-week="<%= events.week %>">
+                        <%- include ('../widgets/calendar_events'); %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<% } %>

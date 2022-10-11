@@ -1,0 +1,103 @@
+<% if (!map.serviceEnabled) { %>
+    <div class="col flex-grow-1">
+        <div class="card p-0 rounded-10 bg-blue-dark py-3">
+            <div class="d-flex align-items-center justify-content-center">
+                <span class="text-center font-size-ssm">
+                    <span class="h5 fw-bold d-block">MAPS SERVICE NOT ENABLED</span>
+                    <span class="d-block">Enable the service at the top right of the page.</span>
+                </span>
+            </div>
+        </div>
+    </div>
+<% } %>
+
+<% if (map.serviceEnabled && !map.enabled) { %>
+    <div class="col flex-grow-1">
+        <div class="card p-0 rounded-10 bg-blue-dark py-3">
+            <div class="d-flex align-items-center justify-content-center">
+                <span class="text-center font-size-ssm">
+                    <span class="h5 fw-bold d-block">
+                        <i class="bi bi-exclamation-triangle text-danger"></i>
+                        MAP NOT ENABLED
+                    </span>
+                    <span class="d-block"><%= map.error %></span>
+                    <span class="d-block">Go to <a href="/settings">settings</a> to check or edit your keys.</span>
+                </span>
+            </div>
+        </div>
+    </div>
+<% } %>
+
+<% if (map.serviceEnabled && map.enabled && map.routes) { %>
+    <% map.routes.forEach(function (route) { %>
+        <div class="col travel-item"
+             data-type="<%= route.type %>"
+             data-id="<%= route.id %>"
+        >
+            <div class="card p-0 rounded-10 bg-blue-dark pt-2 pb-3">
+                <div class="d-flex justify-content-between align-items-center px-3">
+                    <span class="fs-5 text-white rounded-10">
+                        <i class="bi bi-car-front"></i>
+                    </span>
+                    <span class="d-flex align-items-center font-size-sm text-uppercase text-white">
+                        <span class="badge bg-info fw-bold text-wrap">
+                            <%= route.routes[0].origin.name %>
+                        </span>
+                        <i class="bi bi-arrow-left-right mx-1"></i>
+                        <span class="badge bg-info fw-bold text-wrap">
+                            <%= route.routes[0].destination.name %>
+                        </span>
+                    </span>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center font-size-sm text-white px-3">
+                    <span class="d-flex justify-content-start align-items-center">
+                        <i class="bi bi-arrow-bar-right me-1"></i>
+                        <span class="badge <%= route.routes[0].traffic.value === 0 ? "bg-success" : "bg-danger" %>">
+                            <%= route.routes[0].duration.text %> <%- route.routes[0].traffic.value > 0 ? "<span class='text-white'>(" + route.routes[0].traffic.text + ")</span>" : "" %>
+                        </span>
+                        <% if (page === "travel") { %>
+                            <span class="badge btn-secondary ms-1 open-map"
+                               data-parent-id="<%= route.id %>"
+                               data-direction="0"
+                               data-origin-address="<%= route.routes[0].origin.address %>"
+                               data-origin-lat="<%= route.routes[0].origin.location.lat %>"
+                               data-origin-lon="<%= route.routes[0].origin.location.lon %>"
+                               data-destination-address="<%= route.routes[0].destination.address %>"
+                               data-destination-lat="<%= route.routes[0].destination.location.lat %>"
+                               data-destination-lon="<%= route.routes[0].destination.location.lon %>"
+                            >
+                                <i class="bi bi-map-fill"></i>
+                            </span>
+                        <% } %>
+                    </span>
+
+                    <span class="d-flex justify-content-end align-items-center">
+                        <% if (page === "travel") { %>
+                            <span class="badge btn-secondary me-1 open-map"
+                               data-parent-id="<%= route.id %>"
+                               data-id="<%= route.routes[1].id %>"
+                               data-direction="1"
+                               data-origin-address="<%= route.routes[1].origin.address %>"
+                               data-origin-lat="<%= route.routes[1].origin.location.lat %>"
+                               data-origin-lon="<%= route.routes[1].origin.location.lon %>"
+                               data-destination-address="<%= route.routes[1].destination.address %>"
+                               data-destination-lat="<%= route.routes[1].destination.location.lat %>"
+                               data-destination-lon="<%= route.routes[1].destination.location.lon %>"
+                            >
+                                <i class="bi bi-map-fill"></i>
+                            </span>
+                        <% } %>
+
+                        <span class="badge <%= route.routes[1].traffic.value === 0 ? "bg-success" : "bg-danger" %>">
+                            <%= route.routes[1].duration.text %> <%- route.routes[1].traffic.value > 0 ? "<span class='text-white'>(" + route.routes[1].traffic.text + ")</span>" : "" %>
+                        </span>
+                        <i class="bi bi-arrow-bar-left ms-1"></i>
+                    </span>
+                </div>
+
+                <div class="ratio ratio-16x9 travel-map mt-3 d-none" data-id="<%= route.id %>"></div>
+            </div>
+        </div>
+    <% }); %>
+<% } %>

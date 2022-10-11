@@ -1,0 +1,185 @@
+<div class="d-flex justify-content-between align-items-center mx-3 m-2">
+    <span class="d-flex align-items-center h4 mb-0 font-no-monospace fw-lighter">
+        <span>
+            <i class="bi bi-spotify"></i> Spotify
+        </span>
+        <div class="ms-2 spinner-grow text-success spinner-grow-sm font-size-essm update-spinner d-none"
+             data-page="spotify"
+             role="status"
+        ></div>
+    </span>
+    <span class="font-size-sm d-flex" id="spotifyDeviceWrapper">
+        <%- include ("../widgets/spotify_device.ejs") %>
+    </span>
+</div>
+
+<% if (!spotify.serviceEnabled) { %>
+    <div class="col flex-grow-1">
+        <div class="card p-0 rounded-10 bg-blue-dark py-3">
+            <div class="d-flex align-items-center justify-content-center">
+                <span class="text-center font-size-ssm">
+                    <span class="h5 fw-bold d-block">SPOTIFY SERVICE NOT ENABLED</span>
+                    <span class="d-block">Enable the service at the top right of the page.</span>
+                </span>
+            </div>
+        </div>
+    </div>
+<% } %>
+
+<% if (spotify.serviceEnabled && !spotify.enabled) { %>
+    <div class="col flex-grow-1">
+        <div class="card p-0 rounded-10 bg-blue-dark py-3">
+            <div class="d-flex align-items-center justify-content-center">
+                <span class="text-center font-size-ssm">
+                    <span class="h5 fw-bold d-block">SPOTIFY NOT ENABLED</span>
+                    <span class="d-block"><%= spotify.error %></span>
+                    <span class="d-block">Go to <a href="/settings">settings</a> to check or edit your keys.</span>
+                    <span class="d-block mt-2">Click <a href="" id="reinitializeSpotify">here</a> to reinitialize Spotify</span>
+                </span>
+            </div>
+        </div>
+    </div>
+<% } %>
+
+<% if (spotify.serviceEnabled && spotify.enabled) { %>
+    <div class="row g-1">
+        <div class="col-12 col-lg-4">
+            <div class="mb-1" id="spotifyPlayerWrapper">
+                <%- include ("../widgets/spotify_player.ejs"); %>
+            </div>
+
+            <% if (spotify.isAuthorized) { %>
+                <div class="card rounded-10 p-2">
+                    <div class="row row-cols-1 g-1">
+                        <div class="col">
+                            <a href="/spotify/playlists" class="btn <%= pageType === "playlists" ? "btn-blue" : "btn-blue-dark" %> d-block sidebar-link rounded-10 text-white">
+                                <div class="d-flex justify-content-start align-items-center rounded-10 flex-row-reverse">
+                                    <span>
+                                        <i class="bi bi-music-note-list"></i>
+                                    </span>
+                                    <span class="me-auto font-size-ssm">
+                                        Playlists
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col">
+                            <a href="/spotify/albums" class="btn <%= pageType === "albums" ? "btn-blue" : "btn-blue-dark" %> d-block sidebar-link rounded-10 text-white">
+                                <div class=" d-flex justify-content-start align-items-center rounded-10 flex-row-reverse">
+                                    <span>
+                                        <i class="bi bi-collection"></i>
+                                    </span>
+                                    <span class="me-auto font-size-ssm">
+                                        Albums
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col">
+                            <a href="/spotify/artists" class="btn <%= pageType === "artists" ? "btn-blue" : "btn-blue-dark" %> d-block sidebar-link rounded-10 text-white">
+                                <div class=" d-flex justify-content-start align-items-center rounded-10 flex-row-reverse">
+                                    <span>
+                                        <i class="bi bi-person-circle"></i>
+                                    </span>
+                                    <span class="me-auto font-size-ssm">
+                                        Artists
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col">
+                            <a href="/spotify/liked" class="btn <%= pageType === "liked" ? "btn-blue" : "btn-blue-dark" %> d-block sidebar-link rounded-10 text-white">
+                                <div class=" d-flex justify-content-start align-items-center rounded-10 flex-row-reverse">
+                                    <span>
+                                        <i class="bi bi-heart-fill"></i>
+                                    </span>
+                                    <span class="me-auto font-size-ssm">
+                                        Liked Songs
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col">
+                            <a href="/spotify/top" class="btn <%= pageType === "top" ? "btn-blue" : "btn-blue-dark" %> d-block sidebar-link rounded-10 text-white">
+                                <div class=" d-flex justify-content-start align-items-center rounded-10 flex-row-reverse">
+                                    <span>
+                                        <i class="bi bi-graph-up-arrow"></i>
+                                    </span>
+                                    <span class="me-auto font-size-ssm">
+                                        My Top Artist & Tracks
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col">
+                            <a href="/spotify/recently" class="btn <%= pageType === "recently" ? "btn-blue" : "btn-blue-dark" %> d-block sidebar-link rounded-10 text-white">
+                                <div class=" d-flex justify-content-start align-items-center rounded-10 flex-row-reverse">
+                                    <span>
+                                        <i class="bi bi-clock-history"></i>
+                                    </span>
+                                    <span class="me-auto font-size-ssm">
+                                        Recently Played Tracks
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col">
+                            <a href="/spotify/categories" class="btn <%= pageType === "categories" ? "btn-blue" : "btn-blue-dark" %> d-block sidebar-link rounded-10 text-white">
+                                <div class=" d-flex justify-content-start align-items-center rounded-10 flex-row-reverse">
+                                    <span>
+                                        <i class="bi bi-tag"></i>
+                                    </span>
+                                    <span class="me-auto font-size-ssm">
+                                        Categories
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col">
+                            <a href="/spotify/search" class="btn <%= pageType === "search" ? "btn-blue" : "btn-blue-dark" %> d-block sidebar-link rounded-10 text-white">
+                                <div class=" d-flex justify-content-start align-items-center rounded-10 flex-row-reverse">
+                                    <span>
+                                        <i class="bi bi-search"></i>
+                                    </span>
+                                    <span class="me-auto font-size-ssm">
+                                        Search
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+
+        <div class="col-12 col-lg-8">
+            <% if (spotify.isAuthorized) { %>
+                <% if (pageType === "playlists" && playlists) { %>
+                    <%- include ("../widgets/spotify_playlists.ejs"); %>
+                <% } else if (pageType === "playlist" && playlist) { %>
+                    <%- include ("../widgets/spotify_playlist"); %>
+                <% } else if (pageType === "albums" && albums) { %>
+                    <%- include ("../widgets/spotify_albums"); %>
+                <% } else if (pageType === "album" && album) { %>
+                    <%- include ("../widgets/spotify_album"); %>
+                <% } else if (pageType === "artists" && artists) { %>
+                    <%- include ("../widgets/spotify_artists"); %>
+                <% } else if (pageType === "artist" && artist) { %>
+                    <%- include ("../widgets/spotify_artist"); %>
+                <% } else if (pageType === "liked" && liked) { %>
+                    <%- include ("../widgets/spotify_liked"); %>
+                <% } else if (pageType === "top" && artists && tracks) { %>
+                    <%- include ("../widgets/spotify_top"); %>
+                <% } else if (pageType === "recently" && recentlyPlayed) { %>
+                    <%- include ("../widgets/spotify_recently_played"); %>
+                <% } else if (pageType === "categories") { %>
+                    <%- include ("../widgets/spotify_categories"); %>
+                <% } else if (pageType === "category" && category) { %>
+                    <%- include ("../widgets/spotify_category"); %>
+                <% } else if (pageType === "search") { %>
+                    <%- include ("../widgets/spotify_search"); %>
+                <% } %>
+            <% } %>
+        </div>
+    </div>
+<% } %>

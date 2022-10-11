@@ -1,0 +1,40 @@
+<% const colors = ["bg-primary", "bg-secondary", "bg-success", "bg-info", "bg-warning", "bg-danger", "bg-light", "bg-blue"]; %>
+
+<form class="pt-0 p-3" id="newUpdateCalendarForm">
+    <input type="text" class="d-none" name="id" value="<%= cal?.id %>" />
+    <div class="d-block mb-2">
+        <input type="text" class="form-control form-control-sm bg-blue-dark" name="customName" value="<%= cal?.customName %>" placeholder="Custom Name">
+    </div>
+
+    <div class="d-block mb-2">
+        <input type="text" class="form-control form-control-sm bg-blue-dark" name="url" value="<%= cal?.url %>" placeholder="URL*" required>
+    </div>
+
+    <div class="d-block mb-3">
+        <div class="row row-cols-<%= colors.length; %>">
+            <% colors.forEach(function (color, index) { %>
+                <div class="col <%= index !== colors.length - 1 ? "pe-1" : "" %>">
+                    <input class="form-check-input calendar-color-toggle fs-4 m-0 <%= color %> border-0" type="checkbox" data-color="<%= color %>" <%= (cal === null && index === 0) || (cal !== null && cal.color === color) ? "checked" : "" %>>
+                </div>
+            <% }); %>
+        </div>
+        <input type="text" class="d-none" id="selectedCalendarColor" name="color" value="<%= cal !== null ? cal.color : colors[0] %>" required />
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center">
+        <span>
+            <div class="btn btn-sm btn-danger" id="deleteCalendar">
+                Delete
+            </div>
+        </span>
+
+        <div>
+            <div class="btn btn-sm btn-secondary" id="cancelCalendar">
+                Cancel
+            </div>
+            <button class="btn btn-sm btn-primary" id="saveCalendar" type="submit">
+                Save
+            </button>
+        </div>
+    </div>
+</form>

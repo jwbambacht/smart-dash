@@ -1,0 +1,140 @@
+<% if (!weather.serviceEnabled) { %>
+    <div class="col flex-grow-1">
+        <div class="card p-0 rounded-10 bg-blue-dark py-3">
+            <div class="d-flex align-items-center justify-content-center">
+                <span class="text-center font-size-ssm">
+                    <span class="h5 fw-bold d-block">WEATHER SERVICE NOT ENABLED</span>
+                    <span class="d-block">Enable the service at the top right of the page.</span>
+                </span>
+            </div>
+        </div>
+    </div>
+<% } %>
+
+<% if (weather.serviceEnabled && !weather.weather.enabled) { %>
+    <div class="col flex-grow-1">
+        <div class="card p-0 rounded-10 bg-blue-dark py-3">
+            <div class="d-flex align-items-center justify-content-center">
+                <span class="text-center font-size-ssm">
+                    <span class="h5 fw-bold d-block">
+                        <i class="bi bi-exclamation-triangle text-danger"></i>
+                        WEATHER FORECAST NOT ENABLED
+                    </span>
+                    <span class="d-block"><%= weather.weather.error %></span>
+                    <span class="d-block">Go to <a href="/settings">settings</a> to check or edit your keys.</span>
+                </span>
+            </div>
+        </div>
+    </div>
+<% } %>
+
+<% if (weather.serviceEnabled && weather.weather.enabled && weather.weather.forecast) { %>
+    <% weather.weather.forecast.forEach(function (day, index) { %>
+        <div class="card <%= index === 0 ? "head" : "" %> rounded-10 px-2 mb-1">
+            <div class="row font-monospace <%= index === 0 && weather.rain.total > 0 && weather.rain.svg !== "" ? "pt-2" : "py-2" %>">
+                <div class="col-auto py-0 my-0">
+                    <img src="<%= day.weather[0].icon %>" class="<%= index === 0 ? "bg-blue" : "bg-light" %> rounded-10 w-100p h-auto mw-50p mh-50p">
+                </div>
+
+                <div class="col-auto d-flex">
+                    <div class="lh-sm my-auto">
+                        <div class="d-block fw-bold">
+                            <%= day.dayAbbrevText %>
+                        </div>
+                        <div class="d-block text-muted fw-light">
+                            <%= day.dateText %>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-auto d-flex">
+                    <div class="lh-sm my-auto">
+                        <div class="d-block text-muted fw-light">
+                            <i class="bi bi-thermometer-low"></i>
+                            <%= day.temp.min %>°C
+                        </div>
+                        <div class="d-block fw-light">
+                            <i class="bi bi-thermometer-high"></i>
+                            <%= day.temp.max %>°C
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-auto d-flex">
+                    <div class="lh-sm my-auto">
+                        <div class="d-block text-muted fw-light">
+                            <i class="bi bi-sunrise"></i>
+                            <%= day.temp.morn %>°C
+                        </div>
+                        <div class="d-block fw-light">
+                            <i class="bi bi-sunset"></i>
+                            <%= day.temp.night %>°C
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-auto d-flex ms-auto">
+                    <div class="lh-sm my-auto font-size-sm">
+                        <span class="d-block badge bg-blue text-white mb-1">
+                            <%= day.rain %>mm
+                            <i class="bi bi-cloud-rain"></i>
+                        </span>
+                        <span class="d-block badge bg-blue text-white">
+                            <%= day.pop %>%
+                            <i class="bi bi-umbrella"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-auto d-flex">
+                    <div class="lh-sm my-auto font-size-sm">
+                        <span class="d-block badge bg-blue text-white mb-1">
+                            <%= day.wind %>
+                            <i class="bi bi-wind"></i>
+                        </span>
+                        <span class="d-block badge bg-blue text-white">
+                            <%= day.wind_gust %>m/s
+                            <i class="bi bi-tornado"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-auto d-flex">
+                    <div class="lh-sm my-auto font-size-sm">
+                        <span class="d-block badge bg-blue text-white mb-1">
+                            <%= day.clouds %>%
+                            <i class="bi bi-clouds"></i>
+                        </span>
+                        <span class="d-block badge bg-blue text-white">
+                            <%= day.uvi %>
+                            UV
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-auto d-flex">
+                    <div class="lh-sm my-auto font-size-sm">
+                        <span class="d-block badge bg-blue text-white mb-1">
+                            <%= day.humidity %>%
+                            <i class="bi bi-droplet-half"></i>
+                        </span>
+                        <span class="d-block badge bg-blue text-white">
+                            <%= day.pressure %>hPa
+                            <i class="bi bi-disc"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <% if (index === 0 && weather.rain.total > 0 && weather.rain.svg !== "") { %>
+                <div id="weatherRain" class="position-relative z-index-10 mt-50px">
+                    <div class="w-100">
+                        <div id="rainChart" class="w-100">
+                            <%- weather.rain.svg %>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    <% }); %>
+<% } %>

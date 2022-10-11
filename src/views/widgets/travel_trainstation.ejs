@@ -1,0 +1,23 @@
+<% trainStations.forEach(function (trainStation) { %>
+    <div id="trainStation-<%= trainStation.id %>">
+        <div class="text-muted d-flex justify-content-between align-items-center py-1 px-3">
+            <span>
+                <i class="bi bi-building me-2"></i>
+                <span class="font-size-ssm">
+                    <%= trainStation.name %>
+                </span>
+            </span>
+            <span>
+                <div class="btn btn-sm text-danger delete-trainstation"
+                     data-id="<%= trainStation.id %>"
+                     data-target="#trainStation-<%= trainStation.id %>"
+                     error-target="#errorMessage-<%= trainStation.id %>">
+                    <i class="load bi bi-trash"></i>
+                    <div class="loading spinner-border spinner-border-sm text-danger d-none" role="status"></div>
+                </div>
+            </span>
+        </div>
+
+        <div class="d-block text-danger text-center font-size-esm fst-italic" id="errorMessage-<%= trainStation.id %>"></div>
+    </div>
+<% }); %>

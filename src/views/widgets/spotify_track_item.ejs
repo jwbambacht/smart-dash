@@ -1,0 +1,68 @@
+<div class="card rounded-10 p-2">
+    <div class="d-flex justify-content-start align-items-center">
+        <span class="d-flex">
+            <% if (type === "album") { %>
+                <span class="ms-3" style="width: 30px;">
+                    <div class="d-flex justify-items-center align-items-center">
+                        <span class="text-center font-size-sm"><%= trackIndex + 1 %>.</span>
+                    </div>
+                </span>
+            <% } else { %>
+                <span class="ratio ratio-1x1" style="width: 50px; height: 50px;">
+                    <% if (track.images && track.images.length > 0) { %>
+                        <% const image = track.images[0]; %>
+                        <img class="rounded spotify-media-image" src="<%= image.url %>" height="50" width="50" />
+                    <% } else { %>
+                        <div class="position-absolute top-0 bottom-0 start-0 end-0 w-100 h-100 bg-secondary text-center rounded">
+                            <i class="bi bi-music-note position-absolute top-50 start-50 translate-middle"></i>
+                        </div>
+                    <% } %>
+                </span>
+            <% } %>
+        </span>
+
+        <span class="ms-3 flex-grow-1 text-truncate overflow-hidden">
+            <span class="font-size-ssm">
+                <%= track.name; %>
+            </span>
+            <span class="d-block text-muted font-size-esm">
+                <% track.artists.forEach(function (artist, index) { %>
+                    <span class="text-decoration-underline cursor-pointer collection-open"
+                          collection-type="artist"
+                          collection-id="<%= artist.id %>"
+                    ><%= artist.name %></span><%= index < track.artists.length - 1 ? ", " : "" %>
+                <% }); %>
+            </span>
+        </span>
+
+        <span class="d-flex align-items-center">
+            <span>
+                <span class="btn btn-sm fs-5 cursor-pointer collection-follow <%= !track.following ? "d-none" : "" %>"
+                      id="unfollowTrack-<%= track.id %>"
+                      collection-type="track"
+                      collection-id="<%= track.id %>"
+                      collection-following="false"
+                      inverse-target="#followTrack-<%= track.id %>"
+                >
+                    <i class="bi bi-heart-fill text-success"></i>
+                </span>
+                <span class="btn btn-sm fs-5 cursor-pointer collection-follow <%= track.following ? "d-none" : "" %>"
+                      id="followTrack-<%= track.id %>"
+                      collection-type="track"
+                      collection-id="<%= track.id %>"
+                      collection-following="true"
+                      inverse-target="#unfollowTrack-<%= track.id %>"
+                >
+                    <i class="bi bi-heart text-success"></i>
+                </span>
+            </span>
+
+            <span class="btn fs-2 btn-sm py-0 collection-play"
+                  collection-uri="<%= uri %>"
+                  collection-offset="<%= trackIndex %>"
+            >
+                <i class="bi bi-play-circle-fill text-success"></i>
+            </span>
+        </span>
+    </div>
+</div>

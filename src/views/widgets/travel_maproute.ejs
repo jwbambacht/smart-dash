@@ -1,0 +1,82 @@
+<% mapRoutes.forEach(function (mapRoute) { %>
+    <div class="accordion-item bg-blue-dark border-body" id="mapRoute-<%= mapRoute.id %>">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed bg-blue-dark text-muted px-3 py-2"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target=".collapse-maproute-<%= mapRoute.id %>"
+                    data-bs-parent="#mapRouteAccordion"
+            >
+                <i class="bi bi-sign-turn-right me-2"></i> <%= mapRoute.name %>
+            </button>
+        </h2>
+        <div class="accordion-collapse collapse collapse-maproute-<%= mapRoute.id %>" data-bs-parent="#mapRouteAccordion">
+            <div class="accordion-body">
+                <div class="mb-3">
+                    <form class="updateMapRouteForm">
+                        <input type="hidden" name="id" value="<%= mapRoute.id %>">
+
+                        <div class="mb-2">
+                            <label>Name*</label>
+                            <input type="text"
+                                   class="form-control form-control-sm"
+                                   name="name"
+                                   value="<%= mapRoute.name %>"
+                            >
+                        </div>
+
+                        <div class="d-block mb-2">
+                            <label>Origin</label>
+                            <div class="input-group input-group-sm mb-3">
+                                <span class="input-group-text" title="origin">
+                                    <i class="bi bi-geo-alt"></i>
+                                </span>
+                                <select name="origin" class="form-select form-select-sm">
+                                    <% mapAddresses.forEach(function (address) { %>
+                                        <% const selected = (mapRoute.origin.id === address.id) ? "selected" : ""; %>
+                                        <option value="<%= address.id %>" <%= selected; %>>
+                                            <%= address.name %> (<%= address.address %>)
+                                        </option>
+                                    <% }) %>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="d-block mb-2">
+                            <label>Destination</label>
+                            <div class="input-group input-group-sm mb-3">
+                                <span class="input-group-text" title="destination">
+                                    <i class="bi bi-geo-alt"></i>
+                                </span>
+                                <select name="destination" class="form-select form-select-sm">
+                                    <% mapAddresses.forEach(function (address) { %>
+                                        <% const selected = (mapRoute.destination.id === address.id) ? "selected" : ""; %>
+                                        <option value="<%= address.id %>" <%= selected; %>>
+                                            <%= address.name %> (<%= address.address %>)
+                                        </option>
+                                    <% }) %>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="d-block mb-2 error-message text-danger font-size-ssm fst-italic"></div>
+
+                        <div class="d-flex justify-content-between">
+                            <div class="btn btn-sm btn-danger delete-maproute"
+                                 data-id="<%= mapRoute.id %>"
+                                 data-target="#mapRoute-<%= mapRoute.id %>"
+                            >
+                                <span class="load">Delete</span>
+                                <div class="loading spinner-border spinner-border-sm text-white d-none" role="status"></div>
+                            </div>
+                            <button class="btn btn-sm btn-dark" type="submit">
+                                <span class="load">Save</span>
+                                <div class="loading spinner-border spinner-border-sm text-white d-none" role="status"></div>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+<% }); %>

@@ -1,0 +1,45 @@
+<form class="addSettingForm font-size-sm">
+    <% if (type !== '') { %>
+        <input type="hidden" name="type" value="<%= type %>" />
+    <% } %>
+
+    <div class="input-group">
+        <% if (type === '') { %>
+            <input type="text"
+                   class="form-control font-size-sm bg-blue-dark"
+                   name="type"
+                   value=""
+                   placeholder="Type*"
+                   required
+            >
+        <% } %>
+        <input type="text"
+               class="form-control font-size-sm bg-blue-dark"
+               name="description"
+               value=""
+               placeholder="Description*"
+               required
+        >
+
+        <input type="text"
+               class="form-control font-size-sm bg-blue-dark"
+               name="specification"
+               value=""
+               placeholder="Specification*"
+               required
+        >
+
+        <input
+                type="text"
+                class="form-control font-size-sm bg-blue-dark"
+                name="value"
+                value=""
+                placeholder="Value*"
+                required
+        >
+
+        <button class="btn btn-dark font-size-sm" type="submit">
+            <i class="bi bi-plus-circle-fill"></i>
+        </button>
+    </div>
+</form>

@@ -1,0 +1,14 @@
+<div class="lh-sm font-no-monospace pb-2">
+    <span class=" fw-bolder text-white fs-1" id="nowTimeString">
+        <%= now.time %>
+    </span>
+    <span class="d-flex justify-content-center font-size-s text-uppercase">
+        <span class="badge bg-blue text-white" id="nowDateString">
+            <%= now.dayText %>, <%= now.monthText %> <%= now.date %>
+        </span>
+        <span class="badge bg-blue text-white ms-2">
+            <i class="bi bi-pin-map font-size-esm"></i>
+            <%= weather.location.city %>
+        </span>
+    </span>
+</div>

@@ -1,0 +1,131 @@
+<% const updatedAt = new Date(devices.updatedAt); %>
+
+<div class="d-flex justify-content-between align-items-center mx-3 m-2">
+    <span class="d-flex align-items-center h4 mb-0 font-no-monospace fw-lighter">
+        Devices
+        <div class="ms-2 spinner-grow text-success spinner-grow-sm font-size-essm update-spinner d-none"
+             data-page="devices"
+             role="status"
+        ></div>
+    </span>
+    <span class="font-size-sm">
+        <% if (devices.serviceEnabled && devices.enabled) { %>
+            <span id="showDeviceVisibility" class="badge btn-blue-dark toggle-visibility cursor-pointer"
+                  data-toggle="show"
+                  data-toggle-inverse="#hideDeviceVisibility"
+            >
+                <i class="bi bi-eye-fill" ></i>
+                Visibility
+            </span>
+            <span id="hideDeviceVisibility"
+                  class="badge btn-blue-dark toggle-visibility cursor-pointer d-none"
+                  data-toggle="hide"
+                  data-toggle-inverse="#showDeviceVisibility"
+            >
+                <i class="bi bi-eye-slash-fill" ></i>
+                Visibility
+            </span>
+        <% } %>
+
+        <span class="badge p-0 bg-blue-dark rounded pe-2 cursor-pointer">
+            <div class="d-flex align-items-center">
+                <select class="p-0 form-control bg-blue-dark border-0 font-size-75r text-white ps-2 pe-1"
+                        name="service-status"
+                        service-type="DevicesService"
+                >
+                    <option value="1" <%= devices.serviceEnabled ? "selected" : "" %>>
+                        <%= devices.serviceEnabled ? "Enabled" : "Enable" %>
+                    </option>
+                    <option value="0" <%= !devices.serviceEnabled ? "selected" : "" %>>
+                        <%= !devices.serviceEnabled ? "Disabled" : "Disable" %>
+                    </option>
+                </select>
+                <i class="bi bi-caret-down"></i>
+            </div>
+        </span>
+
+        <span class="badge bg-blue-dark">
+            <i class="bi bi-clock-history"></i>
+            <span id="devicesRefreshedAt"
+                  class="refresh-badge"
+                  data-date="<%= devices.updatedAt %>"
+            >
+                <%= ('0'+updatedAt.getHours()).slice(-2) + ":" + ('0'+updatedAt.getMinutes()).slice(-2); %>
+            </span>
+        </span>
+    </span>
+</div>
+
+<% if (!devices.serviceEnabled) { %>
+    <div class="col flex-grow-1">
+        <div class="card p-0 rounded-10 bg-blue-dark py-3">
+            <div class="d-flex align-items-center justify-content-center">
+                <span class="text-center font-size-ssm">
+                    <span class="h5 fw-bold d-block">DEVICES SERVICE NOT ENABLED</span>
+                    <span class="d-block">Enable the service at the top right of the page.</span>
+                </span>
+            </div>
+        </div>
+    </div>
+<% } %>
+
+<% if (devices.serviceEnabled && !devices.enabled) { %>
+    <div class="col flex-grow-1">
+        <div class="card p-0 rounded-10 bg-blue-dark py-3">
+            <div class="d-flex align-items-center justify-content-center">
+                <span class="text-center font-size-ssm">
+                    <span class="h5 fw-bold d-block">
+                        <i class="bi bi-exclamation-triangle text-danger"></i>
+                        DEVICES NOT ENABLED
+                    </span>
+                    <span class="d-block"><%= devices.error %></span>
+                    <span class="d-block">Go to <a href="/settings">settings</a> to check or edit your keys.</span>
+                    <span class="d-block mt-2">Click <a href="" id="reinitializeDevices">here</a> to reinitialize the Devices Service</span>
+                </span>
+            </div>
+        </div>
+    </div>
+<% } %>
+
+<% if (devices.serviceEnabled && devices.enabled) { %>
+    <div class="mt-1 p-2">
+        <div class="fs-6 font-no-monospace mb-2 ms-2 fw-lighter">
+            Scenes
+        </div>
+
+        <div class="row g-1 row-cols-2 row-cols-md-3 row-cols-lg-4" id="deviceSceneList">
+            <%- include ('../widgets/devices_scene'); %>
+        </div>
+    </div>
+
+    <div class="mt-1 p-2">
+        <div class="fs-6 font-no-monospace mb-2 ms-2 fw-lighter">
+            Switches
+        </div>
+
+        <div class="row g-1 row-cols-2 row-cols-md-3 row-cols-lg-4" id="deviceSwitchList">
+            <%- include ('../widgets/devices_switch'); %>
+        </div>
+    </div>
+
+    <div class="mt-1 p-2">
+        <div class="fs-6 font-no-monospace mb-2 ms-2 fw-lighter">
+            Dimmers
+        </div>
+
+        <div class="row g-1 row-cols-xxl-6 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1" id="deviceDimmerList">
+            <%- include ('../widgets/devices_dimmer'); %>
+        </div>
+    </div>
+
+
+    <div class="mt-1 p-2">
+        <div class="fs-6 font-no-monospace mb-2 ms-2 fw-lighter">
+            Color
+        </div>
+
+        <div class="row g-1 row-cols-xxl-6 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1" id="deviceColorList">
+            <%- include ('../widgets/devices_color'); %>
+        </div>
+    </div>
+<% } %>

@@ -1,0 +1,57 @@
+<div class='row g-2'>
+    <% if (weather.serviceEnabled && weather.weather.enabled) { %>
+        <div class="col-12">
+            <%- include ('../widgets/weather_time_home'); %>
+        </div>
+    <% } %>
+
+    <div class="col-12 col-lg-5 col-xxl-4">
+        <% if (!(weather.serviceEnabled && weather.weather.enabled)) { %>
+            <div class="row row-cols-1 g-1">
+                <div class="col">
+                    <%- include ('../widgets/weather_time_home'); %>
+                </div>
+            </div>
+        <% } %>
+        <% if (events.serviceEnabled) { %>
+            <div class="row row-cols-1 g-1">
+                <div class="col" id="calendarEventsWrapper">
+                    <%- include ('../widgets/calendar_events_home'); %>
+                </div>
+            </div>
+        <% } %>
+
+        <% if (spotify.serviceEnabled) { %>
+            <div class="row row-cols-1 g-1">
+                <div class="col">
+                    <%- include ('../widgets/spotify_home'); %>
+                </div>
+            </div>
+        <% } %>
+
+        <% if (tasks.serviceEnabled) { %>
+            <div class="row row-cols-1 g-1">
+                <div class="col" id="tasksWrapper">
+                    <%- include ('../widgets/tasks_home'); %>
+                </div>
+            </div>
+        <% } %>
+    </div>
+
+    <div class="col-12 col-lg-7 col-xxl-8">
+        <div class="row g-1 row-cols-1">
+            <% if (map.serviceEnabled || train.serviceEnabled) { %>
+                <div class="col">
+                    <%- include ('../widgets/travel_home'); %>
+                </div>
+            <% } %>
+
+            <% if (devices.serviceEnabled) { %>
+                <div class="col">
+                    <%- include ('../widgets/devices_home'); %>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</div>
+

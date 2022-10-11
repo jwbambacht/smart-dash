@@ -1,0 +1,41 @@
+<div class="accordion-item bg-blue-dark border-body">
+    <h2 class="accordion-header">
+        <button class="accordion-button collapsed bg-blue-dark text-success px-3 py-2"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseAddressAdd"
+                data-bs-parent="#addressAccordion"
+        >
+            <i class="bi bi-plus-circle me-2"></i> Add
+        </button>
+    </h2>
+    <div class="accordion-collapse collapse" id="collapseAddressAdd" data-bs-parent="#addressAccordion">
+        <div class="accordion-body">
+            <form class="font-size-ssm" id="addAddressForm">
+                <div class="d-block mb-2">
+                    <label>Description*</label>
+                    <input type="text" class="form-control form-control-sm" name="description" value="" required>
+                </div>
+
+                <div class="d-block mb-2">
+                    <label>Short Name*</label>
+                    <input type="text" class="form-control form-control-sm" name="name" value="" required>
+                </div>
+
+                <div class="d-block mb-2">
+                    <label>Address*</label>
+                    <input type="text" class="form-control form-control-sm" name="address" value="" required>
+                </div>
+
+                <div class="d-block mb-2 error-message text-danger font-size-ssm fst-italic"></div>
+
+                <div class="text-end">
+                    <button class="btn btn-sm btn-dark" type="submit">
+                        <span class="load">Add</span>
+                        <div class="loading spinner-border spinner-border-sm text-white d-none" role="status"></div>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

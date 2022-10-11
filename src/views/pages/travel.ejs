@@ -1,0 +1,233 @@
+<% const mapUpdatedAt = new Date(map.updatedAt); %>
+<% const trainUpdatedAt = new Date(train.updatedAt); %>
+<% const enabledColor = "btn-blue"; %>
+<% const disabledColor = "btn-blue-dark"; %>
+
+<div class="d-flex justify-content-between align-items-center mx-3 m-2">
+    <span class="d-flex align-items-center h4 mb-0 font-no-monospace fw-lighter">
+        Travel
+        <div class="ms-2 spinner-grow text-success spinner-grow-sm font-size-essm update-spinner d-none"
+             data-page="travel"
+             role="status"
+        ></div>
+    </span>
+    <span class="font-size-sm">
+        <span class="badge <%= enabledColor %> cursor-pointer travel-type-toggle"
+              id="travelNSTypeToggle"
+              data-target=".travel-items[data-type='train_route']"
+              data-no-target=".travel-items[data-type='map_route']"
+              enabled-color="<%= enabledColor %>"
+              disabled-color="<%= disabledColor %>"
+        >
+            Train <i class="bi bi-train-front"></i>
+        </span>
+
+        <span class="badge <%= disabledColor %> cursor-pointer travel-type-toggle"
+              id="travelMapTypeToggle"
+              data-target=".travel-items[data-type='map_route']"
+              data-no-target=".travel-items[data-type='train_route']"
+              enabled-color="<%= enabledColor %>"
+              disabled-color="<%= disabledColor %>"
+        >
+            Car <i class="bi bi-car-front"></i>
+        </span>
+
+        <span class="badge p-0 bg-blue-dark rounded pe-2 cursor-pointer travel-items" data-type="train_route">
+            <div class="d-flex align-items-center">
+                <select class="p-0 form-control bg-blue-dark border-0 font-size-75r text-white ps-2 pe-1"
+                        name="service-status"
+                        service-type="NSService"
+                >
+                    <option value="1" <%= train.serviceEnabled ? "selected" : "" %>>
+                        <%= train.serviceEnabled ? "Enabled" : "Enable" %>
+                    </option>
+                    <option value="0" <%= !train.serviceEnabled ? "selected" : "" %>>
+                        <%= !train.serviceEnabled ? "Disabled" : "Disable" %>
+                    </option>
+                </select>
+                <i class="bi bi-caret-down"></i>
+            </div>
+        </span>
+
+        <span class="badge p-0 bg-blue-dark rounded pe-2 cursor-pointer travel-items d-none" data-type="map_route">
+            <div class="d-flex align-items-center">
+                <select class="p-0 form-control bg-blue-dark border-0 font-size-75r text-white ps-2 pe-1"
+                        name="service-status"
+                        service-type="MapService"
+                >
+                    <option value="1" <%= map.serviceEnabled ? "selected" : "" %>>
+                        <%= map.serviceEnabled ? "Enabled" : "Enable" %>
+                    </option>
+                    <option value="0" <%= !map.serviceEnabled ? "selected" : "" %>>
+                        <%= !map.serviceEnabled ? "Disabled" : "Disable" %>
+                    </option>
+                </select>
+                <i class="bi bi-caret-down"></i>
+            </div>
+        </span>
+
+        <span class="badge <%= disabledColor %> travel-items" data-type="train_route">
+            <i class="bi bi-clock-history"></i>
+            <span id="travelTrainRefreshedAt"
+                  class="refresh-badge"
+                  data-date="<%= train.updatedAt %>"
+            >
+                <%= ('0'+trainUpdatedAt.getHours()).slice(-2) + ":" + ('0'+trainUpdatedAt.getMinutes()).slice(-2); %>
+            </span>
+        </span>
+
+        <span class="badge <%= disabledColor %> travel-items d-none" data-type="map_route">
+            <i class="bi bi-clock-history"></i>
+            <span id="travelMapRefreshedAt"
+                  class="refresh-badge"
+                  data-date="<%= map.updatedAt %>"
+            >
+                <%= ('0'+mapUpdatedAt.getHours()).slice(-2) + ":" + ('0'+mapUpdatedAt.getMinutes()).slice(-2); %>
+            </span>
+        </span>
+    </span>
+</div>
+
+<div class="row g-1">
+    <% if (!map.serviceEnabled && !train.serviceEnabled) { %>
+        <div class="col flex-grow-1">
+            <div class="card p-0 rounded-10 bg-blue-dark py-3">
+                <div class="d-flex align-items-center justify-content-center">
+                <span class="text-center font-size-ssm">
+                    <span class="h5 fw-bold d-block">MAP & TRAIN SERVICE NOT ENABLED</span>
+                    <span class="d-block">Enable the service(s) at the top right of the page.</span>
+                </span>
+                </div>
+            </div>
+        </div>
+    <% } %>
+
+    <% if (map.serviceEnabled || train.serviceEnabled) { %>
+        <div class="col-12 col-lg-4">
+            <div class="card rounded-10 px-2">
+                <div class="accordion accordion-flush" id="mapsAccordion">
+                    <% if (map.serviceEnabled) { %>
+                        <div class="accordion-item bg-blue-dark border-blue-gray">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-blue-dark text-white px-2"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#collapseAddresses"
+                                        data-bs-parent="#mapsAccordion"
+                                        aria-expanded="true"
+                                        aria-controls="collapseAddresses"
+                                >
+                                    <i class="bi bi-car-front me-3"></i> Addresses
+                                </button>
+                            </h2>
+                            <div id="collapseAddresses" class="accordion-collapse collapse" data-bs-parent="#mapsAccordion">
+                                <div class="accordion-body p-0">
+                                    <div class="accordion accordion-flush" id="addressAccordion">
+                                        <div class="border-bottom border-body" id="mapAddressAccordionItems">
+                                            <%- include ('../widgets/travel_mapaddress'); %>
+                                        </div>
+
+                                        <%- include ('../widgets/travel_mapaddress_add'); %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item bg-blue-dark border-blue-gray">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-blue-dark text-white px-2"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#collapseMapRoutes"
+                                        data-bs-parent="#mapsAccordion"
+                                        aria-expanded="false"
+                                        aria-controls="collapseMapRoutes"
+                                >
+                                    <i class="bi bi-car-front me-3"></i> Map Routes
+                                </button>
+                            </h2>
+                            <div id="collapseMapRoutes" class="accordion-collapse collapse" data-bs-parent="#mapsAccordion">
+                                <div class="accordion-body p-0">
+                                    <div class="accordion accordion-flush" id="mapRouteAccordion">
+                                        <div class="border-bottom border-body" id="mapRouteAccordionItems">
+                                            <%- include ('../widgets/travel_maproute'); %>
+                                        </div>
+
+                                        <%- include ('../widgets/travel_maproute_add', {mapAddresses: mapAddresses}); %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+
+                    <% if (train.serviceEnabled) { %>
+                        <div class="accordion-item bg-blue-dark border-blue-gray">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-blue-dark text-white px-2"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#collapseTrainStations"
+                                        data-bs-parent="#mapsAccordion"
+                                        aria-expanded="true"
+                                        aria-controls="collapseTrainStations"
+                                >
+                                    <i class="bi bi-train-front me-3"></i> Train Stations
+                                </button>
+                            </h2>
+                            <div id="collapseTrainStations" class="accordion-collapse collapse" data-bs-parent="#mapsAccordion">
+                                <div class="py-1" id="trainStationAccordion">
+                                    <div id="trainStationAccordionItems">
+                                        <%- include ('../widgets/travel_trainstation'); %>
+                                    </div>
+
+                                    <%- include ('../widgets/travel_trainstation_add', {trainStations: train.stations}); %>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item bg-blue-dark border-blue-gray">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-blue-dark text-white px-2"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#collapseTrainRoutes"
+                                        data-bs-parent="#mapsAccordion"
+                                        aria-expanded="false"
+                                        aria-controls="collapseTrainRoutes"
+                                >
+                                    <i class="bi bi-train-front me-3"></i> Train Routes
+                                </button>
+                            </h2>
+                            <div id="collapseTrainRoutes" class="accordion-collapse collapse" data-bs-parent="#mapsAccordion">
+                                <div class="accordion-body p-0">
+                                    <div class="accordion accordion-flush" id="trainRouteAccordion">
+                                        <div class="border-bottom border-body" id="trainRouteAccordionItems">
+                                            <%- include ('../widgets/travel_trainroute'); %>
+                                            <%#- include ('../widgets/travel_trainroute', {trainRoute: trainRoute, trainStations: trainStations}); %>
+                                        </div>
+
+                                        <%- include ('../widgets/travel_trainroute_add', {trainStations: trainStations}); %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-8">
+            <div id="travelMapWrapper"
+                 class="d-none travel-items row g-1 row-cols-1"
+                 data-type="map_route"
+            >
+                <%- include ('../widgets/travel_items_map'); %>
+            </div>
+
+            <div id="travelNSWrapper"
+                 class="travel-items row g-1 row-cols-1" google-api-key="<%= map.apiKey %>"
+                 data-type="train_route"
+            >
+                <%- include ('../widgets/travel_items_ns'); %>
+            </div>
+        </div>
+    <% } %>
+</div>
