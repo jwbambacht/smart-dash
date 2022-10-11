@@ -1,0 +1,12 @@
+version: "3.5"
+
+services:
+  db:
+    image: "postgres:latest"
+    restart: "always"
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: "admin"
+      POSTGRES_USER: "root"
+      POSTGRES_DB: "nodets_dash_dev"

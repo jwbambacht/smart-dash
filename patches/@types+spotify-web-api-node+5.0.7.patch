@@ -1,0 +1,19 @@
+diff --git a/node_modules/@types/spotify-web-api-node/index.d.ts b/node_modules/@types/spotify-web-api-node/index.d.ts
+index f86b5cb..44b6652 100755
+--- a/node_modules/@types/spotify-web-api-node/index.d.ts
++++ b/node_modules/@types/spotify-web-api-node/index.d.ts
+@@ -1124,7 +1124,7 @@ interface GetArtistAlbumsOptions extends PaginationCountryOptions {
+ 
+ interface GetPlaylistTracksOptions extends PaginationMarketOptions, FieldsOptions { }
+ 
+-type SearchType = 'album' | 'artist' | 'playlist' | 'track' | 'show' | 'episode';
++export type SearchType = 'album' | 'artist' | 'playlist' | 'track' | 'show' | 'episode';
+ 
+ interface SearchOptions extends PaginationMarketOptions {
+     include_external?: 'audio' | undefined;
+@@ -1238,4 +1238,4 @@ interface RefreshAccessTokenResponse {
+     token_type: string;
+ }
+ 
+-export = SpotifyWebApi;
++export default SpotifyWebApi;
