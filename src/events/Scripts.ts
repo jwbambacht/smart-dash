@@ -1140,43 +1140,6 @@ function followListeners(): void {
     });
 }
 
-function doUpdatePlayer(data: object): void {
-    updateSpinner("spotify");
-
-    const page = document.querySelector("body").getAttribute("data-page");
-    const spotifyTarget = document.querySelector("#spotifyPlayerWrapper");
-    const spotifyDeviceTarget = document.querySelector("#spotifyDeviceWrapper");
-
-    if (!spotifyTarget) {
-        stopSpinner("spotify");
-        return;
-    }
-
-    fetch("/views/widgets/spotify_player.ejs").then(function (resp) {
-        return resp.clone().text();
-    }).then(function (template) {
-
-        spotifyTarget.innerHTML = ejs.render(template, {page: page, spotify: data});
-
-        playListeners();
-        followListeners();
-    });
-
-    if (!spotifyDeviceTarget) {
-        stopSpinner("spotify");
-        return;
-    }
-
-    fetch("/views/widgets/spotify_device.ejs").then(function (resp) {
-       return resp.clone().text();
-    }).then(function (template) {
-
-        spotifyDeviceTarget.innerHTML = ejs.render(template, {page: page, spotify: data});
-
-        stopSpinner("spotify");
-    });
-}
-
 function deviceListeners(): void {
     const spotifyDeviceSelect = document.querySelector("select[name='select-device']") as HTMLSelectElement;
     if (spotifyDeviceSelect) {
@@ -1211,6 +1174,44 @@ function deviceListeners(): void {
                 });
             });
         });
+    });
+}
+
+function doUpdatePlayer(data: object): void {
+    updateSpinner("spotify");
+
+    const page = document.querySelector("body").getAttribute("data-page");
+    const spotifyTarget = document.querySelector("#spotifyPlayerWrapper");
+    const spotifyDeviceTarget = document.querySelector("#spotifyDeviceWrapper");
+
+    if (!spotifyTarget) {
+        stopSpinner("spotify");
+        return;
+    }
+
+    fetch("/views/widgets/spotify_player.ejs").then(function (resp) {
+        return resp.clone().text();
+    }).then(function (template) {
+
+        spotifyTarget.innerHTML = ejs.render(template, {page: page, spotify: data});
+
+        playListeners();
+        followListeners();
+    });
+
+    if (!spotifyDeviceTarget) {
+        stopSpinner("spotify");
+        return;
+    }
+
+    fetch("/views/widgets/spotify_device.ejs").then(function (resp) {
+       return resp.clone().text();
+    }).then(function (template) {
+
+        spotifyDeviceTarget.innerHTML = ejs.render(template, {page: page, spotify: data});
+
+        deviceListeners();
+        stopSpinner("spotify");
     });
 }
 
