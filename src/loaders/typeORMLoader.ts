@@ -67,7 +67,7 @@ const defaultSettings = [
 export async function seedDB(logger?: LoggerService): Promise<void> {
     try {
         if (logger) logger.info("Seeding database...");
-        const settingService = await Container.get(SettingService);
+        const settingService = Container.get(SettingService);
 
         for (const dSetting of defaultSettings) {
             if (!await settingService.findByTypeSpec(dSetting.type, dSetting.specification)) {
@@ -96,7 +96,7 @@ export async function setupTypeORM(): Promise<void> {
         database: process.env.TYPEORM_DATABASE,
         synchronize: process.env.TYPEORM_SYNCHRONIZE,
         logging: process.env.TYPEORM_LOGGING,
-        entities: [__dirname + "/models/*.js"],
+        entities: [__dirname + "/../models/*.js"],
     });
 
     if (!await createConnection(connectionOptions)) throw new Error('Failed to create database connection');
