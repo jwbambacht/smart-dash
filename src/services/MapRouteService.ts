@@ -1,9 +1,8 @@
 import { Container } from "typedi";
-import { Service } from 'typedi';
-import { FindOneOptions } from "typeorm";
-import { OrmRepository } from 'typeorm-typedi-extensions';
+import { FindOneOptions, Repository } from 'typeorm';
+import { InjectRepository } from 'typeorm-typedi-extensions';
+
 import { LoggerService } from './LoggerService';
-import { MapRouteRepository } from "../repositories/MapRouteRepository";
 import { MapRoute } from "../models/MapRoute";
 import { Address } from "../models/Address";
 
@@ -11,49 +10,50 @@ import { Address } from "../models/Address";
 export class MapRouteService {
     log = Container.get(LoggerService);
 
-    constructor(@OrmRepository() private mapRouteRepository: MapRouteRepository) {}
+    @InjectRepository(MapRoute)
+    private repository: Repository<MapRoute>;
 
     public async create(mapRoute: MapRoute): Promise<MapRoute> {
         this.log.info('Create a maproute');
-        return this.mapRouteRepository.save(mapRoute);
+        return this.repository.save(mapRoute);
     }
 
     public async update(mapRoute: MapRoute): Promise<MapRoute> {
         this.log.info('Update a maproute');
-        return this.mapRouteRepository.save(mapRoute);
+        return this.repository.save(mapRoute);
     }
 
     public async delete(id: string): Promise<void> {
         this.log.info('Delete a maproute');
-        await this.mapRouteRepository.delete(id);
+        await this.repository.delete(id);
         return;
     }
 
     public findAll(): Promise<MapRoute[] | undefined> {
-        return this.mapRouteRepository.find();
+        return this.repository.find();
     }
 
     public findByID(id: string, options?: FindOneOptions): Promise<MapRoute | undefined> {
-        return this.mapRouteRepository.findOne({
+        return this.repository.findOne({
             id
         }, options);
     }
 
     public findByOriginAndDestination(origin: Address, destination: Address, options?: FindOneOptions): Promise<MapRoute | undefined> {
-        return this.mapRouteRepository.findOne({
+        return this.repository.findOne({
             origin,
             destination
         }, options);
     }
 
     public findByOrigin(origin: Address, options?: FindOneOptions): Promise<MapRoute | undefined> {
-        return this.mapRouteRepository.findOne({
+        return this.repository.findOne({
             origin
         }, options);
     }
 
     public findByDestination(destination: Address, options?: FindOneOptions): Promise<MapRoute | undefined> {
-        return this.mapRouteRepository.findOne({
+        return this.repository.findOne({
             destination
         }, options);
     }

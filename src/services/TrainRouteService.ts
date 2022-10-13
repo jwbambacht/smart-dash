@@ -1,9 +1,8 @@
 import { Container } from "typedi";
-import { Service } from 'typedi';
-import { FindOneOptions } from "typeorm";
-import { OrmRepository } from 'typeorm-typedi-extensions';
+import { FindOneOptions, Repository } from 'typeorm';
+import { InjectRepository } from 'typeorm-typedi-extensions';
+
 import { LoggerService } from "../services/LoggerService";
-import { TrainRouteRepository } from "../repositories/TrainRouteRepository";
 import { TrainRoute } from "../models/TrainRoute";
 import { TrainStation } from "../models/TrainStation";
 
@@ -11,55 +10,56 @@ import { TrainStation } from "../models/TrainStation";
 export class TrainRouteService {
     log = Container.get(LoggerService);
 
-    constructor(@OrmRepository() private trainRouteRepository: TrainRouteRepository) {}
+    @InjectRepository(TrainRoute)
+    private repository: Repository<TrainRoute>;
 
     public async create(mapRoute: TrainRoute): Promise<TrainRoute> {
         this.log.info('Create a train route');
-        return this.trainRouteRepository.save(mapRoute);
+        return this.repository.save(mapRoute);
     }
 
     public async update(mapRoute: TrainRoute): Promise<TrainRoute> {
         this.log.info('Update a train route');
-        return this.trainRouteRepository.save(mapRoute);
+        return this.repository.save(mapRoute);
     }
 
     public async delete(id: string): Promise<void> {
         this.log.info('Delete a train route');
-        await this.trainRouteRepository.delete(id);
+        await this.repository.delete(id);
         return;
     }
 
     public findAll(): Promise<TrainRoute[] | undefined> {
-        return this.trainRouteRepository.find();
+        return this.repository.find();
     }
 
     public findByID(id: string, options?: FindOneOptions): Promise<TrainRoute | undefined> {
-        return this.trainRouteRepository.findOne({
+        return this.repository.findOne({
             id
         }, options);
     }
 
     public findByName(name: string, options?: FindOneOptions): Promise<TrainRoute | undefined> {
-        return this.trainRouteRepository.findOne({
+        return this.repository.findOne({
             name
         }, options);
     }
 
     public findByOriginAndDestination(origin: TrainStation, destination: TrainStation, options?: FindOneOptions): Promise<TrainRoute | undefined> {
-        return this.trainRouteRepository.findOne({
+        return this.repository.findOne({
             origin,
             destination
         }, options);
     }
 
     public findByOrigin(origin: TrainStation, options?: FindOneOptions): Promise<TrainRoute | undefined> {
-        return this.trainRouteRepository.findOne({
+        return this.repository.findOne({
             origin
         }, options);
     }
 
     public findByDestination(destination: TrainStation, options?: FindOneOptions): Promise<TrainRoute | undefined> {
-        return this.trainRouteRepository.findOne({
+        return this.repository.findOne({
             destination
         }, options);
     }

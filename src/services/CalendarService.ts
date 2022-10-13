@@ -1,12 +1,12 @@
 import { Service } from "typedi";
-import { OrmRepository } from "typeorm-typedi-extensions";
+import { InjectRepository } from 'typeorm-typedi-extensions';
 import * as lodash from 'lodash';
 import moment from "moment";
 import * as ical from 'node-ical';
 import { BaseService } from './BaseService';
-import { CalendarRepository } from "../repositories/CalendarRepository";
 import { Calendar } from "../models/Calendar";
 import { Event } from "../types/CalendarTypes";
+import { Repository } from 'typeorm';
 
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 const daysAbbrev = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -24,8 +24,17 @@ export class CalendarService extends BaseService {
     updatedAt: number;
     calendarUpdateInterval = 10 * 60 * 1000;
 
-    constructor(@OrmRepository() private calendarRepository: CalendarRepository) {
+    @InjectRepository(Calendar)
+    private repository: Repository<Calendar>;
+
+    constructor() {
         super("CalendarService");
+
+        this.startService();
+    }
+
+    async startService(): Promise<void> {
+        await this.repository;
 
         this.fetchCalendarEvents().then(() => {
             setInterval(async () => {
@@ -49,11 +58,11 @@ export class CalendarService extends BaseService {
     }
 
     async getCalendars(): Promise<Calendar[] | undefined> {
-        return this.calendarRepository.find();
+        return this.repository.find();
     }
 
     async getCalendar(id: string): Promise<object> {
-        return this.calendarRepository.findOne({id});
+        return this.repository.findOne({id});
     }
 
     async addCalendar(body: {url: string; customName: string; color: string}): Promise<string> {
@@ -63,7 +72,7 @@ export class CalendarService extends BaseService {
         calendar.color = body.color;
         calendar.updatedAt = new Date().getTime();
 
-        if (await this.calendarRepository.save(calendar) !== undefined) {
+        if (await this.repository.save(calendar) !== undefined) {
             await this.fetchCalendarEvents();
             return "OK";
         }
@@ -73,7 +82,7 @@ export class CalendarService extends BaseService {
 
     async setCalendar(body: {url: string; customName: string; color: string}, id: string): Promise<string> {
 
-        const calendar = await this.calendarRepository.findOne(id);
+        const calendar = await this.repository.findOne(id);
 
         if (calendar === undefined) return;
 
@@ -82,7 +91,7 @@ export class CalendarService extends BaseService {
         calendar.color = body.color;
         calendar.updatedAt = new Date().getTime();
 
-        if (await this.calendarRepository.save(calendar) !== undefined) {
+        if (await this.repository.save(calendar) !== undefined) {
             await this.fetchCalendarEvents();
             return "OK";
         }
@@ -91,11 +100,11 @@ export class CalendarService extends BaseService {
     }
 
     async deleteCalendar(id: string): Promise<string> {
-        const calendar = await this.calendarRepository.findOne(id);
+        const calendar = await this.repository.findOne(id);
 
         if (calendar === undefined) return;
 
-        if (await this.calendarRepository.delete(calendar)) {
+        if (await this.repository.delete(calendar)) {
             await this.fetchCalendarEvents();
             return "OK";
         }
@@ -107,7 +116,7 @@ export class CalendarService extends BaseService {
         const calendar = (await this.getCalendars()).find((cal) => cal.id === id);
         calendar.enabled = enable;
 
-        if (await this.calendarRepository.save(calendar) !== null) {
+        if (await this.repository.save(calendar) !== null) {
             await this.fetchCalendarEvents();
 
             return "OK";
@@ -193,14 +202,14 @@ export class CalendarService extends BaseService {
         fetch(calendar.url).then(async (req) => {
             if (req.status === 200) {
                 calendar.error = false;
-                await this.calendarRepository.save(calendar);
+                await this.repository.save(calendar);
 
                 return await this.parseCalendarData(calendar, await req.text());
             }
         })
         .catch(async () => {
             calendar.error = true;
-            await this.calendarRepository.save(calendar);
+            await this.repository.save(calendar);
         });
     }
 
@@ -217,7 +226,7 @@ export class CalendarService extends BaseService {
 
                 if (event.type === "VCALENDAR") {
                     calendar.defaultName = event['WR-CALNAME'];
-                    this.calendarRepository.save(calendar);
+                    this.repository.save(calendar);
                     continue;
                 }
 
@@ -281,7 +290,7 @@ export class CalendarService extends BaseService {
             this.log.info("CalendarService", "No calendar data found: " + err);
 
             calendar.enabled = false;
-            await this.calendarRepository.save(calendar);
+            await this.repository.save(calendar);
             throw new Error("No calendar data found for " + calendar.url);
         });
     }

@@ -1,15 +1,18 @@
 import { Service } from "typedi";
+import { Repository } from 'typeorm';
+import { InjectRepository } from 'typeorm-typedi-extensions';
 import { BaseService } from './BaseService';
-import { OrmRepository } from "typeorm-typedi-extensions";
 import { Task } from "../models/Task";
-import { TaskRepository } from "../repositories/TaskRepository";
 
 @Service()
 export class TaskService extends BaseService {
     taskUpdateInterval = 60 * 1000;
     tasksUpdateActivated = false;
 
-    constructor(@OrmRepository() private taskRepository: TaskRepository) {
+    @InjectRepository(Task)
+    private repository: Repository<Task>;
+
+    constructor() {
         super("TaskService");
 
         setInterval(async () => {
@@ -40,12 +43,12 @@ export class TaskService extends BaseService {
         const isEnabled = await this.isServiceEnabled();
         return {
             serviceEnabled: isEnabled,
-            items: isEnabled ? await this.taskRepository.find() : []
+            items: isEnabled ? await this.repository.find() : []
         };
     }
 
     async getTask(id: string): Promise<Task> {
-        return await this.taskRepository.findOne(id);
+        return await this.repository.findOne(id);
     }
 
     async addTask(body: {task: string; flagged: boolean}): Promise<string> {
@@ -53,7 +56,7 @@ export class TaskService extends BaseService {
         task.task = body.task;
         task.flagged = body.flagged;
 
-        if (await this.taskRepository.save(task)) {
+        if (await this.repository.save(task)) {
             this.emit<object>("tasks update", await this.getTasks());
 
             return "OK";
@@ -69,7 +72,7 @@ export class TaskService extends BaseService {
 
         task.task = description;
 
-        if (await this.taskRepository.save(task)) {
+        if (await this.repository.save(task)) {
             this.emit<object>("tasks update", await this.getTasks());
 
             return "OK";
@@ -83,7 +86,7 @@ export class TaskService extends BaseService {
 
         if (task === undefined) return;
 
-        if (await this.taskRepository.delete(task)) {
+        if (await this.repository.delete(task)) {
             this.emit<object>("tasks update", await this.getTasks());
 
             return "OK";
@@ -100,7 +103,7 @@ export class TaskService extends BaseService {
         task.completed = completed;
         task.completedAt = completed ? new Date().getTime() : null;
 
-        if (await this.taskRepository.save(task)) {
+        if (await this.repository.save(task)) {
             this.emit<object>("tasks update", await this.getTasks());
 
             return "OK";
@@ -116,7 +119,7 @@ export class TaskService extends BaseService {
 
         task.flagged = flagged;
 
-        if (await this.taskRepository.save(task)) {
+        if (await this.repository.save(task)) {
             this.emit<object>("tasks update", await this.getTasks());
 
             return "OK";
