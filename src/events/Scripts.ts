@@ -96,7 +96,7 @@ function doGetEventsHome(): void {
     const page = document.querySelector("body").getAttribute("data-page");
     const target = document.querySelector("#calendarEventsWrapper");
 
-    fetch("/api/widgets/calendar/preview/events").then(function (req) {
+    fetch("/api/calendar/preview/events").then(function (req) {
         if (req.status === 200) {
             req.clone().json().then(function (obj) {
                 fetch("/views/widgets/calendar_events_home.ejs").then(function (resp) {
@@ -123,7 +123,7 @@ function doUpdateCalendarEvents(): void {
     const year = target.getAttribute("data-year");
     const week = target.getAttribute("data-week");
 
-    fetch("/api/widgets/calendar/events/" + year + "/" + week).then(function (req) {
+    fetch("/api/calendar/events/" + year + "/" + week).then(function (req) {
         if (req.status === 200) {
             req.clone().json().then(function (obj) {
                 fetch("/views/widgets/calendar_events.ejs").then(function (resp) {
@@ -152,7 +152,7 @@ function doDeleteCalendarAction(): void {
 
     if (calendarID === undefined) return;
 
-    fetch("/api/widgets/calendar/delete/" + calendarID, {
+    fetch("/api/calendar/delete/" + calendarID, {
         method: "DELETE"
     }).then(function (req) {
         if (req.status !== 200) {
@@ -181,7 +181,7 @@ function doAddUpdateCalendarAction(event: Event, element: HTMLFormElement): void
 
     const id = (element.querySelector("[name='id']") as HTMLInputElement).value;
     const add = id === "";
-    const endpoint = "/api/widgets/calendar/" + (add ? "add" : "update/" + id);
+    const endpoint = "/api/calendar/" + (add ? "add" : "update/" + id);
 
     fetch(endpoint, {
         method: "POST",
@@ -230,7 +230,7 @@ function getUpdateCalendarWindow(element: Element): void {
 
     const calendarID = element.getAttribute("data-id");
 
-    fetch("/api/widgets/calendar/find/" + calendarID).then(function (req) {
+    fetch("/api/calendar/find/" + calendarID).then(function (req) {
         if (req.status === 200) {
             req.clone().json().then(function (obj) {
 
@@ -271,7 +271,7 @@ function doGetNextPreviousEvents(element: Element, next: boolean): void {
 
 function doToggleCalendar(element: Element, id: string, status: boolean): void {
 
-    fetch("/api/widgets/calendar/toggle/" + id + "/" + status, {
+    fetch("/api/calendar/toggle/" + id + "/" + status, {
         method: "POST"
     }).then(function (req) {
         if (req.status === 200) {
@@ -293,7 +293,7 @@ function doGetMonth(element: Element, next: boolean): void {
     const date = new Date(currentYear, currentMonth);
     date.setMonth(next ? date.getMonth() + 1 : date.getMonth() - 1);
 
-    fetch('/api/widgets/calendar/month/' + date.getFullYear() + "/" + date.getMonth()).then(function(req) {
+    fetch('/api/calendar/month/' + date.getFullYear() + "/" + date.getMonth()).then(function(req) {
         if (req.status === 200) {
             req.clone().json().then(function(obj) {
 
@@ -342,7 +342,7 @@ function doExecuteSceneAction(event: Event, sceneID: string): void {
 
     updateSpinner("devices");
 
-    fetch("/api/widgets/devices/scene/" + sceneID).then(function () {
+    fetch("/api/devices/scene/" + sceneID).then(function () {
         stopSpinner("devices");
     });
 }
@@ -352,7 +352,7 @@ function doToggleDeviceAction(event: Event, deviceID: string, state: string): vo
 
     updateSpinner("devices");
 
-    fetch("/api/widgets/devices/" + deviceID + "/" + state).then(function () {
+    fetch("/api/devices/" + deviceID + "/" + state).then(function () {
         stopSpinner("devices");
     });
 }
@@ -362,7 +362,7 @@ function doDimDeviceAction(event: Event, deviceID: string, level: string | numbe
 
     updateSpinner("devices");
 
-    fetch("/api/widgets/devices/" + deviceID + "/dim/" + level).then(function (req) {
+    fetch("/api/devices/" + deviceID + "/dim/" + level).then(function (req) {
         if (req.status === 200) {
             document.querySelector("#toggleButtons-" + deviceID).classList.remove("d-none");
             document.querySelector("#brightness-" + deviceID).classList.add("d-none");
@@ -378,7 +378,7 @@ function doColorDeviceAction(event: Event, deviceID: string, level: string | num
 
     updateSpinner("devices");
 
-    fetch("/api/widgets/devices/" + deviceID + "/color/" + level).then(function (req) {
+    fetch("/api/devices/" + deviceID + "/color/" + level).then(function (req) {
         if (req.status === 200) {
             document.querySelector("#toggleButtons-" + deviceID).classList.remove("d-none");
             document.querySelector("#color-" + deviceID).classList.add("d-none");
@@ -580,7 +580,7 @@ function toggleDeviceVisibilityListeners(): void {
 function doGetDevices(data: any): void {
     updateSpinner("devices");
 
-    fetch("/api/widgets/templates/devices").then(function (req) {
+    fetch("/api/app/templates/devices").then(function (req) {
         if (req.status === 200) {
 
             req.clone().json().then(function (templates) {
@@ -867,7 +867,7 @@ function doGetData(element: Element, next: boolean): void {
     const newYear = date.getFullYear();
     const newMonth = date.getMonth();
 
-    fetch('/api/widgets/devices/energy/historical/' + newYear + '/' + newMonth).then(function (req) {
+    fetch('/api/devices/energy/historical/' + newYear + '/' + newMonth).then(function (req) {
         if (req.status === 200) {
             req.clone().json().then(function(obj) {
                 fetch("/views/widgets/energy_historical.ejs").then(function (resp) {
@@ -995,14 +995,14 @@ function doPlayCollectionAction(element: Element): void {
     const uri = element.getAttribute("collection-uri");
     const offset = element.getAttribute("collection-offset");
 
-    fetch("/api/widgets/spotify/playback/uri/" + uri + "/" + offset, { method: "PUT" });
+    fetch("/api/spotify/playback/uri/" + uri + "/" + offset, { method: "PUT" });
 }
 
 function doPlaybackAction(element: Element): void {
     updateSpinner("spotify");
     const type = element.getAttribute("action-type");
 
-    fetch("/api/widgets/spotify/playback/" + type, { method: "PUT" });
+    fetch("/api/spotify/playback/" + type, { method: "PUT" });
 }
 
 function playListeners(): void {
@@ -1053,7 +1053,7 @@ function volumeListeners(): void {
 
             const increase = element.getAttribute("action-type") === "increase";
 
-            fetch("/api/widgets/spotify/volume/" + increase.toString(), {
+            fetch("/api/spotify/volume/" + increase.toString(), {
                 method: "PUT"
             });
         });
@@ -1143,7 +1143,7 @@ function followListeners(): void {
             const toFollow = element.getAttribute("collection-following");
             const inverseTarget = document.querySelector(element.getAttribute("inverse-target"));
 
-            fetch("/api/widgets/spotify/follow/" + type + "/" + id + "/" + toFollow, { method: "PUT" }).then(function (req) {
+            fetch("/api/spotify/follow/" + type + "/" + id + "/" + toFollow, { method: "PUT" }).then(function (req) {
                 if (req.status === 200) {
                     element.classList.add("d-none");
                     inverseTarget.classList.remove("d-none");
@@ -1160,7 +1160,7 @@ function deviceListeners(): void {
     if (spotifyDeviceSelect) {
         spotifyDeviceSelect.addEventListener("change", function () {
             updateSpinner("spotify");
-            fetch("/api/widgets/spotify/device", {
+            fetch("/api/spotify/device", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
@@ -1181,7 +1181,7 @@ function deviceListeners(): void {
 
             const state = element.getAttribute("state");
 
-            fetch("/api/widgets/spotify/power/" + (state === "on").toString(), { method: "PUT" });
+            fetch("/api/spotify/power/" + (state === "on").toString(), { method: "PUT" });
         });
     });
 }
@@ -1309,12 +1309,12 @@ function doCompleteFlagTaskAction(id: string, toggle: boolean, type: string): vo
         return;
     }
 
-    fetch("/api/widgets/tasks/" + type + "/" + id + "/" + (toggle ? "true" : "false"), { method: "POST" });
+    fetch("/api/tasks/" + type + "/" + id + "/" + (toggle ? "true" : "false"), { method: "POST" });
 }
 
 function doDeleteTask(id: string): void {
 
-    fetch("/api/widgets/tasks/" + id, {
+    fetch("/api/tasks/" + id, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json"
@@ -1372,7 +1372,7 @@ function onTaskDescriptionChangeListeners(): void {
             const id = element.getAttribute("data-id");
 
             if (element.value !== "") {
-                fetch("/api/widgets/tasks/" + id, {
+                fetch("/api/tasks/" + id, {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json"
@@ -1433,7 +1433,7 @@ function doAddTask(event: Event): void {
     const newTaskUnflagElement = document.querySelector("#unflagTaskNew");
 
     if (newTaskDescription.value !== "") {
-        fetch("/api/widgets/tasks", {
+        fetch("/api/tasks", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -1672,7 +1672,7 @@ function doAddAddressAction(event: Event, element: Element): void {
     element.querySelector(".error-message").innerHTML = "";
     toggleActionSpinner(element.querySelector("[type='submit']"));
 
-    fetch("/api/addresses/", {
+    fetch("/api/travel/addresses/", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -1704,7 +1704,7 @@ function doUpdateAddressAction(event: Event, element: Element): void {
     element.querySelector(".error-message").innerHTML = "";
     toggleActionSpinner(element.querySelector("[type='submit']"));
 
-    fetch("/api/addresses/" + id, {
+    fetch("/api/travel/addresses/" + id, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"
@@ -1737,7 +1737,7 @@ function doDeleteAddressAction(event: Event, element: Element): void {
 
     toggleActionSpinner(element);
 
-    fetch("/api/addresses/" + id, {
+    fetch("/api/travel/addresses/" + id, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json"
@@ -1792,7 +1792,7 @@ function doAddMapRouteAction(event: Event, element: Element): void {
     element.querySelector(".error-message").innerHTML = "";
     toggleActionSpinner(element.querySelector("[type='submit']"));
 
-    fetch("/api/maproutes/", {
+    fetch("/api/travel/maproutes/", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -1825,7 +1825,7 @@ function doUpdateMapRouteAction(event: Event, element: Element): void {
     element.querySelector(".error-message").innerHTML = "";
     toggleActionSpinner(element.querySelector("[type='submit']"));
 
-    fetch("/api/maproutes/" + id, {
+    fetch("/api/travel/maproutes/" + id, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"
@@ -1857,7 +1857,7 @@ function doDeleteMapRouteAction(event: Event, element: Element): void {
 
     toggleActionSpinner(element);
 
-    fetch("/api/maproutes/" + id, {
+    fetch("/api/travel/maproutes/" + id, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json"
@@ -1908,7 +1908,7 @@ function doAddTrainStationAction(event: Event, element: Element): void {
     element.querySelector(".error-message").innerHTML = "";
     toggleActionSpinner(element.querySelector("[type='submit']"));
 
-    fetch("/api/trainstations/", {
+    fetch("/api/travel/trainstations/", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -1940,7 +1940,7 @@ function doDeleteTrainStationAction(event: Event, element: Element): void {
 
     toggleActionSpinner(element);
 
-    fetch("/api/trainstations/" + id, {
+    fetch("/api/travel/trainstations/" + id, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json"
@@ -1988,7 +1988,7 @@ function doAddTrainRouteAction(event: Event, element: Element): void {
     element.querySelector(".error-message").innerHTML = "";
     toggleActionSpinner(element.querySelector("[type='submit']"));
 
-    fetch("/api/trainroutes/", {
+    fetch("/api/travel/trainroutes/", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -2021,7 +2021,7 @@ function doUpdateTrainRouteAction(event: Event, element: Element): void {
     element.querySelector(".error-message").innerHTML = "";
     toggleActionSpinner(element.querySelector("[type='submit']"));
 
-    fetch("/api/trainroutes/" + id, {
+    fetch("/api/travel/trainroutes/" + id, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"
@@ -2053,7 +2053,7 @@ function doDeleteTrainRouteAction(event: Event, element: Element): void {
 
     toggleActionSpinner(element);
 
-    fetch("/api/trainroutes/" + id, {
+    fetch("/api/travel/trainroutes/" + id, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json"
@@ -2188,7 +2188,7 @@ function onPageLoad(): void {
             const serviceType = element.getAttribute("service-type");
             const value = element.value === "1";
 
-            fetch("/api/widgets/service/", {
+            fetch("/api/app/service/", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
@@ -2379,7 +2379,7 @@ function onPageLoad(): void {
         reinitializeDevicesElement.addEventListener("click", function (event) {
             event.preventDefault();
 
-            fetch("/api/widgets/devices/reinit", { method: "POST" }).then(function () {
+            fetch("/api/devices/reinit", { method: "POST" }).then(function () {
                 setTimeout(function () {
                     document.location.reload();
                 }, 1000);
@@ -2439,7 +2439,7 @@ function onPageLoad(): void {
         const restartServerElement = document.querySelector("#restartServer");
         if (restartServerElement) {
             restartServerElement.addEventListener("click", function () {
-                fetch("/api/widgets/restart").then(function () {
+                fetch("/api/app/restart").then(function () {
                     console.log('RESTARTING SERVER, PLEASE WAIT');
                 });
             });
@@ -2497,7 +2497,7 @@ function onPageLoad(): void {
         reinitializeSpotifyElement.addEventListener("click", function (event) {
             event.preventDefault();
 
-            fetch("/api/widgets/spotify/reinit", { method: "POST" });
+            fetch("/api/spotify/reinit", { method: "POST" });
         });
     }
     
