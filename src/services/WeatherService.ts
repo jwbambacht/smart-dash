@@ -160,6 +160,29 @@ export class WeatherService extends BaseService {
     }
 
     async getLocation(): Promise<Location> {
+        try {
+            const locationObj = await this.getSetting("weather", "location");
+            if (!locationObj) {
+                throw new Error("Location not defined in database");
+            }
+            const location: Location = JSON.parse(locationObj.value);
+
+            if (!(isFinite(location.lat) && Math.abs(location.lat) <= 90)) {
+                throw new Error("Latitude is invalid");
+            }
+
+            if (!(isFinite(location.lon) && Math.abs(location.lon) <= 180)) {
+                throw new Error("Longitude is invalid");
+            }
+
+            this.location = location;
+
+            return this.location;
+
+        } catch (err) {
+            this.log.error("WeatherService", `Manual location failed (${err})`);
+        }
+
         return fetch(process.env.WEATHER_LOCATION_URL)
             .then(req => req.json())
             .then(json => {
@@ -167,12 +190,7 @@ export class WeatherService extends BaseService {
                 this.location = {
                     lat: json.lat,
                     lon: json.lon,
-                    city: json.city,
-                    country: json.country,
-                    countryCode: json.countryCode,
-                    region: json.region,
-                    zip: json.zip,
-                    timezone: json.timezone
+                    city: json.city
                 };
 
                 return this.location;

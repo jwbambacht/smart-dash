@@ -2,11 +2,6 @@ export type Location = {
     lat: number;
     lon: number;
     city: string;
-    country: string;
-    countryCode: string;
-    region: string;
-    zip: number;
-    timezone: string;
 }
 
 export type WeatherDay = {
