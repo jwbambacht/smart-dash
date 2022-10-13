@@ -367,6 +367,16 @@ export class UserController {
         return await this.spotifyService.getCategoryPlaylists(id);
     }
 
+    @Put("/spotify/volume/:increase")
+    async setSpotifyVolume(@Param("increase") increase: string): Promise<string> {
+        return await this.spotifyService.setVolume(increase === "true");
+    }
+
+    @Put("/spotify/power/:state")
+    async setSpotifyPower(@Param("state") state: boolean): Promise<string> {
+        return await this.spotifyService.togglePlayback(state);
+    }
+
     @Get("/spotify/search")
     async searchSpotify(
         @QueryParam("query") query: string,

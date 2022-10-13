@@ -28,6 +28,21 @@ const chunk = (arr: string[], size: number): string[][] => Array.from({
     length: Math.ceil(arr.length / size)
 }, (v, i) => arr.slice(i * size, i * size + size));
 
+const scopes = [
+    'user-modify-playback-state',
+    'user-read-playback-state',
+    'user-read-currently-playing',
+    'user-library-modify',
+    'user-library-read',
+    'user-top-read',
+    'user-follow-read',
+    'user-follow-modify',
+    'playlist-read-private',
+    'playlist-modify-public',
+    'playlist-modify-private',
+    'user-read-recently-played'
+];
+
 @Service()
 export class SpotifyService extends BaseService {
     devicesService = Container.get(DevicesService);
@@ -38,7 +53,6 @@ export class SpotifyService extends BaseService {
         clientSecret: ""
     };
     spotifyAccessToken: SpotifyAccessToken;
-    scopes = ["user-modify-playback-state", "user-read-playback-state", "user-read-currently-playing", "user-library-modify", "user-library-read", "user-top-read", "user-follow-read", "user-follow-modify", "playlist-read-private", "playlist-modify-public", "playlist-modify-private", "user-read-recently-played"];
     spotifyAPI: SpotifyApi;
     currentUser: SpotifyUser = null;
     currentPlayer: SpotifyPlayer = null;
@@ -160,7 +174,7 @@ export class SpotifyService extends BaseService {
 
         if (!this.enabled) return "/";
 
-        return this.spotifyAPI.createAuthorizeURL(this.scopes, Math.random().toString(16));
+        return this.spotifyAPI.createAuthorizeURL(scopes, Math.random().toString(16));
     }
 
     async getAccessToken(authorizationCode: string): Promise<string> {
@@ -268,7 +282,7 @@ export class SpotifyService extends BaseService {
                     track: preferredSpeaker && body.item ? await this.getTrack(body.item.id) : null
                 };
 
-                this.emit<object>("spotify update", await this.getState());
+                if (!silent) this.emit<object>("spotify update", await this.getState());
 
                 return this.currentPlayer;
             },
@@ -340,6 +354,29 @@ export class SpotifyService extends BaseService {
             });
     }
 
+    async togglePlayback(on: boolean): Promise<string> {
+        const device = await this.devicesService.getDeviceForSpotify();
+
+        if (!device) return "ERROR";
+
+        return this.devicesService.turnDeviceOnOff(device.deviceID, on)
+            .then(async () => {
+                if (on) {
+                    await this.setPlayback("play");
+                    if (!this.currentPlayer.isPlaying) await this.setPlayback("play");
+                } else {
+                    await this.getPlayer(true);
+                    if (this.currentPlayer.device && this.currentPlayer.isPlaying) {
+                        await this.setPlayback("pause");
+
+                        if (this.currentPlayer.isPlaying) await this.setPlayback("pause");
+                    }
+                }
+
+                return "OK";
+            });
+    }
+
     async setPlaybackWithContext(type: string, uri: string, offset: number): Promise<object> {
         const body: SpotifyContext = {};
 
@@ -396,12 +433,33 @@ export class SpotifyService extends BaseService {
                 throw badRequestError;
             }
 
-            this.currentPlayer = await this.getPlayer();
+            await this.getPlayer();
 
             this.emit<object>("spotify update", await this.getState());
 
             return this.getState();
         });
+    }
+
+    async setVolume(increase: boolean): Promise<string> {
+        await this.getPlayer(true);
+
+        if (!this.currentPlayer ||
+            !this.currentPlayer.device ||
+            this.currentPlayer.device.id === "" ||
+            !this.currentPlayer.device.isActive ||
+            !this.currentPlayer.device.volume
+        ) return "ERROR";
+
+        const currentVolume = this.currentPlayer.device.volume;
+        if (currentVolume === 0 && !increase) return "ERROR";
+        if (currentVolume === 100 && increase) return "ERROR";
+
+        return this.spotifyAPI.setVolume(increase ? currentVolume + 5 : currentVolume - 5)
+            .then(async () => {
+                await this.getPlayer();
+                return "OK";
+            });
     }
 
     async stopPlayback(): Promise<void> {

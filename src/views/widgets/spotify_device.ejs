@@ -1,13 +1,11 @@
 <% if (spotify.serviceEnabled && spotify.enabled && spotify.isAuthorized && spotify.deviceForSpotify !== null) { %>
     <span class="spotify-device-switch rounded badge btn-blue-dark animate text-white cursor-pointer me-1"
           state="on"
-          device-id="<%= spotify.deviceForSpotify ? spotify.deviceForSpotify.deviceID : "" %>"
     >
         <i class="bi bi-speaker"></i> ON
     </span>
     <span class="spotify-device-switch rounded badge btn-blue-dark animate cursor-pointer text-white"
           state="off"
-          device-id="<%= spotify.deviceForSpotify ? spotify.deviceForSpotify.deviceID : "" %>"
     >
         <i class="bi bi-speaker"></i> OFF
     </span>

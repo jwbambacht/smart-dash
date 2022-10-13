@@ -1045,6 +1045,21 @@ function playListeners(): void {
     });
 }
 
+function volumeListeners(): void {
+    const volumeButtons = document.querySelectorAll(".spotify-volume-button");
+    $.each(volumeButtons, function (_, element) {
+        element.addEventListener("click", function (event) {
+            event.stopPropagation();
+
+            const increase = element.getAttribute("action-type") === "increase";
+
+            fetch("/api/widgets/spotify/volume/" + increase.toString(), {
+                method: "PUT"
+            });
+        });
+    });
+}
+
 function collectionListeners(): void {
     const collectionOpenButtons = document.querySelectorAll(".collection-open");
     $.each(collectionOpenButtons, function (_, element) {
@@ -1164,15 +1179,9 @@ function deviceListeners(): void {
         element.addEventListener("click", function () {
             toggleActionSpinner(element);
 
-            const deviceID = element.getAttribute("device-id");
             const state = element.getAttribute("state");
-            const playbackState = state === "on" ? "play" : "pause";
 
-            fetch("/api/widgets/devices/" + deviceID + "/" + state).then(function () {
-                fetch("/api/widgets/spotify/playback/" + playbackState, { method: "PUT" }).then(function () {
-                    toggleActionSpinner(element);
-                });
-            });
+            fetch("/api/widgets/spotify/power/" + (state === "on").toString(), { method: "PUT" });
         });
     });
 }
@@ -1196,6 +1205,7 @@ function doUpdatePlayer(data: object): void {
         spotifyTarget.innerHTML = ejs.render(template, {page: page, spotify: data});
 
         playListeners();
+        volumeListeners();
         followListeners();
     });
 
@@ -2459,6 +2469,7 @@ function onPageLoad(): void {
     if (page === "home" || page === "spotify") {
 
         playListeners();
+        volumeListeners();
         collectionListeners();
         searchListeners();
         categoryListeners();
