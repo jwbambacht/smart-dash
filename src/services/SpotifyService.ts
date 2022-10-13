@@ -2,6 +2,7 @@ import { Container, Service } from "typedi";
 import { BadRequestError } from "routing-controllers";
 import moment from "moment";
 import SpotifyApi, { SearchType } from "spotify-web-api-node";
+import { BaseService } from './BaseService';
 import { DevicesService } from "./DevicesService";
 import { DeviceType } from "../types/DevicesTypes";
 import {
@@ -16,7 +17,6 @@ import {
     SpotifyTrack,
     SpotifyUser
 } from "../types/SpotifyTypes";
-import { BaseService } from './BaseService';
 
 const encodeFormData = (data: { [key: string]: string }): string => {
     return Object.keys(data)
@@ -59,7 +59,7 @@ export class SpotifyService extends BaseService {
             return;
         }
 
-        const clientID = await this.settingService.findByTypeSpec("spotify", "spotify_client_id");
+        const clientID = await this.getSetting("spotify", "spotify_client_id");
         if (clientID) {
             this.spotifyCredentials.clientId = clientID.value;
         } else {
@@ -68,7 +68,7 @@ export class SpotifyService extends BaseService {
             return;
         }
 
-        const clientSecret = await this.settingService.findByTypeSpec("spotify", "spotify_client_secret");
+        const clientSecret = await this.getSetting("spotify", "spotify_client_secret");
         if (clientSecret) {
             this.spotifyCredentials.clientSecret = clientSecret.value;
         } else {
@@ -234,14 +234,13 @@ export class SpotifyService extends BaseService {
     }
 
     async getSpotifySpeakerName(): Promise<string> {
-        return this.settingService.findByTypeSpec('spotify', 'spotify_device_name').then((speaker) => {
-            if (speaker !== undefined) return speaker.value;
-
-            return undefined;
-        });
+        return this.getSetting('spotify', 'spotify_device_name')
+            .then((speaker) => {
+                return speaker.value || undefined;
+            });
     }
 
-    async getPlayer(): Promise<SpotifyPlayer | undefined> {
+    async getPlayer(silent = false): Promise<SpotifyPlayer | undefined> {
         if (!this.isAuthorized()) return undefined;
 
         const speakerName = await this.getSpotifySpeakerName();

@@ -23,10 +23,6 @@ function angleToDirection(angle: number): string {
 
 @Service()
 export class WeatherService extends BaseService {
-    weatherEnabled = true;
-    weatherError = '';
-    rainEnabled = true;
-    rainError = '';
     weatherURL = new URL(process.env.WEATHER_FORECAST_URL);
     rainURL = new URL(process.env.WEATHER_RAIN_URL);
     location: Location = null;
@@ -41,6 +37,10 @@ export class WeatherService extends BaseService {
     forecastUpdateActivated = false;
     rainUpdateInterval = 3 * 60 * 1000;
     rainUpdateActivated = false;
+    weatherEnabled = true;
+    weatherError = '';
+    rainEnabled = true;
+    rainError = '';
 
     constructor() {
         super("WeatherService");
@@ -50,7 +50,7 @@ export class WeatherService extends BaseService {
 
     async startService(): Promise<void> {
         this.getLocation().then((location) => {
-            if (location === null) {
+            if (!location) {
                 this.locationUpdateTimer = setInterval(async () => {
                     const location = await this.getLocation();
                     if (location !== null) this.locationUpdateTimer = null;
@@ -196,8 +196,7 @@ export class WeatherService extends BaseService {
             return;
         }
 
-        return this.settingService.findByTypeSpec("api_key", "weather")
-            .then(setting => setting.value)
+        return this.getAPIKey("weather")
             .then(async (apiKey) => {
                 const params = {
                     lat: this.location.lat.toString(),

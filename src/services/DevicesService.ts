@@ -137,7 +137,7 @@ export class DevicesService extends BaseService {
             return;
         }
 
-        const loginEmail = await this.settingService.findByTypeSpec("devices", "kaku_email");
+        const loginEmail = await this.getSetting("devices", "kaku_email");
         if (loginEmail) {
             this.config.email = loginEmail.value;
         } else {
@@ -146,7 +146,7 @@ export class DevicesService extends BaseService {
             return;
         }
 
-        const loginPassword = await this.settingService.findByTypeSpec("devices", "kaku_password");
+        const loginPassword = await this.getSetting("devices", "kaku_password");
         if (loginPassword) {
             this.config.password = loginPassword.value;
         } else {
@@ -256,27 +256,28 @@ export class DevicesService extends BaseService {
             const timeout = setTimeout(() => {
                 client.close();
 
-                this.settingService.findByTypeSpec("devices", "kaku_backup_address").then(setting => {
-                    this.config.localBackupAddress = setting.value;
+                this.getSetting("devices", "kaku_backup_address")
+                    .then(setting => {
+                        this.config.localBackupAddress = setting.value;
 
-                }).then(() => {
-                    if (this.config.localBackupAddress) {
-                        this.log.warn("DevicesService", "Searching hub timed out! Using backup address for communication");
+                    }).then(() => {
+                        if (this.config.localBackupAddress) {
+                            this.log.warn("DevicesService", "Searching hub timed out! Using backup address for communication");
 
-                        if (this.config.localBackupAddress !== null) {
-                            this.config.localAddress = this.config.localBackupAddress;
-                            resolve(this.config.localBackupAddress);
+                            if (this.config.localBackupAddress !== null) {
+                                this.config.localAddress = this.config.localBackupAddress;
+                                resolve(this.config.localBackupAddress);
+                            }
+                        } else {
+                            this.log.warn("DevicesService", "Searching for hub timed out and no backup IP-address specified!");
+                            reject('Searching hub timed out and no backup IP-address specified!');
                         }
-                    } else {
-                        this.log.warn("DevicesService", "Searching for hub timed out and no backup IP-address specified!");
-                        reject('Searching hub timed out and no backup IP-address specified!');
-                    }
-                }).catch((err) => {
-                    this.log.warn("DevicesService", "No backup address found in database " + err);
-                    this.enabled = false;
-                    this.error = 'No backup address found in database';
-
-                });
+                    })
+                    .catch((err) => {
+                        this.log.warn("DevicesService", "No backup address found in database " + err);
+                        this.enabled = false;
+                        this.error = 'No backup address found in database';
+                    });
             }, searchTimeout);
 
             client.on('message', (msg, peer) => {
@@ -301,10 +302,8 @@ export class DevicesService extends BaseService {
     }
 
     async getStatus(): Promise<object> {
-        const serviceEnabled = await this.settingService.findByTypeSpec("service", "devices_status");
-
         return {
-            serviceEnabled: serviceEnabled ? serviceEnabled.value === "true" : true,
+            serviceEnabled: await this.isServiceEnabled(),
             enabled: this.enabled,
             error: this.error
         };
@@ -313,14 +312,13 @@ export class DevicesService extends BaseService {
     async getDevicesScenes(force = false): Promise<object> {
         if (force) await this.fetchDevicesScenes();
 
-        await this.settingService.findAllByTypeSpec("devices", "blacklist").then((blacklist) => {
-            this.blacklistIDs = blacklist.map((setting) => setting);
-        });
-
-        const serviceEnabled = await this.settingService.findByTypeSpec("service", "devices_status");
+        await this.settingService.findAllByTypeSpec("devices", "blacklist")
+            .then((blacklist) => {
+                this.blacklistIDs = blacklist.map((setting) => setting);
+            });
 
         return {
-            serviceEnabled: serviceEnabled ? serviceEnabled.value === "true" : true,
+            serviceEnabled: await this.isServiceEnabled(),
             devices: this.devices.map((device) => {
                 device.blacklisted = this.blacklistIDs.find((setting) => setting.value === String(device.deviceID)) || null;
                 return device;
@@ -338,9 +336,10 @@ export class DevicesService extends BaseService {
     async fetchDevicesScenes(homeID?: string): Promise<boolean> {
         if (!await this.isServiceEnabled() || !this.enabled) return;
 
-        await this.settingService.findAllByTypeSpec("devices", "blacklist").then((blacklist) => {
-            this.blacklistIDs = blacklist.map((setting) => setting);
-        });
+        await this.settingService.findAllByTypeSpec("devices", "blacklist")
+            .then((blacklist) => {
+                this.blacklistIDs = blacklist.map((setting) => setting);
+            });
 
         this.log.info("DevicesService", "Fetching devices from API");
 
@@ -648,17 +647,14 @@ export class DevicesService extends BaseService {
     async getLiveEnergyReadings(force = false): Promise<object> {
         if (force) await this.fetchLiveEnergyReadings();
 
-        const serviceEnabled = await this.settingService.findByTypeSpec("service", "devices_status");
-
         return {
-            serviceEnabled: serviceEnabled ? serviceEnabled.value === "true" : true,
+            serviceEnabled: await this.isServiceEnabled(),
             readings: this.liveEnergyReadings || [],
             enabled: this.enabled,
             error: this.error
         };
     }
 
-    // power (low), power (high), produced (low), produced (high), current power, current production, gas, water, gas, water?,
     async fetchLiveEnergyReadings(): Promise<void> {
         if (!await this.isServiceEnabled() || !this.enabled) return;
 
@@ -911,10 +907,8 @@ export class DevicesService extends BaseService {
             }
         }
 
-        const serviceEnabled = await this.settingService.findByTypeSpec("service", "devices_status");
-
         return {
-            serviceEnabled: serviceEnabled ? serviceEnabled.value === "true" : true,
+            serviceEnabled: await this.isServiceEnabled(),
             year: year,
             month: month,
             monthText: months[month],
@@ -965,7 +959,7 @@ export class DevicesService extends BaseService {
     async getDeviceForSpotify(): Promise<Device | undefined> {
         if (!await this.isServiceEnabled() || !this.enabled) return undefined;
 
-        const setting = await this.settingService.findByTypeSpec("spotify", "spotify_speaker_id");
+        const setting = await this.getSetting("spotify", "spotify_speaker_id");
 
         if (setting) return this.getDevice(Number(setting.value));
 
@@ -976,22 +970,21 @@ export class DevicesService extends BaseService {
     async setDeviceForSpotify(deviceID: number): Promise<Device | undefined> {
         if (!await this.isServiceEnabled() || !this.enabled) return undefined;
 
-        const setting = await this.settingService.findByTypeSpec("spotify", "spotify_speaker_id");
+        const setting = await this.getSetting("spotify", "spotify_speaker_id");
 
         if (setting) {
             setting.specification = "spotify_speaker_id";
             setting.value = deviceID.toString();
 
-            await this.settingService.update(setting);
+            await this.setSetting(setting);
         } else {
-
             const newSetting = new Setting();
             newSetting.type = "spotify";
             newSetting.description = "Spotify Amplifier Device ID";
             newSetting.specification = "spotify_speaker_id";
             newSetting.value = deviceID.toString();
 
-            await this.settingService.create(newSetting);
+            await this.setSetting(newSetting);
         }
 
         this.emit<object>("spotify update", await Container.get(SpotifyService).getState());

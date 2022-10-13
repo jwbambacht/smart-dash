@@ -2,6 +2,7 @@ import { Container } from 'typedi';
 import { LoggerService } from './LoggerService';
 import { SocketService } from './SocketService';
 import { SettingService } from './SettingService';
+import { Setting } from '../models/Setting';
 
 export class BaseService {
 	log = Container.get(LoggerService);
@@ -13,15 +14,15 @@ export class BaseService {
 	}
 
 	async init(type: string): Promise<void> {
-		this.log.socket('SocketService', `Received ${type} message for service '${this.serviceName}'`);
+		this.log.http('SocketService', `Received ${type} message for service '${this.serviceName}'`);
 	}
 
 	activate(type: string): void {
-		this.log.socket('SocketService', `Received ${type} message for service '${this.serviceName}'`);
+		this.log.http('SocketService', `Received ${type} message for service '${this.serviceName}'`);
 	}
 
 	emit<T>(event: string, data: T): void {
-		this.log.socket('SocketService', `Emitting ${event} from service '${this.serviceName}'`);
+		this.log.http('SocketService', `Emitting ${event} from service '${this.serviceName}'`);
 		this.socketService.emit(event, data);
 	}
 
@@ -30,5 +31,21 @@ export class BaseService {
 		if (serviceEnabled) return serviceEnabled.value === 'true';
 
 		return true;
+	}
+
+	async getSetting(type: string, specification: string): Promise<Setting> {
+		return await this.settingService.findByTypeSpec(type, specification);
+	}
+
+	async setSetting(setting: Setting): Promise<Setting> {
+		if (await this.getSetting(setting.type, setting.specification)) {
+			return await this.settingService.update(setting);
+		}
+
+		return await this.settingService.create(setting);
+	}
+
+	async getAPIKey(specification: string): Promise<string> {
+		return (await this.getSetting("api_key", specification))?.value;
 	}
 }

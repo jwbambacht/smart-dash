@@ -89,8 +89,7 @@ export class MapService extends BaseService {
     async fetchRoutes(): Promise<void> {
         if (!(await this.checkServiceStatus())) return;
 
-        return this.settingService.findByTypeSpec("api_key", "maps")
-            .then(setting => setting.value)
+        return this.getAPIKey("maps")
             .then(async (apiKey) => {
                 this.apiKey = apiKey;
 

@@ -108,8 +108,7 @@ export class NSService extends BaseService {
     async fetchStations(): Promise<void> {
         if (!(await this.checkServiceStatus())) return;
 
-        this.settingService.findByTypeSpec("api_key", "ns")
-            .then(setting => setting.value)
+        return this.getAPIKey("ns")
             .then(async (apiKey) => {
                 const req = await fetch(this.stationsURL.toString(), {
                     headers: {
@@ -132,8 +131,6 @@ export class NSService extends BaseService {
                                 uicCode: station.UICCode
                             };
                         }).sort((a: NSStation, b: NSStation) => a.name.localeCompare(b.name));
-
-                    return this.stations;
 
                 } else if (req.status === 401) {
                     this.stations = [];
@@ -162,8 +159,7 @@ export class NSService extends BaseService {
     async fetchTrips(): Promise<void> {
         if (!(await this.checkServiceStatus())) return;
 
-        return this.settingService.findByTypeSpec("api_key", "ns")
-            .then(setting => setting.value)
+        return this.getAPIKey("ns")
             .then(async (apiKey) => {
                 const trainRoutes = await this.trainRouteService.findAll();
 

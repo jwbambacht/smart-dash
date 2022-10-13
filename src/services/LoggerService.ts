@@ -37,7 +37,7 @@ export class LoggerService {
         this.logger.debug(`${message}${spec !== undefined ? `: ${spec}` : ""}`, ...meta);
     }
 
-    public socket(message: string, spec?: string, ...meta: any[]): void {
-        this.logger.debug(`${message}${spec !== undefined ? `: ${spec}` : ""}`, ...meta);
+    public http(message: string, spec?: string, ...meta: any[]): void {
+        this.logger.http(`${message}${spec !== undefined ? `: ${spec}` : ""}`, ...meta);
     }
 }
