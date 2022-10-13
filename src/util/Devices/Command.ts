@@ -1,13 +1,14 @@
-import { Buffer } from 'buffer';
 import { Container } from "typedi";
+import { Buffer } from 'buffer';
 import dgram from "dgram";
+
 import { Cryptographer } from "./Cryptographer";
 import { LoggerService } from "../../services/LoggerService";
 
 export class Command {
+    log = Container.get(LoggerService);
     private readonly totalMessage: Buffer;
     private readonly client = dgram.createSocket('udp4');
-    log = Container.get(LoggerService);
 
     constructor(
         private readonly macAddress: string,

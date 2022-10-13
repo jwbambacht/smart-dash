@@ -3,6 +3,7 @@ import { InjectRepository } from 'typeorm-typedi-extensions';
 import * as lodash from 'lodash';
 import moment from "moment";
 import * as ical from 'node-ical';
+
 import { BaseService } from './BaseService';
 import { Calendar } from "../models/Calendar";
 import { Event } from "../types/CalendarTypes";
@@ -16,6 +17,7 @@ const monthNamesAbbrev = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"
 
 @Service()
 export class CalendarService extends BaseService {
+
     minimumDate = new Date(new Date().getFullYear(), 0, 1, 0, 0, 0, 0);
     maximumDate = new Date(new Date().getFullYear() + 1, 0, 1, 0, 0, 0, 0);
     events: Event[] = [];

@@ -1,5 +1,5 @@
-import crypto from 'crypto';
 import { Buffer } from 'buffer';
+import crypto from 'crypto';
 
 export class Cryptographer {
     /**

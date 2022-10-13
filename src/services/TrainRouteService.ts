@@ -1,8 +1,8 @@
-import { Container } from "typedi";
+import { Container, Service } from "typedi";
 import { FindOneOptions, Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 
-import { LoggerService } from "../services/LoggerService";
+import { LoggerService } from './LoggerService';
 import { TrainRoute } from "../models/TrainRoute";
 import { TrainStation } from "../models/TrainStation";
 

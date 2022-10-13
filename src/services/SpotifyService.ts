@@ -1,7 +1,8 @@
 import { Container, Service } from "typedi";
 import { BadRequestError } from "routing-controllers";
-import moment from "moment";
 import SpotifyApi, { SearchType } from "spotify-web-api-node";
+import moment from "moment";
+
 import { BaseService } from './BaseService';
 import { DevicesService } from "./DevicesService";
 import { DeviceType } from "../types/DevicesTypes";

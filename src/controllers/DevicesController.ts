@@ -1,5 +1,6 @@
 import { Get, JsonController, Param, Post } from 'routing-controllers';
 import { Container } from 'typedi';
+
 import { DevicesService } from '../services/DevicesService';
 import { Device } from '../types/DevicesTypes';
 

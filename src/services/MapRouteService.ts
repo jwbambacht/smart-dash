@@ -1,4 +1,4 @@
-import { Container } from "typedi";
+import { Container, Service } from "typedi";
 import { FindOneOptions, Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 

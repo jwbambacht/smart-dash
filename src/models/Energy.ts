@@ -1,5 +1,6 @@
 import { AfterLoad, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { Exclude } from "class-transformer";
+
 import { bigIntToNumber } from "../util/Util";
 
 @Entity("energy", {

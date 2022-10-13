@@ -5,6 +5,7 @@ import http from 'http';
 import * as express from 'express';
 import { createExpressServer } from "routing-controllers";
 import socket, { Server } from "socket.io";
+
 import { LoggerService } from "../services/LoggerService";
 
 export async function setupExpressApp(logger: LoggerService): Promise<Server> {

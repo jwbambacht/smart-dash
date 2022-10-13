@@ -1,4 +1,5 @@
 import { Container } from 'typedi';
+
 import { LoggerService } from './LoggerService';
 import { SocketService } from './SocketService';
 import { SettingService } from './SettingService';

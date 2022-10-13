@@ -1,5 +1,6 @@
-import { BadRequestError, Body, Get, JsonController, Param, Post, Put, QueryParam } from 'routing-controllers';
 import { Container } from 'typedi';
+import { BadRequestError, Body, Get, JsonController, Param, Post, Put, QueryParam } from 'routing-controllers';
+
 import { SpotifyService } from '../services/SpotifyService';
 import { DevicesService } from '../services/DevicesService';
 import { SpotifySearchResult } from '../types/SpotifyTypes';

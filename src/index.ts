@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import "reflect-metadata";
 import { Container } from "typedi";
 import { useContainer } from "typeorm";
+
 import { seedDB, setupTypeORM } from './loaders/typeORMLoader';
 import { setupExpressApp } from "./loaders/expressLoader";
 import { LoggerService } from "./services/LoggerService";

@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, AfterLoad } from 'typeorm';
+
 import { bigIntToNumber } from "../util/Util";
 
 @Entity({

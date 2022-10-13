@@ -1,8 +1,9 @@
 import { getConnectionOptions, createConnection } from "typeorm";
 import { Container } from 'typedi';
+
+import { LoggerService } from '../services/LoggerService';
 import { SettingService } from '../services/SettingService';
 import { Setting } from '../models/Setting';
-import { LoggerService } from '../services/LoggerService';
 
 const defaultSettings = [
     {

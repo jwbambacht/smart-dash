@@ -1,6 +1,7 @@
 import { Container } from "typedi";
 import { ExpressErrorMiddlewareInterface, Middleware } from 'routing-controllers';
 import * as express from 'express';
+
 import { LoggerService } from "../services/LoggerService";
 
 class ExpressError {

@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+
 import { TrainStation } from "./TrainStation";
 
 @Entity({name: "train_routes"})

@@ -1,5 +1,6 @@
-import { Body, Delete, Get, JsonController, Param, Post, Put } from 'routing-controllers';
 import { Container } from 'typedi';
+import { Body, Delete, Get, JsonController, Param, Post, Put } from 'routing-controllers';
+
 import { TaskService } from '../services/TaskService';
 
 @JsonController("/api/tasks")

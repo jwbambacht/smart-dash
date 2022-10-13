@@ -1,6 +1,7 @@
 import { Container } from "typedi";
 import { BadRequestError, Body, Delete, JsonController, Param, Post, Put } from "routing-controllers";
 import { IsNotEmpty, IsString } from "class-validator";
+
 import { LoggerService } from "../services/LoggerService";
 import { SettingService } from "../services/SettingService";
 import { Setting } from "../models/Setting";

@@ -1,4 +1,5 @@
 import { AfterLoad, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+
 import { bigIntToNumber } from "../util/Util";
 
 @Entity("calendars", {
