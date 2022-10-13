@@ -2,7 +2,7 @@ import { Container } from "typedi";
 import { Service } from 'typedi';
 import { OrmRepository } from 'typeorm-typedi-extensions';
 import { FindOneOptions } from "typeorm";
-import { LoggerService } from "../services/LoggerService";
+import { LoggerService } from './LoggerService';
 import { AddressRepository } from "../repositories/AddressRepository";
 import { Address } from "../models/Address";
 

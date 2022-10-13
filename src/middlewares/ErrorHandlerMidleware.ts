@@ -12,7 +12,6 @@ class ExpressError {
 
 @Middleware({ type: 'after' })
 export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
-
     log = Container.get(LoggerService);
 
     public error(error: ExpressError, req: express.Request, res: express.Response): void {

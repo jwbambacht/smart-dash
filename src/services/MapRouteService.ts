@@ -9,7 +9,6 @@ import { Address } from "../models/Address";
 
 @Service()
 export class MapRouteService {
-
     log = Container.get(LoggerService);
 
     constructor(@OrmRepository() private mapRouteRepository: MapRouteRepository) {}

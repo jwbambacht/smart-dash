@@ -229,10 +229,10 @@ export class CalendarService extends BaseService {
                         location: event.location,
                         week: moment(event.start).isoWeek(),
                         start: event.start.getTime(),
-                        startDate: new Date(event.start.getFullYear(), event.start.getMonth(), event.start.getDate()).getTime(), // moment(moment(event.start).format("DD-MM-YYYY")).toDate().getTime(),
+                        startDate: new Date(event.start.getFullYear(), event.start.getMonth(), event.start.getDate()).getTime(),
                         startTime: moment(event.start).format("HH:mm"),
                         end: event.end.getTime(),
-                        endDate: new Date(event.end.getFullYear(), event.end.getMonth(), event.end.getDate()).getTime(), //moment(moment(event.end).format("DD-MM-YYYY")).toDate().getTime(),
+                        endDate: new Date(event.end.getFullYear(), event.end.getMonth(), event.end.getDate()).getTime(),
                         endTime: moment(event.end).format("HH:mm"),
                         recurring: event.rrule === null,
                         calendar: calendar
@@ -255,7 +255,7 @@ export class CalendarService extends BaseService {
                         start = moment(date).toDate();
                         end = moment(new Date(start.getTime() + duration)).toDate();
 
-                    } else { // tzid not present (calculate offset from original start)
+                    } else {
 
                         start = new Date(date.setHours(date.getHours() - ((event.start.getTimezoneOffset() - date.getTimezoneOffset()) / 60)));
                         end = moment(new Date(start.getTime() + duration)).toDate();
@@ -266,10 +266,10 @@ export class CalendarService extends BaseService {
                         location: event.location,
                         week: moment(start).isoWeek(),
                         start: start.getTime(),
-                        startDate: new Date(start.getFullYear(), start.getMonth(), start.getDate()).getTime(), // moment(moment(start).format("DD-MM-YYYY")).toDate().getTime(),
+                        startDate: new Date(start.getFullYear(), start.getMonth(), start.getDate()).getTime(),
                         startTime: moment(start).format("HH:mm"),
                         end: end.getTime(),
-                        endDate: new Date(end.getFullYear(), end.getMonth(), end.getDate()).getTime(), //moment(moment(end).format("DD-MM-YYYY")).toDate().getTime(),
+                        endDate: new Date(end.getFullYear(), end.getMonth(), end.getDate()).getTime(),
                         endTime: moment(end).format("HH:mm"),
                         recurring: true,
                         calendar: calendar
@@ -306,7 +306,7 @@ export class CalendarService extends BaseService {
                 days: days[dayOfWeek],
                 dayAbbrev: daysAbbrev[dayOfWeek],
                 dayAbbrevShort: daysAbbrevShort[dayOfWeek],
-                week: moment(day).isoWeek(), //Math.ceil(Math.floor((day.getTime() - startYearDate.getTime()) / (24 * 60 * 60 * 1000)) / 7),
+                week: moment(day).isoWeek(),
                 weekend: dayOfWeek >= 5,
                 today: date.toDateString() === today.toDateString()
             };
