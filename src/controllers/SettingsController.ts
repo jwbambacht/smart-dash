@@ -44,10 +44,6 @@ export class SettingsController {
         if (body.type === "" || body.specification === "" || body.value === "") {
             errors.push("Not all fields are filled");
         }
-        //
-        // if (await Container.get(SettingService).findBySpec(body.specification) !== undefined) {
-        //     errors.push("Specification is already defined");
-        // }
 
         if (errors.length > 0) {
             throw new BadRequestError(JSON.stringify(errors));

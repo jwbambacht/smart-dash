@@ -1,13 +1,13 @@
 import { Service } from "typedi";
+import { Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import * as lodash from 'lodash';
 import moment from "moment";
-import * as ical from 'node-ical';
 
+import * as ical from 'node-ical';
 import { BaseService } from './BaseService';
 import { Calendar } from "../models/Calendar";
 import { Event } from "../types/CalendarTypes";
-import { Repository } from 'typeorm';
 
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 const daysAbbrev = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
