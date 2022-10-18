@@ -2,11 +2,22 @@
 
 <div class="d-flex justify-content-between align-items-center mx-3 m-2">
     <span class="d-flex align-items-center h4 mb-0 font-no-monospace fw-lighter">
-        Devices
-        <div class="ms-2 spinner-grow text-success spinner-grow-sm font-size-essm update-spinner d-none"
-             data-page="devices"
-             role="status"
-        ></div>
+        <span class="d-flex align-items-center justify-content-start">
+            <div>
+                <div class="btn btn-blue ratio ratio-1x1 p-3" data-bs-toggle="modal" data-bs-target="#navigationContainer">
+                    <div class="d-flex justify-content-center align-items-center fs-4">
+                        <i class="bi bi-lightbulb-fill"></i>
+                    </div>
+                </div>
+            </div>
+            <span class="ms-2">
+                Devices
+                <div class="ms-2 spinner-grow text-success spinner-grow-sm font-size-essm update-spinner d-none"
+                     data-page="devices"
+                     role="status"
+                ></div>
+            </span>
+        </span>
     </span>
     <span class="font-size-sm">
         <% if (devices.serviceEnabled && devices.enabled) { %>
@@ -94,7 +105,7 @@
         </div>
 
         <div class="row g-1 row-cols-2 row-cols-md-3 row-cols-lg-4" id="deviceSceneList">
-            <%- include ('../widgets/devices_scene'); %>
+            <%- include ('../widgets/devices/devices_scene'); %>
         </div>
     </div>
 
@@ -104,7 +115,7 @@
         </div>
 
         <div class="row g-1 row-cols-2 row-cols-md-3 row-cols-lg-4" id="deviceSwitchList">
-            <%- include ('../widgets/devices_switch'); %>
+            <%- include ('../widgets/devices/devices_switch'); %>
         </div>
     </div>
 
@@ -114,7 +125,7 @@
         </div>
 
         <div class="row g-1 row-cols-xxl-6 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1" id="deviceDimmerList">
-            <%- include ('../widgets/devices_dimmer'); %>
+            <%- include ('../widgets/devices/devices_dimmer'); %>
         </div>
     </div>
 
@@ -125,7 +136,7 @@
         </div>
 
         <div class="row g-1 row-cols-xxl-6 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1" id="deviceColorList">
-            <%- include ('../widgets/devices_color'); %>
+            <%- include ('../widgets/devices/devices_color'); %>
         </div>
     </div>
 <% } %>

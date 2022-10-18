@@ -1,0 +1,84 @@
+<div class="row row-cols-1 g-1">
+    <div class="col">
+        <div class="card rounded-10 pe-3">
+            <div class="d-flex justify-content-start align-items-center">
+                <span class="d-flex">
+                    <span class="ratio ratio-1x1 w-200p h-auto">
+                        <% if (album.images && album.images.length > 0) { %>
+                            <% const image = album.images[0]; %>
+                            <img class="rounded-start-10 spotify-media-image w-200p h-auto" src="<%= image.url %>" />
+
+                        <% } else if (album.tracks.length > 0) { %>
+                            <% const image = album.tracks[Math.floor(Math.random() * album.tracks.length)].images[0]; %>
+                            <img class="rounded-start-10 spotify-media-image w-200p h-auto" src="<%= image.url %>" />
+
+                        <% } else { %>
+                            <div class="position-absolute top-0 bottom-0 start-0 end-0 w-100 h-100 bg-info bg-gradient text-center rounded-start-10">
+                                <i class="bi bi-collection position-absolute top-50 start-50 translate-middle"></i>
+                            </div>
+                        <% } %>
+
+                        <div class="overlay position-absolute top-0 bottom-0 start-0 end-0 w-100 h-100 cursor-pointer collection-play"
+                             collection-uri="<%= album.uri %>"
+                             collection-offset="0"
+                        >
+                            <i class="bi bi-play-circle-fill text-success fs-1 position-absolute top-50 start-50 translate-middle"></i>
+                        </div>
+                    </span>
+                </span>
+                <span class="ms-3 lh-1 flex-grow-1">
+                    <span class="d-flex align-items-center justify-content-between">
+                        <span class="text-uppercase text-light font-size-ssm">
+                            <%= album.albumType %>
+                        </span>
+                        <span>
+                            <span class="btn btn-sm fs-5 py-0 cursor-pointer collection-follow <%= !album.following ? "d-none" : "" %>"
+                                  id="unfollowAlbum"
+                                  collection-type="album"
+                                  collection-id="<%= album.id %>"
+                                  collection-following="false"
+                                  inverse-target="#followAlbum"
+                            >
+                                <i class="bi bi-heart-fill text-success"></i>
+                            </span>
+                            <span class="btn btn-sm fs-5 py-0 cursor-pointer collection-follow <%= album.following ? "d-none" : "" %>"
+                                  id="followAlbum"
+                                  collection-type="album"
+                                  collection-id="<%= album.id %>"
+                                  collection-following="true"
+                                  inverse-target="#unfollowAlbum"
+                            >
+                                <i class="bi bi-heart text-success"></i>
+                            </span>
+                        </span>
+                    </span>
+
+                    <span class="d-block h3 mb-2 fw-bolder">
+                        <%= album.name %>
+                    </span>
+
+                    <span class="d-block text-uppercase text-light font-size-ssm">
+                        <%- album.artists.map(function (artist) {
+                            return "<span class='text-decoration-underline cursor-pointer collection-open' collection-type='artist' collection-id='" + artist.id + "'>" + artist.name + "</span>";
+                        }).join("<span class='bi bi-dot'></span>"); %>
+
+                        <span class="bi bi-dot"></span>
+
+                        <% if (album.releaseDate && album.releaseDate.length > 4) { %>
+                            <%= album.releaseDate.slice(0, 4); %>
+                            <span class="bi bi-dot"></span>
+                        <% } %>
+
+                        <%= album.tracks.length %> song(s)
+                    </span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <% album.tracks.forEach(function (track, trackIndex) { %>
+        <div class="col">
+            <%- include ("./spotify_track_item", { track: track, trackIndex: trackIndex, type: "album", uri: album.uri }); %>
+        </div>
+    <% }); %>
+</div>

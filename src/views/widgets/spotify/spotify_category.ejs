@@ -1,0 +1,44 @@
+<div class="row row-cols-1 g-1">
+    <div class="col">
+        <div class="card rounded-10 pe-3">
+            <div class="d-flex justify-content-start align-items-center">
+                <span class="d-flex">
+                    <span class="ratio ratio-1x1 w-200p h-auto">
+                        <% if (category.images && category.images.length > 0) { %>
+                            <% const image = category.images[0]; %>
+                            <img class="rounded-start-10 w-200p h-auto" src="<%= image.url %>" />
+
+                        <% } else if (category.playlists.length > 0) { %>
+                            <% const image = category.playlists[Math.floor(Math.random() * category.playlists.length)].images[0]; %>
+                            <img class="rounded-start-10" src="<%= image.url %>" height="auto" width="200" />
+                        <% } else { %>
+                            <div class="position-absolute top-0 bottom-0 start-0 end-0 w-100 h-100 bg-secondary text-center rounded-start-10">
+                                <i class="bi bi-music-note-list position-absolute top-50 start-50 translate-middle"></i>
+                            </div>
+                        <% } %>
+                    </span>
+                </span>
+
+                <span class="ms-3 lh-1 flex-grow-1">
+                    <span class="d-block text-uppercase text-light font-size-ssm mb-2">
+                        Category
+                    </span>
+
+                    <span class="d-block h3 mb-2 fw-bolder">
+                        <%= category.name %>
+                    </span>
+
+                    <span class="d-block text-uppercase text-light font-size-ssm">
+                        <%= category.playlists.length %> playlists
+                    </span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <% category.playlists.forEach(function (playlist) { %>
+        <div class="col">
+            <%- include ("./spotify_playlist_item", { playlist: playlist }); %>
+        </div>
+    <% }); %>
+</div>

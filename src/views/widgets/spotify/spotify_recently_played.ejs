@@ -1,0 +1,7 @@
+<div class="row row-cols-1 g-1">
+    <% recentlyPlayed.forEach(function (track) { %>
+        <div class="col">
+            <%- include ("./spotify_track_item", { track: track, trackIndex: 0, type: "track", uri: track.uri }); %>
+        </div>
+    <% }); %>
+</div>

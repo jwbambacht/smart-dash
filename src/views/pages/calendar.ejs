@@ -1,11 +1,22 @@
 <% const updatedAt = new Date(events.updatedAt); %>
 <div class="d-flex justify-content-between align-items-center mx-3 m-2">
     <span class="d-flex align-items-center h4 mb-0 font-no-monospace fw-lighter">
-        Calendar
-        <div class="ms-2 spinner-grow text-success spinner-grow-sm font-size-essm update-spinner d-none"
-             data-page="calendar"
-             role="status"
-        ></div>
+        <span class="d-flex align-items-center justify-content-start">
+            <div>
+                <div class="btn btn-blue ratio ratio-1x1 p-3" data-bs-toggle="modal" data-bs-target="#navigationContainer">
+                    <div class="d-flex justify-content-center align-items-center fs-4">
+                        <i class="bi bi-lightbulb-fill"></i>
+                    </div>
+                </div>
+            </div>
+            <span class="ms-2">
+                Calendar
+                <div class="ms-2 spinner-grow text-success spinner-grow-sm font-size-essm update-spinner d-none"
+                     data-page="calendar"
+                     role="status"
+                ></div>
+            </span>
+        </span>
     </span>
     <span class="font-size-sm">
         <span class="badge p-0 bg-blue-dark rounded pe-2 ms-1 cursor-pointer">
@@ -55,7 +66,7 @@
             <div class="row">
                 <div class="col">
                     <div class="card rounded-10 px-3 py-2" id="calendarWrapper">
-                        <%- include ('../widgets/calendar_month'); %>
+                        <%- include ('../widgets/calendar/calendar_month'); %>
                     </div>
                 </div>
             </div>
@@ -71,11 +82,11 @@
                         </div>
 
                         <div class="d-none" id="calendarNewUpdateWrapper">
-                            <%- include ('../widgets/calendar_new_update', { cal: null }); %>
+                            <%- include ('../widgets/calendar/calendar_new_update', { cal: null }); %>
                         </div>
 
                         <div id="calendarList">
-                            <%- include ('../widgets/calendar_calendars'); %>
+                            <%- include ('../widgets/calendar/calendar_calendars'); %>
                         </div>
                     </div>
                 </div>
@@ -102,7 +113,7 @@
                     </div>
 
                     <div class="mt-1" id="calendarEventsWrapper" data-year="<%= events.year %>" data-week="<%= events.week %>">
-                        <%- include ('../widgets/calendar_events'); %>
+                        <%- include ('../widgets/calendar/calendar_events'); %>
                     </div>
                 </div>
             </div>

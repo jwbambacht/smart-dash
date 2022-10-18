@@ -1,0 +1,17 @@
+<div class="row row-cols-1 g-1">
+    <div class="col">
+        <div class="row row-cols-1 g-1 mb-1" id="newTask">
+            <%- include ('./tasks_item_new') %>
+        </div>
+
+        <div id="tasksWrapper">
+            <div class="row row-cols-1 g-1 mb-1" id="flaggedTasks">
+                <%- include ('./tasks_items', { isFlagged: true }); %>
+            </div>
+
+            <div class="row row-cols-1 g-1 <%= page === "home" ? "d-none" : "" %>" id="unflaggedTasks">
+                <%- include ('./tasks_items', { isFlagged: false }); %>
+            </div>
+        </div>
+    </div>
+</div>

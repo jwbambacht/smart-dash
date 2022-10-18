@@ -1,0 +1,63 @@
+<% if (devices.serviceEnabled && devices.enabled) { %>
+    <% if (page === "devices") { %>
+        <% devices.scenes.filter(function (scene) { return (page === "home") ? scene.blacklisted === null : true}).forEach(function (scene) { %>
+            <div class="col device-row <%= scene.blacklisted !== null ? "device-hidden d-none" : "" %>"
+                 data-blacklist-id="<%= scene.blacklisted !== null ? scene.blacklisted.id : "" %>"
+            >
+                <div class="card devices-scene-row rounded-10 execute-scene p-1 ps-2 cursor-pointer animate"
+                     style="--animate-color: var(--bs-success)"
+                     scene-id="<%= scene.id %>"
+                >
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="me-2 flex-grow-1 text-truncate overflow-hidden">
+                            <span class="d-block font-size-esm text-truncate">
+                                <i class="btn btn-sm bi bi-play-fill px-0"></i>
+                                <%= scene.name %>
+                            </span>
+                        </span>
+
+                        <div class="btn-group device-visibility d-none">
+                            <span id="showDevice<%= scene.id %>"
+                                  class="toggle-devices-visibility rounded-10 btn btn-sm btn-success text-white cursor-pointer <%= scene.blacklisted !== null ? "" : "d-none" %>"
+                                  data-id="<%= scene.id %>"
+                                  data-toggle="show"
+                                  data-toggle-inverse="#hideDevice<%= scene.id %>"
+                            >
+                                <span class="font-size-esm">SHOW</span>
+                            </span>
+                            <span id="hideDevice<%= scene.id %>"
+                                  class="toggle-devices-visibility rounded-10 btn btn-sm btn-danger text-white cursor-pointer <%= scene.blacklisted !== null ? "d-none" : "" %>"
+                                  data-id="<%= scene.id %>"
+                                  data-toggle="hide"
+                                  data-toggle-inverse="#showDevice<%= scene.id %>"
+                            >
+                                <span class="font-size-esm">HIDE</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <% }); %>
+    <% } else { %>
+        <% devices.scenes.filter(function (scene) { return (page === "home") ? scene.blacklisted === null : true}).forEach(function (scene) { %>
+            <div class="col device-row <%= scene.blacklisted !== null ? "device-hidden d-none" : "" %>"
+                 data-blacklist-id="<%= scene.blacklisted !== null ? scene.blacklisted.id : "" %>"
+            >
+                <div class="card devices-scene-row rounded-10 cursor-pointer execute-scene animate"
+                     style="--animate-color: var(--bs-success)"
+                     scene-id="<%= scene.id %>"
+                >
+
+                    <div class="d-flex align-items-center flex-column overflow-hidden">
+                        <span class="px-2 text-center lh-1 mt-1 font-size-esm fw-bold font-no-monospace text-truncate">
+                            <%= scene.name %>
+                        </span>
+                        <div class="fs-5">
+                            <i class="bi bi-play-fill text-secondary"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <% }); %>
+    <% } %>
+<% } %>

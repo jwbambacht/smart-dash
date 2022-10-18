@@ -1,0 +1,33 @@
+<div class="col">
+    <form class="bg-blue-dark input-group input-group-sm rounded-10" id="newTaskForm">
+        <span class="input-group-text bg-blue-dark p-0 font-size-sm rounded-start-10 border-0">
+            <span class="btn btn-sm btn-blue-dark text-white rounded-10">
+                <i class="bi bi-flag-fill text-warning task-flag"
+                   data-id="new"
+                   data-flagged="true"
+                   id="flagTaskNew"
+                   data-inverse="#unflagTaskNew"
+                ></i>
+                <i class="bi bi-flag text-white task-flag d-none"
+                   data-id="new"
+                   data-flagged="false"
+                   id="unflagTaskNew"
+                   data-inverse="#flagTaskNew"
+                ></i>
+            </span>
+            <input type="hidden" name="newTaskFlagged" value="1">
+        </span>
+
+        <input type="text"
+               class="font-size-ssm form-control form-control-sm bg-blue-dark placeholder-light text-white font-size-sm border-0"
+               name="newTaskDescription"
+               placeholder="New task description..."
+        >
+
+        <span class="input-group-text bg-blue-dark p-0 font-size-sm rounded-end-10 border-0">
+            <button class="btn btn-sm btn-blue-dark text-white rounded-10 task-add" type="submit">
+                <i class="bi bi-plus-circle-fill"></i>
+            </button>
+        </span>
+    </form>
+</div>

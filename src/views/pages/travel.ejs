@@ -5,11 +5,23 @@
 
 <div class="d-flex justify-content-between align-items-center mx-3 m-2">
     <span class="d-flex align-items-center h4 mb-0 font-no-monospace fw-lighter">
-        Travel
-        <div class="ms-2 spinner-grow text-success spinner-grow-sm font-size-essm update-spinner d-none"
-             data-page="travel"
-             role="status"
-        ></div>
+        <span class="d-flex align-items-center justify-content-start">
+            <div>
+                <div class="btn btn-blue ratio ratio-1x1 p-3" data-bs-toggle="modal" data-bs-target="#navigationContainer">
+                    <div class="d-flex justify-content-center align-items-center fs-4">
+                        <i class="bi bi-stoplights-fill"></i>
+                    </div>
+                </div>
+            </div>
+            <span class="ms-2">
+                Travel
+
+                <div class="ms-2 spinner-grow text-success spinner-grow-sm font-size-essm update-spinner d-none"
+                     data-page="travel"
+                     role="status"
+                ></div>
+            </span>
+        </span>
     </span>
     <span class="font-size-sm">
         <span class="badge <%= enabledColor %> cursor-pointer travel-type-toggle"
@@ -124,10 +136,10 @@
                                 <div class="accordion-body p-0">
                                     <div class="accordion accordion-flush" id="addressAccordion">
                                         <div class="border-bottom border-body" id="mapAddressAccordionItems">
-                                            <%- include ('../widgets/travel_mapaddress'); %>
+                                            <%- include ('../widgets/travel/travel_mapaddress'); %>
                                         </div>
 
-                                        <%- include ('../widgets/travel_mapaddress_add'); %>
+                                        <%- include ('../widgets/travel/travel_mapaddress_add'); %>
                                     </div>
                                 </div>
                             </div>
@@ -149,10 +161,10 @@
                                 <div class="accordion-body p-0">
                                     <div class="accordion accordion-flush" id="mapRouteAccordion">
                                         <div class="border-bottom border-body" id="mapRouteAccordionItems">
-                                            <%- include ('../widgets/travel_maproute'); %>
+                                            <%- include ('../widgets/travel/travel_maproute'); %>
                                         </div>
 
-                                        <%- include ('../widgets/travel_maproute_add', {mapAddresses: mapAddresses}); %>
+                                        <%- include ('../widgets/travel/travel_maproute_add', {mapAddresses: mapAddresses}); %>
                                     </div>
                                 </div>
                             </div>
@@ -176,10 +188,10 @@
                             <div id="collapseTrainStations" class="accordion-collapse collapse" data-bs-parent="#mapsAccordion">
                                 <div class="py-1" id="trainStationAccordion">
                                     <div id="trainStationAccordionItems">
-                                        <%- include ('../widgets/travel_trainstation'); %>
+                                        <%- include ('../widgets/travel/travel_trainstation'); %>
                                     </div>
 
-                                    <%- include ('../widgets/travel_trainstation_add', {trainStations: train.stations}); %>
+                                    <%- include ('../widgets/travel/travel_trainstation_add', {trainStations: train.stations}); %>
                                 </div>
                             </div>
                         </div>
@@ -200,11 +212,10 @@
                                 <div class="accordion-body p-0">
                                     <div class="accordion accordion-flush" id="trainRouteAccordion">
                                         <div class="border-bottom border-body" id="trainRouteAccordionItems">
-                                            <%- include ('../widgets/travel_trainroute'); %>
-                                            <%#- include ('../widgets/travel_trainroute', {trainRoute: trainRoute, trainStations: trainStations}); %>
+                                            <%- include ('../widgets/travel/travel_trainroute'); %>
                                         </div>
 
-                                        <%- include ('../widgets/travel_trainroute_add', {trainStations: trainStations}); %>
+                                        <%- include ('../widgets/travel/travel_trainroute_add', {trainStations: trainStations}); %>
                                     </div>
                                 </div>
                             </div>
@@ -219,14 +230,14 @@
                  class="d-none travel-items row g-1 row-cols-1"
                  data-type="map_route"
             >
-                <%- include ('../widgets/travel_items_map'); %>
+                <%- include ('../widgets/travel/travel_items_map'); %>
             </div>
 
             <div id="travelNSWrapper"
                  class="travel-items row g-1 row-cols-1" google-api-key="<%= map.apiKey %>"
                  data-type="train_route"
             >
-                <%- include ('../widgets/travel_items_ns'); %>
+                <%- include ('../widgets/travel/travel_items_ns'); %>
             </div>
         </div>
     <% } %>

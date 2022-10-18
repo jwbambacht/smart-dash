@@ -1,7 +1,7 @@
 <div class='row g-2'>
     <% if (weather.serviceEnabled && weather.weather.enabled) { %>
         <div class="col-12">
-            <%- include ('../widgets/weather_time_home'); %>
+            <%- include ('../widgets/weather/weather_time_home'); %>
         </div>
     <% } %>
 
@@ -9,14 +9,14 @@
         <% if (!(weather.serviceEnabled && weather.weather.enabled)) { %>
             <div class="row row-cols-1 g-1">
                 <div class="col">
-                    <%- include ('../widgets/weather_time_home'); %>
+                    <%- include ('../widgets/weather/weather_time_home'); %>
                 </div>
             </div>
         <% } %>
         <% if (events.serviceEnabled) { %>
             <div class="row row-cols-1 g-1">
                 <div class="col" id="calendarEventsWrapper">
-                    <%- include ('../widgets/calendar_events_home'); %>
+                    <%- include ('../widgets/calendar/calendar_events_home'); %>
                 </div>
             </div>
         <% } %>
@@ -24,7 +24,7 @@
         <% if (spotify.serviceEnabled) { %>
             <div class="row row-cols-1 g-1">
                 <div class="col">
-                    <%- include ('../widgets/spotify_home'); %>
+                    <%- include ('../widgets/spotify/spotify_home'); %>
                 </div>
             </div>
         <% } %>
@@ -32,7 +32,7 @@
         <% if (tasks.serviceEnabled) { %>
             <div class="row row-cols-1 g-1">
                 <div class="col" id="tasksWrapper">
-                    <%- include ('../widgets/tasks_home'); %>
+                    <%- include ('../widgets/tasks/tasks_home'); %>
                 </div>
             </div>
         <% } %>
@@ -42,13 +42,13 @@
         <div class="row g-1 row-cols-1">
             <% if (map.serviceEnabled || train.serviceEnabled) { %>
                 <div class="col">
-                    <%- include ('../widgets/travel_home'); %>
+                    <%- include ('../widgets/travel/travel_home'); %>
                 </div>
             <% } %>
 
             <% if (devices.serviceEnabled) { %>
                 <div class="col">
-                    <%- include ('../widgets/devices_home'); %>
+                    <%- include ('../widgets/devices/devices_home'); %>
                 </div>
             <% } %>
         </div>

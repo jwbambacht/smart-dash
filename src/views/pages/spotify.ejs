@@ -1,15 +1,25 @@
 <div class="d-flex justify-content-between align-items-center mx-3 m-2">
     <span class="d-flex align-items-center h4 mb-0 font-no-monospace fw-lighter">
-        <span>
-            <i class="bi bi-spotify"></i> Spotify
+        <span class="d-flex align-items-center justify-content-start">
+            <div>
+                <div class="btn btn-blue ratio ratio-1x1 p-3" data-bs-toggle="modal" data-bs-target="#navigationContainer">
+                    <div class="d-flex justify-content-center align-items-center fs-4">
+                        <i class="bi bi-spotify"></i>
+                    </div>
+                </div>
+            </div>
+            <span class="ms-2">
+                Spotify
+
+                <div class="ms-2 spinner-grow text-success spinner-grow-sm font-size-essm update-spinner d-none"
+                     data-page="spotify"
+                     role="status"
+                ></div>
+            </span>
         </span>
-        <div class="ms-2 spinner-grow text-success spinner-grow-sm font-size-essm update-spinner d-none"
-             data-page="spotify"
-             role="status"
-        ></div>
     </span>
     <span class="font-size-sm d-flex" id="spotifyDeviceWrapper">
-        <%- include ("../widgets/spotify_device.ejs") %>
+        <%- include ("../widgets/spotify/spotify_device.ejs") %>
     </span>
 </div>
 
@@ -45,7 +55,7 @@
     <div class="row g-1">
         <div class="col-12 col-lg-4">
             <div class="mb-1" id="spotifyPlayerWrapper">
-                <%- include ("../widgets/spotify_player.ejs"); %>
+                <%- include ("../widgets/spotify/spotify_player.ejs"); %>
             </div>
 
             <% if (spotify.isAuthorized) { %>
@@ -155,29 +165,29 @@
         <div class="col-12 col-lg-8">
             <% if (spotify.isAuthorized) { %>
                 <% if (pageType === "playlists" && playlists) { %>
-                    <%- include ("../widgets/spotify_playlists.ejs"); %>
+                    <%- include ("../widgets/spotify/spotify_playlists.ejs"); %>
                 <% } else if (pageType === "playlist" && playlist) { %>
-                    <%- include ("../widgets/spotify_playlist"); %>
+                    <%- include ("../widgets/spotify/spotify_playlist"); %>
                 <% } else if (pageType === "albums" && albums) { %>
-                    <%- include ("../widgets/spotify_albums"); %>
+                    <%- include ("../widgets/spotify/spotify_albums"); %>
                 <% } else if (pageType === "album" && album) { %>
-                    <%- include ("../widgets/spotify_album"); %>
+                    <%- include ("../widgets/spotify/spotify_album"); %>
                 <% } else if (pageType === "artists" && artists) { %>
-                    <%- include ("../widgets/spotify_artists"); %>
+                    <%- include ("../widgets/spotify/spotify_artists"); %>
                 <% } else if (pageType === "artist" && artist) { %>
-                    <%- include ("../widgets/spotify_artist"); %>
+                    <%- include ("../widgets/spotify/spotify_artist"); %>
                 <% } else if (pageType === "liked" && liked) { %>
-                    <%- include ("../widgets/spotify_liked"); %>
+                    <%- include ("../widgets/spotify/spotify_liked"); %>
                 <% } else if (pageType === "top" && artists && tracks) { %>
-                    <%- include ("../widgets/spotify_top"); %>
+                    <%- include ("../widgets/spotify/spotify_top"); %>
                 <% } else if (pageType === "recently" && recentlyPlayed) { %>
-                    <%- include ("../widgets/spotify_recently_played"); %>
+                    <%- include ("../widgets/spotify/spotify_recently_played"); %>
                 <% } else if (pageType === "categories") { %>
-                    <%- include ("../widgets/spotify_categories"); %>
+                    <%- include ("../widgets/spotify/spotify_categories"); %>
                 <% } else if (pageType === "category" && category) { %>
-                    <%- include ("../widgets/spotify_category"); %>
+                    <%- include ("../widgets/spotify/spotify_category"); %>
                 <% } else if (pageType === "search") { %>
-                    <%- include ("../widgets/spotify_search"); %>
+                    <%- include ("../widgets/spotify/spotify_search"); %>
                 <% } %>
             <% } %>
         </div>

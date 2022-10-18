@@ -1,0 +1,74 @@
+<div class="row row-cols-1 g-1">
+    <div class="col">
+        <div class="card rounded-10 pe-3">
+            <div class="d-flex justify-content-start align-items-center">
+                <span class="ratio ratio-1x1 w-200p h-auto">
+                    <div class="w-100 h-100 bg-info bg-gradient text-center rounded-start-10">
+                        <i class="bi bi-graph-up-arrow position-absolute start-50 top-50 translate-middle fs-1"></i>
+                    </div>
+                </span>
+
+                <span class="ms-3 lh-1 flex-grow-1">
+                    <span class="d-block h3 mb-2 fw-bolder">
+                        Top
+                    </span>
+
+                    <span class="d-block text-uppercase text-light font-size-ssm mb-2">
+                        <% if (artists) { %>
+                            <%= artists.length %> artists
+                        <% } %>
+
+                        <% if (artists && tracks) { %>
+                            <i class='bi bi-dot'></i>
+                        <% } %>
+
+                        <% if (tracks) { %>
+                            <%= tracks.length %> tracks
+                        <% } %>
+                    </span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <% const selectedColor = "btn-blue"; %>
+    <% const deselectedColor = "btn-blue-dark"; %>
+
+    <div class="col my-1">
+        <div class="d-flex align-items-center justify-content-start font-size-sm px-2 py-2">
+            <div class="badge <%= selectedColor %> cursor-pointer me-2 toggle-category"
+                 data-target="#spotifyTopTracks"
+                 data-non-target=".spotify-category-wrapper"
+                 selected-color="<%= selectedColor %>"
+                 deselected-color="<%= deselectedColor %>"
+            >
+                My Top Tracks
+            </div>
+
+            <div class="badge <%= deselectedColor %> cursor-pointer me-2 toggle-category"
+                 data-target="#spotifyTopArtists"
+                 data-non-target=".spotify-category-wrapper"
+                 selected-color="<%= selectedColor %>"
+                 deselected-color="<%= deselectedColor %>"
+            >
+                My Top Artists
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row row-cols-1 g-1 spotify-category-wrapper" id="spotifyTopTracks">
+    <% tracks.forEach(function (track) { %>
+        <div class="col">
+            <%- include ("./spotify_track_item", { track: track, trackIndex: 0, type: "track", uri: track.uri }); %>
+        </div>
+    <% }); %>
+</div>
+
+<div class="row row-cols-2 g-1 spotify-category-wrapper d-none" id="spotifyTopArtists">
+    <% artists.forEach(function (artist) { %>
+        <div class="col">
+            <%- include ("./spotify_artist_item", { artist: artist }); %>
+        </div>
+    <% }); %>
+</div>
