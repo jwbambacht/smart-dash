@@ -1,0 +1,29 @@
+<% const updatedAt = new Date(crypto.updatedAt); %>
+
+<div class="d-flex justify-content-between align-items-center me-3 m-2">
+    <a class="sidebar-link text-decoration-none text-blue" href="/crypto">
+        <i class="bi bi-currency-bitcoin fs-5"></i>
+        <span class="fs-5 mb-0 font-no-monospace fw-light">
+            Crypto
+        </span>
+        <div class="ms-2 spinner-grow text-success spinner-grow-sm font-size-essm update-spinner d-none"
+             data-page="crypto"
+             role="status"
+        ></div>
+    </a>
+    <span class="font-size-sm">
+        <span class="badge bg-blue-dark">
+        <i class="bi bi-clock-history"></i>
+        <span id="cryptoRefreshedAt"
+              class="refresh-badge"
+              data-date="<%= crypto.updatedAt %>"
+        >
+            <%= ('0'+updatedAt.getHours()).slice(-2) + ":" + ('0'+updatedAt.getMinutes()).slice(-2); %>
+        </span>
+    </span>
+    </span>
+</div>
+
+<div class="row row-cols-3 g-1" id="cryptoWrapper">
+    <%- include ('./crypto_items_home'); %>
+</div>

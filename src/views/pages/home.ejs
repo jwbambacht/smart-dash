@@ -36,6 +36,14 @@
                 </div>
             </div>
         <% } %>
+
+        <% if (crypto.serviceEnabled) { %>
+            <div class="row row-cols-1 g-1">
+                <div class="col">
+                    <%- include ('../widgets/crypto/crypto_home'); %>
+                </div>
+            </div>
+        <% } %>
     </div>
 
     <div class="col-12 col-lg-7 col-xxl-8">

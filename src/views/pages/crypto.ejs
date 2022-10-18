@@ -1,0 +1,79 @@
+<% const updatedAt = new Date(crypto.updatedAt); %>
+
+<div class="d-flex justify-content-between align-items-center mx-3 m-2" id="cryptoToolbarWrapper">
+    <span class="d-flex align-items-center h4 mb-0 font-no-monospace fw-lighter">
+        <span class="d-flex align-items-center justify-content-start">
+            <div>
+                <div class="btn btn-blue ratio ratio-1x1 p-3" data-bs-toggle="modal" data-bs-target="#navigationContainer">
+                    <div class="d-flex justify-content-center align-items-center fs-4">
+                        <i class="bi bi-currency-bitcoin"></i>
+                    </div>
+                </div>
+            </div>
+            <span class="ms-2">
+                Crypto
+                <div class="ms-2 spinner-grow text-success spinner-grow-sm font-size-essm update-spinner d-none"
+                     data-page="crypto"
+                     role="status"
+                ></div>
+            </span>
+        </span>
+    </span>
+    <span class="font-size-sm d-flex">
+        <span class="badge d-flex align-items-center bg-blue-dark rounded align-items-center py-0 me-1 cursor-pointer">
+            <select class="p-0 form-control bg-blue-dark border-0 font-size-75r text-white pe-1"
+                    name="crypto-select-perpage"
+            >
+                <% crypto.perPageOptions.forEach(function (number, index) { %>
+                    <option value="<%= number %>" <%= index === 0 ? "selected" : "" %>>
+                        <%= number %>
+                    </option>
+                <% }); %>
+            </select>
+            <i class="bi bi-caret-down"></i>
+        </span>
+        <span class="badge d-flex align-items-center bg-blue-dark rounded align-items-center py-0 me-1 cursor-pointer">
+            <select class="p-0 form-control bg-blue-dark border-0 font-size-75r text-white pe-1"
+                    name="crypto-select-page"
+            >
+                <% crypto.pages.forEach(function (pageNumber, index) { %>
+                    <option value="<%= pageNumber %>" <%= index === 0 ? "selected" : "" %>>
+                        Page <%= pageNumber %>
+                    </option>
+                <% }); %>
+            </select>
+            <i class="bi bi-caret-down"></i>
+        </span>
+
+        <span class="badge p-0 bg-blue-dark rounded pe-2 me-1 cursor-pointer">
+            <div class="d-flex align-items-center">
+                <select class="p-0 form-control bg-blue-dark border-0 font-size-75r text-white ps-2 pe-1"
+                        name="service-status"
+                        service-type="CryptoService"
+                >
+                    <option value="1" <%= crypto.serviceEnabled ? "selected" : "" %>>
+                        <%= crypto.serviceEnabled ? "Enabled" : "Enable" %>
+                    </option>
+                    <option value="0" <%= !crypto.serviceEnabled ? "selected" : "" %>>
+                        <%= !crypto.serviceEnabled ? "Disabled" : "Disable" %>
+                    </option>
+                </select>
+                <i class="bi bi-caret-down"></i>
+            </div>
+        </span>
+
+        <span class="badge bg-blue-dark">
+            <i class="bi bi-clock-history"></i>
+            <span id="cryptoRefreshedAt"
+                  class="refresh-badge"
+                  data-date="<%= crypto.updatedAt %>"
+            >
+                <%= ('0'+updatedAt.getHours()).slice(-2) + ":" + ('0'+updatedAt.getMinutes()).slice(-2); %>
+            </span>
+        </span>
+    </span>
+</div>
+
+<div id="cryptoWrapper">
+    <%- include ('../widgets/crypto/crypto_items.ejs'); %>
+</div>

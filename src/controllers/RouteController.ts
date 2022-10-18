@@ -15,6 +15,7 @@ import { TrainRouteService } from "../services/TrainRouteService";
 import { MapService } from "../services/MapService";
 import { NSService } from "../services/NSService";
 import { SpotifyService } from "../services/SpotifyService";
+import { CryptoService } from '../services/CryptoService';
 import { SpotifySearchResult } from "../types/SpotifyTypes";
 
 @Controller()
@@ -31,6 +32,7 @@ export class RouteController {
     devicesService = Container.get(DevicesService);
     calendarService = Container.get(CalendarService);
     taskService = Container.get(TaskService);
+    cryptoService = Container.get(CryptoService);
     settingService = Container.get(SettingService);
 
     @Get("/")
@@ -55,7 +57,8 @@ export class RouteController {
             devices: await this.devicesService.getDevicesScenes(),
             events: await this.calendarService.getCalendarEventsBetween(),
             tasks: await this.taskService.getTasks(),
-            spotify: await this.spotifyService.getState()
+            spotify: await this.spotifyService.getState(),
+            crypto: await this.cryptoService.getCrypto()
         };
     }
 
@@ -291,6 +294,15 @@ export class RouteController {
         return {
             page: "tasks",
             tasks: await this.taskService.getTasks()
+        };
+    }
+
+    @Get("/crypto")
+    @Render("index.ejs")
+    async GetCrypto(): Promise<unknown> {
+        return {
+            page: "crypto",
+            crypto: await this.cryptoService.getCrypto(false)
         };
     }
 

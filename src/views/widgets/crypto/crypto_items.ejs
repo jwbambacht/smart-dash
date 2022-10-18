@@ -1,0 +1,129 @@
+<% if (!crypto.serviceEnabled) { %>
+    <div class="col flex-grow-1">
+        <div class="card p-0 rounded-10 bg-blue-dark py-3">
+            <div class="d-flex align-items-center justify-content-center">
+                    <span class="text-center font-size-ssm">
+                        <span class="h5 fw-bold d-block">CRYPTO SERVICE NOT ENABLED</span>
+                        <span class="d-block">Enable the service at the top right of the page.</span>
+                    </span>
+            </div>
+        </div>
+    </div>
+<% } %>
+
+<% if (crypto.serviceEnabled && !crypto.enabled) { %>
+    <div class="col flex-grow-1">
+        <div class="card p-0 rounded-10 bg-blue-dark py-3">
+            <div class="d-flex align-items-center justify-content-center">
+                    <span class="text-center font-size-ssm">
+                        <span class="h5 fw-bold d-block">
+                            <i class="bi bi-exclamation-triangle text-danger"></i>
+                            CRYPTO NOT ENABLED
+                        </span>
+                        <span class="d-block"><%= crypto.error %></span>
+                    </span>
+            </div>
+        </div>
+    </div>
+<% } %>
+
+<% if (crypto.serviceEnabled && crypto.enabled && crypto.coins) { %>
+    <div class="row row-cols-1 g-1">
+        <div class="col">
+            <div class="card bg-transparent px-3 py-1">
+                <div class="row align-items-center font-no-monospace font-size-ssm fw-bold">
+                    <div class="col-auto"><i class="bi bi-star-half fs-6"></i></div>
+                    <div class="col-auto">#</div>
+                    <div class="col me-auto">Coin</div>
+                    <div class="col-auto text-end">Price</div>
+                    <div class="col-4 col-md-3 text-center">
+                        <span class="d-flex justify-content-evenly">
+                            <span class="text-center">1h</span>
+                            <span class="text-center">24h</span>
+                            <span class="text-center">7d</span>
+                        </span>
+                    </div>
+                    <div class="col-1 text-end d-none d-lg-block">Volume</div>
+                    <div class="col-1 text-end d-none d-lg-block">Cap</div>
+                    <div class="col-2 text-center d-none d-md-block">Last 7 Days</div>
+                </div>
+            </div>
+        </div>
+        <% crypto.coins.forEach(function (coin, _) { %>
+            <div class="col mb-1 crypto-item" data-favorite="<%= coin.isFavorite %>">
+                <div class="card rounded-10 bg-blue-dark px-3 py-1">
+                    <div class="row align-items-center font-no-monospace font-size-ssm">
+                        <div class="col-auto fs-6">
+                            <% if (coin.isFavorite) { %>
+                                <i class="bi bi-star-fill crypto-asset-toggle text-warning cursor-pointer" data-id="<%= coin.asset.id %>" data-state="on"></i>
+                            <% } else { %>
+                                <i class="bi bi-star crypto-asset-toggle cursor-pointer" data-id="<%= coin.asset.id %>" data-state="off"></i>
+                            <% } %>
+                        </div>
+                        <div class="col-auto">
+                            <%= coin.market.rank %>
+                        </div>
+                        <div class="col me-auto">
+                            <span class="d-flex justify-content-start align-items-center">
+                                <% if (coin.asset.image) { %>
+                                    <img src="<%= coin.asset.image %>" style="width: 20px; height: 20px;" />
+                                <% } else { %>
+                                    <i class="bi bi-coin"></i>
+                                <% } %>
+                                <span class="ms-2 lh-sm">
+                                    <span class="d-block fw-bold"><%= coin.asset.name %></span>
+                                    <span class="d-block text-secondary"><%= coin.asset.symbol.toUpperCase() %></span>
+                                </span>
+                            </span>
+                        </div>
+                        <div class="col-auto text-end fw-bold">
+                            $<%= coin.market.price %>
+                        </div>
+                        <div class="col-4 col-md-3 text-center">
+                            <% const change1hUp = +coin.market.change1hPercentage >= 0; %>
+                            <% const change24hUp = +coin.market.change24hPercentage >= 0; %>
+                            <% const change7dUp = +coin.market.change7dPercentage >= 0; %>
+                            <% const upIcon = "<i class='bi bi-caret-up-fill d-none d-sm-inline-block'></i>"; %>
+                            <% const downIcon = "<i class='bi bi-caret-down-fill d-none d-sm-inline-block'></i>"; %>
+
+                            <span class="d-flex justify-content-evenly">
+                                <span class="text-center <%= change1hUp ? "text-success" : "text-danger" %>">
+                                    <%- change1hUp ? upIcon : downIcon %> <%= Math.abs(+coin.market.change1hPercentage).toFixed(2) %>%
+                                </span>
+                                <span class="text-center <%= change24hUp ? "text-success" : "text-danger" %>">
+                                    <%- change24hUp ? upIcon : downIcon %> <%= Math.abs(+coin.market.change24hPercentage).toFixed(2) %>%
+                                </span>
+                                <span class="text-center <%= change7dUp ? "text-success" : "text-danger" %>">
+                                    <%- change7dUp ? upIcon : downIcon %> <%= Math.abs(+coin.market.change7dPercentage).toFixed(2) %>%
+                                </span>
+                            </span>
+                        </div>
+                        <div class="col-1 text-end d-none d-lg-block">
+                            <% if (coin.market.volume >= Math.pow(10, 9)) { %>
+                                $<%= coin.market.volume.toPrecision(3) / Math.pow(10, 9) %> bil
+                            <% } else if (coin.market.volume >= Math.pow(10, 6)) { %>
+                                $<%= coin.market.volume.toPrecision(3) / Math.pow(10, 6) %> mil
+                            <% } else { %>
+                                $<%= coin.market.volume %>
+                            <% } %>
+                        </div>
+                        <div class="col-1 text-end d-none d-lg-block">
+                            <% if (coin.market.marketCap >= Math.pow(10, 9)) { %>
+                                $<%= coin.market.marketCap.toPrecision(3) / Math.pow(10, 9) %> bil
+                            <% } else if (coin.market.marketCap >= Math.pow(10, 6)) { %>
+                                $<%= coin.market.marketCap.toPrecision(3) / Math.pow(10, 6) %> mil
+                            <% } else { %>
+                                $<%= coin.market.marketCap %>
+                            <% } %>
+                        </div>
+<!--                        <div class="col-2 d-none d-md-block">-->
+<!--                            <div class="h-100 w-100">-->
+<!--                                <img src="<%= coin.svg %>" class="w-100 h-100" />-->
+<!--                            </div>-->
+<!--                        </div>-->
+                    </div>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+<% } %>

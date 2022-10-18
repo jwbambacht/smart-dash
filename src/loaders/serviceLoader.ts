@@ -9,6 +9,7 @@ import { NSService } from '../services/NSService';
 import { DevicesService } from '../services/DevicesService';
 import { CalendarService } from '../services/CalendarService';
 import { TaskService } from '../services/TaskService';
+import { CryptoService } from '../services/CryptoService';
 
 export function initializeServices(io: Server): void {
 	Container.get(SocketService).setServer(io);
@@ -19,6 +20,7 @@ export function initializeServices(io: Server): void {
 	Container.get(DevicesService);
 	Container.get(CalendarService);
 	Container.get(TaskService);
+	Container.get(CryptoService);
 
 	return;
 }
