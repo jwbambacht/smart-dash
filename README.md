@@ -2,7 +2,7 @@
 A Smart Home Dashboard that is designed to display data and information in the browser of any device. An alternative to solutions like [Home Assistant](https://github.com/home-assistant/core) to let the client completely customize layouts and easily create any service/integration themselves in TypeScript. The features of the application can be integrated in a modular manner with/without dependencies to other features or services.
 
 <center>
-    <img src="https://user-images.githubusercontent.com/31626076/195676679-a847c984-1c6c-4aa0-9caa-133c89d5269e.gif" width="75%" height="auto" style="border: 2px solid #375a7f; border-radius: 10px;" />
+    <img src="https://user-images.githubusercontent.com/31626076/195676679-a847c984-1c6c-4aa0-9caa-133c89d5269e.gif" width="100%" height="auto" style="border: 2px solid #375a7f; border-radius: 10px;" />
 </center>
 
 The NodeJS backend makes use of modern JavaScript/TypeScript functionalities. The frontend is designed to work with older JavaScript browsers as well (ECMA2016+). Therefore, devices as old tablets are able to run the application as well. If support for older browsers is not an issue, modern syntax or even using frontend frameworks like [React](https://github.com/facebook/react) or [Angular](https://github.com/angular/angular) should be no problem. The application is unauthenticated and unidentified, meaning that every client that visits the application in the browser will see exactly the same.
