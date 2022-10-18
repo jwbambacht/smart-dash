@@ -7,6 +7,7 @@ import { LoggerService } from "./LoggerService";
 type EmitServiceType = {
     service: string;
     type: string;
+    value?: object;
 }
 
 @Service()
@@ -27,11 +28,15 @@ export class SocketService {
             });
 
             socket.on("init", (data: EmitServiceType) => {
-                this.listeners.get(data.service)?.init(data.type);
+                this.listeners.get(data.service)?.init(data.type, data.value);
             });
 
             socket.on("activate", (data: EmitServiceType) => {
-                this.listeners.get(data.service)?.activate(data.type);
+                this.listeners.get(data.service)?.activate(data.type, data.value);
+            });
+
+            socket.on("event", (data: EmitServiceType) => {
+                this.listeners.get(data.service)?.event(data.type, data.value);
             });
         });
     }

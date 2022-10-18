@@ -14,12 +14,16 @@ export class BaseService {
 		this.socketService.registerListener(this.serviceName, this);
 	}
 
-	async init(type: string): Promise<void> {
-		this.log.http('SocketService', `Received ${type} message for service '${this.serviceName}'`);
+	async init(type: string, value?: object): Promise<void> {
+		this.log.http('SocketService', `Received ${type} message for service '${this.serviceName}' with value '${JSON.stringify(value)}'`);
 	}
 
-	activate(type: string): void {
-		this.log.http('SocketService', `Received ${type} message for service '${this.serviceName}'`);
+	activate(type: string, value?: object): void {
+		this.log.http('SocketService', `Received ${type} message for service '${this.serviceName}' with value '${JSON.stringify(value)}'`);
+	}
+
+	async event(type: string, value: object): Promise<void> {
+		this.log.http('SocketService', `Received ${type} message for service '${this.serviceName}' with value '${JSON.stringify(value)}'`);
 	}
 
 	emit<T>(event: string, data: T): void {
