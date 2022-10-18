@@ -4,7 +4,7 @@ import { Body, Delete, Get, JsonController, Param, Post, Put } from 'routing-con
 import { TaskService } from '../services/TaskService';
 
 @JsonController("/api/tasks")
-export class UserController {
+export class TaskController {
 	tasksService = Container.get(TaskService);
 
 	@Get("/")

@@ -337,12 +337,12 @@ export class DevicesService extends BaseService {
     async fetchDevicesScenes(homeID?: string): Promise<boolean> {
         if (!await this.isServiceEnabled() || !this.enabled) return;
 
+        this.log.info("DevicesService", "Fetching devices from API");
+
         await this.settingService.findAllByTypeSpec("devices", "blacklist")
             .then((blacklist) => {
                 this.blacklistIDs = blacklist.map((setting) => setting);
             });
-
-        this.log.info("DevicesService", "Fetching devices from API");
 
         if (!this.config.aesKey || !this.config.macAddress) {
             this.enabled = false;
@@ -444,13 +444,13 @@ export class DevicesService extends BaseService {
 
             this.updatedAt = new Date();
 
-            return;
+            return true;
         }
 
         this.enabled = false;
         this.error = "Devices/Scenes couldn't be fetched";
 
-        return;
+        return false;
     }
 
     getDeviceTypeName(deviceType: DeviceType): DeviceTypeName {

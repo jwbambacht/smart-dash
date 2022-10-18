@@ -61,7 +61,7 @@ export class WeatherService extends BaseService {
                 this.fetchForecast().then(() => {
                     setInterval(async () => {
                         if (this.forecastUpdateActivated) {
-                            this.emit<object>("forecast update",await  this.getForecast(true));
+                            this.emit<object>("forecast update", await this.getForecast(true));
                         }
 
                         this.forecastUpdateActivated = false;

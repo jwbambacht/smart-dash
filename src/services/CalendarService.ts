@@ -131,13 +131,16 @@ export class CalendarService extends BaseService {
         year: number = new Date().getFullYear(),
         week: number = moment(new Date()).isoWeek()
     ): Promise<object> {
+        let filtered: lodash.Dictionary<Event[]> = {};
         const weekStart = moment().year(year).isoWeek(week).startOf("isoWeek").toDate().getTime();
         const weekEnd = moment().year(year).isoWeek(week).endOf("isoWeek").toDate().getTime();
 
-        const filteredEvents = this.events
-            .filter((event: Event) => event.start >= weekStart && event.start <= weekEnd)
-            .sort((a, b) => a.start - b.start);
-        const groupedEvents = lodash.groupBy(filteredEvents, 'startDate');
+        if (await this.checkServiceStatus()) {
+            const filteredEvents = this.events
+                .filter((event: Event) => event.start >= weekStart && event.start <= weekEnd)
+                .sort((a, b) => a.start - b.start);
+            filtered = lodash.groupBy(filteredEvents, 'startDate');
+        }
 
         return {
             serviceEnabled: await this.isServiceEnabled(),
@@ -145,7 +148,7 @@ export class CalendarService extends BaseService {
             week: week,
             weekStart: weekStart,
             weekEnd: weekEnd,
-            events: groupedEvents,
+            events: filtered,
             updatedAt: this.updatedAt
         };
     }
@@ -154,25 +157,29 @@ export class CalendarService extends BaseService {
         startDate: Date = new Date(),
         nDays = 2
     ): Promise<object> {
-        const endDate = new Date(startDate.getTime());
-        endDate.setDate(endDate.getDate() + nDays + 1);
-        endDate.setHours(0);
-        endDate.setMinutes(0);
+        let filteredEvents: object[] = [];
 
-        const filteredEvents = this.events
-            .filter((event: Event) => event.end >= startDate.getTime() && event.end < endDate.getTime())
-            .sort((a, b) => a.start - b.start)
-            .map((event): object => {
-                const obj = event;
-                obj.dayTextAbbrev = moment(event.start).format("ddd");
-                obj.dayText = moment(event.start).format("dddd");
+        if (await this.checkServiceStatus()) {
+            const endDate = new Date(startDate.getTime());
+            endDate.setDate(endDate.getDate() + nDays + 1);
+            endDate.setHours(0);
+            endDate.setMinutes(0);
 
-                const daysFromNow = moment(event.start).diff(moment(startDate.getTime()).startOf('day'), 'days');
-                obj.daysFromNow = daysFromNow;
-                obj.dayType = daysFromNow === 0 ? "Today" : (daysFromNow === 1 ? "Tomorrow" : moment(event.start).format("dddd"));
+            filteredEvents = this.events
+                .filter((event: Event) => event.end >= startDate.getTime() && event.end < endDate.getTime())
+                .sort((a, b) => a.start - b.start)
+                .map((event): object => {
+                    const obj = event;
+                    obj.dayTextAbbrev = moment(event.start).format("ddd");
+                    obj.dayText = moment(event.start).format("dddd");
 
-                return obj;
-            });
+                    const daysFromNow = moment(event.start).diff(moment(startDate.getTime()).startOf('day'), 'days');
+                    obj.daysFromNow = daysFromNow;
+                    obj.dayType = daysFromNow === 0 ? "Today" : (daysFromNow === 1 ? "Tomorrow" : moment(event.start).format("dddd"));
+
+                    return obj;
+                });
+        }
 
         return {
             serviceEnabled: await this.isServiceEnabled(),
@@ -182,6 +189,8 @@ export class CalendarService extends BaseService {
     }
 
     async fetchCalendarEvents(): Promise<void> {
+        if (!await this.checkServiceStatus()) return;
+
         this.log.info("CalendarService", "Fetching calendars");
 
         this.events = [];
