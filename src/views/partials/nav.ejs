@@ -1,64 +1,40 @@
-<ul class="nav nav-pills nav-flush mb-md-auto me-auto text-center fs-3">
-    <% if (position === "side") { %>
-        <li class="nav-item">
-            <a href="/home" class="nav-link sidebar-link py-3 mx-2 rounded-10 sidebar-width <%= (page === "home") ? "active" : "" %>">
-                <% if (page === "home") { %>
-                    <img src="/assets/img/favicon/favicon_white_transparent.svg" width="100%" height="auto" />
-                <% } else { %>
-                    <img src="/assets/img/favicon/favicon_blue_transparent.svg" width="100%" height="auto" />
-                <% } %>%>
-            </a>
-        </li>
-    <% } else { %>
-        <li class="nav-item">
-            <a href="/home" class="nav-link sidebar-link py-3 mx-2 rounded-10 <%= page === "home" ? "active" : "" %>">
-                <i class="bi <%= (page === 'home' ? 'bi-grid-fill' : 'bi-grid') %>"></i>
-            </a>
-        </li>
-    <% } %>
-    <li class="nav-item">
-        <a href="/spotify" class="nav-link sidebar-link py-3 mx-2 rounded-10 <%= (position === "side") ? "sidebar-width" : "" %> <%= page === "spotify" ? "active" : "" %>">
-            <i class="bi <%= (page === 'spotify' ? 'bi-spotify' : 'bi-spotify') %>"></i>
-        </a>
-    </li>
-    <li class="nav-item">
-        <a href="/weather" class="nav-link sidebar-link py-3 mx-2 rounded-10 <%= (position === "side") ? "sidebar-width" : "" %> <%= page === "weather" ? "active" : "" %>">
-            <i class="bi <%= (page === 'weather' ? 'bi-cloud-sun-fill' : 'bi-cloud-sun') %>"></i>
-        </a>
-    </li>
-    <li class="nav-item">
-        <a href="/travel" class="nav-link sidebar-link py-3 mx-2 rounded-10 <%= (position === "side") ? "sidebar-width" : "" %>  <%= page === "travel" ? "active" : "" %>">
-            <i class="bi <%= (page === 'travel' ? 'bi-stoplights-fill' : 'bi-stoplights') %>"></i>
-        </a>
-    </li>
-    <li class="nav-item">
-        <a href="/devices" class="nav-link sidebar-link py-3 mx-2 rounded-10 <%= (position === "side") ? "sidebar-width" : "" %> <%= page === "devices" ? "active" : "" %>">
-            <i class="bi <%= (page === 'devices' ? 'bi-lightbulb-fill' : 'bi-lightbulb') %>"></i>
-        </a>
-    </li>
-    <li class="nav-item">
-        <a href="/energy" class="nav-link sidebar-link py-3 mx-2 rounded-10 <%= (position === "side") ? "sidebar-width" : "" %> <%= page === "energy" ? "active" : "" %>">
-            <i class="bi <%= (page === 'energy' ? 'bi-plug-fill' : 'bi-plug') %>"></i>
-        </a>
-    </li>
-    <li class="nav-item">
-        <a href="/calendar" class="nav-link sidebar-link py-3 mx-2 rounded-10 <%= (position === "side") ? "sidebar-width" : "" %> <%= page === "calendar" ? "active" : "" %>">
-            <i class="bi <%= (page === 'calendar' ? 'bi-calendar-date-fill' : 'bi-calendar-date') %>"></i>
-        </a>
-    </li>
-    <li class="nav-item">
-        <a href="/tasks" class="nav-link sidebar-link py-3 mx-2 rounded-10 <%= (position === "side") ? "sidebar-width" : "" %> <%= page === "tasks" ? "active" : "" %>">
-            <i class="bi <%= (page === 'tasks' ? 'bi-list-check' : 'bi-list-task') %>"></i>
-        </a>
-    </li>
-    <li class="nav-item">
-        <a href="/settings" class="nav-link sidebar-link py-3 mx-2 rounded-10 <%= (position === "side") ? "sidebar-width" : "" %> <%= page === "settings" ? "active" : "" %>">
-            <i class="bi <%= (page === 'settings' ? 'bi-gear-fill' : 'bi-gear') %>"></i>
-        </a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link py-3 mx-2 rounded-10 <%= (position === "side") ? "sidebar-width" : "" %> text-secondary refresh-page">
-            <i class="bi-arrow-clockwise"></i>
-        </a>
-    </li>
-</ul>
+<% const navItems = [
+    { path: "home", label: "Home", icon: "bi-grid", iconActive: "bi-grid-fill" },
+    { path: "spotify", label: "Spotify", icon: "bi-spotify", iconActive: "bi-spotify" },
+    { path: "weather", label: "Weather", icon: "bi-cloud-sun", iconActive: "bi-cloud-sun-fill" },
+    { path: "travel", label: "Travel", icon: "bi-stoplights", iconActive: "bi-stoplights-fill" },
+    { path: "devices", label: "Devices", icon: "bi-lightbulb", iconActive: "bi-lightbulb-fill" },
+    { path: "energy", label: "Energy", icon: "bi-plug", iconActive: "bi-plug-fill" },
+    { path: "calendar", label: "Calendar", icon: "bi-calendar-date", iconActive: "bi-calendar-date-fill" },
+    { path: "tasks", label: "Tasks", icon: "bi-list-task", iconActive: "bi-list-check" },
+    { path: "crypto", label: "Crypto", icon: "bi-currency-bitcoin", iconActive: "bi-currency-bitcoin" },
+    { path: "settings", label: "Setting", icon: "bi-gear", iconActive: "bi-gear-fill" },
+    { path: "", label: "Refresh", icon: "bi-arrow-clockwise", iconActive: "bi-arrow-clockwise", customClasses: "refresh-page" }
+]; %>
+
+<div class="modal fade" id="navigationContainer" aria-labelledby="navigationContainer" tabindex="2" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen" data-bs-dismiss="modal" data-bs-target="#navigationContainer">
+        <div class="modal-content bg-black bg-opacity-95">
+            <div class="position-absolute top-0 end-0 pt-3 pe-3">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="d-flex align-items-center min-vh-100">
+                <div class="container-fluid">
+                    <div class="row row-cols-3 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
+                        <% navItems.forEach(function (item) { %>
+                            <% const isActive = page === item.path; %>
+                            <div class="col text-center mb-3">
+                                <a class="btn btn-blue-dark rounded-10 ratio ratio-1x1 sidebar-link <%= item.customClasses ? item.customClasses : "" %>"
+                                   href="/<%= item.path %>" style="max-width: 125px; max-height: 125px;">
+                                    <span class="d-flex align-items-center justify-content-center">
+                                        <i class="bi <%= isActive ? item.iconActive + " text-blue" : item.icon + " text-white" %> fs-2"></i>
+                                    </span>
+                                </a>
+                            </div>
+                        <% }); %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

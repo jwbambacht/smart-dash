@@ -99,7 +99,7 @@ function doGetEventsHome(): void {
     fetch("/api/calendar/preview/events").then(function (req) {
         if (req.status === 200) {
             req.clone().json().then(function (obj) {
-                fetch("/views/widgets/calendar_events_home.ejs").then(function (resp) {
+                fetch("/views/widgets/calendar/calendar_events_home.ejs").then(function (resp) {
                     return resp.clone().text();
 
                 }).then(function (template) {
@@ -126,7 +126,7 @@ function doUpdateCalendarEvents(): void {
     fetch("/api/calendar/events/" + year + "/" + week).then(function (req) {
         if (req.status === 200) {
             req.clone().json().then(function (obj) {
-                fetch("/views/widgets/calendar_events.ejs").then(function (resp) {
+                fetch("/views/widgets/calendar/calendar_events.ejs").then(function (resp) {
                     return resp.clone().text();
 
                 }).then(function (template) {
@@ -297,7 +297,7 @@ function doGetMonth(element: Element, next: boolean): void {
         if (req.status === 200) {
             req.clone().json().then(function(obj) {
 
-                fetch("/views/widgets/calendar_month.ejs").then(function (resp) {
+                fetch("/views/widgets/calendar/calendar_month.ejs").then(function (resp) {
                     return resp.clone().text();
 
                 }).then(function (template) {
@@ -870,7 +870,7 @@ function doGetData(element: Element, next: boolean): void {
     fetch('/api/devices/energy/historical/' + newYear + '/' + newMonth).then(function (req) {
         if (req.status === 200) {
             req.clone().json().then(function(obj) {
-                fetch("/views/widgets/energy_historical.ejs").then(function (resp) {
+                fetch("/views/widgets/energy/energy_historical.ejs").then(function (resp) {
                     return resp.clone().text();
 
                 }).then(function (template) {
@@ -903,7 +903,7 @@ function doGetLiveEnergyReadings(data: any): void {
         return;
     }
 
-    fetch("/views/widgets/energy_meter_readings.ejs").then(function (resp) {
+    fetch("/views/widgets/energy/energy_meter_readings.ejs").then(function (resp) {
         return resp.clone().text();
 
     }).then(function (template) {
@@ -1198,7 +1198,7 @@ function doUpdatePlayer(data: object): void {
         return;
     }
 
-    fetch("/views/widgets/spotify_player.ejs").then(function (resp) {
+    fetch("/views/widgets/spotify/spotify_player.ejs").then(function (resp) {
         return resp.clone().text();
     }).then(function (template) {
 
@@ -1214,7 +1214,7 @@ function doUpdatePlayer(data: object): void {
         return;
     }
 
-    fetch("/views/widgets/spotify_device.ejs").then(function (resp) {
+    fetch("/views/widgets/spotify/spotify_device.ejs").then(function (resp) {
        return resp.clone().text();
     }).then(function (template) {
 
@@ -1231,7 +1231,7 @@ function doUpdateDevice(data: object): void {
     const page = document.querySelector("body").getAttribute("data-page");
     const target = document.querySelector("#spotifyDeviceWrapper");
 
-    fetch("/views/widgets/spotify_device.ejs").then(function (resp) {
+    fetch("/views/widgets/spotify/spotify_device.ejs").then(function (resp) {
         return resp.clone().text();
     }).then(function (template) {
 
@@ -1399,7 +1399,7 @@ function doUpdateTasks(data: any): void {
         return;
     }
 
-    fetch("/views/widgets/tasks_items.ejs").then(function (resp) {
+    fetch("/views/widgets/tasks/tasks_items.ejs").then(function (resp) {
         return resp.clone().text();
 
     }).then(function (template) {
@@ -1618,7 +1618,7 @@ function doUpdateNSTrips(data: any): void {
         return;
     }
 
-    fetch("/views/widgets/travel_items_ns.ejs").then(function (resp) {
+    fetch("/views/widgets/travel/travel_items_ns.ejs").then(function (resp) {
         return resp.clone().text();
     }).then(function (template) {
 
@@ -1646,7 +1646,7 @@ function doUpdateMapRoutes(data: any): void {
         return;
     }
 
-    fetch("/views/widgets/travel_items_map.ejs").then(function (resp) {
+    fetch("/views/widgets/travel/travel_items_map.ejs").then(function (resp) {
         return resp.clone().text();
     }).then(function (template) {
 
@@ -2112,7 +2112,7 @@ function doUpdateWeather(data: any): void {
             return;
         }
 
-        fetch("/views/widgets/weather_today_home.ejs").then(function (resp) {
+        fetch("/views/widgets/weather/weather_today_home.ejs").then(function (resp) {
             return resp.clone().text();
 
         }).then(function (template) {
@@ -2123,7 +2123,7 @@ function doUpdateWeather(data: any): void {
     }
 
     if (page === "weather") {
-        fetch("/views/widgets/weather_forecast.ejs").then(function (resp) {
+        fetch("/views/widgets/weather/weather_forecast.ejs").then(function (resp) {
             return resp.clone().text();
 
         }).then(function (template) {
@@ -2169,15 +2169,10 @@ function onPageLoad(): void {
     });
 
     const nowTimeElement = document.querySelector("#nowTimeString");
-    if (nowTimeElement !== null) {
+    const nowDateElement = document.querySelector("#nowDateString");
+    if (nowTimeElement && nowDateElement) {
         window.setInterval(function () {
             nowTimeElement.innerHTML = momentt(new Date()).format("HH:mm:ss");
-        }, 1000);
-    }
-
-    const nowDateElement = document.querySelector("#nowDateString");
-    if (nowDateElement !== null) {
-        window.setInterval(function () {
             nowDateElement.innerHTML = momentt(new Date()).format("dddd, MMMM D");
         }, 1000);
     }
@@ -2209,6 +2204,51 @@ function onPageLoad(): void {
             });
         });
     });
+
+    if (typeof $.fn.modal === 'undefined') {
+        const navigationMenuButton = document.querySelector("[data-bs-toggle='modal']");
+        if (navigationMenuButton) {
+            navigationMenuButton.addEventListener("click", function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+
+                const target = navigationMenuButton.getAttribute("data-bs-target");
+                if (!target) return;
+
+                const navigationContainer = document.querySelector(target);
+                if (!navigationContainer) return;
+
+                const bodyElement = document.querySelector("body");
+                bodyElement.classList.add("modal-open");
+                navigationContainer.classList.add("show");
+                (navigationContainer as HTMLDivElement).style.display = "block";
+                bodyElement.append("<div class='modal-backdrop show'></div>");
+            });
+        }
+
+        const navigationCloseElements = document.querySelectorAll("[data-bs-dismiss='modal']");
+        $.each(navigationCloseElements, function (_, element) {
+            element.addEventListener("click", function (event) {
+                // event.preventDefault();
+                // event.stopPropagation();
+
+                const target = navigationMenuButton.getAttribute("data-bs-target");
+                if (!target) return;
+
+                const navigationContainer = document.querySelector(target);
+                if (!navigationContainer) return;
+
+                const bodyElement = document.querySelector("body");
+                bodyElement.classList.remove("modal-open");
+                navigationContainer.classList.remove("show");
+                (navigationContainer as HTMLDivElement).style.display = "none";
+                const backdropElement = document.querySelector(".modal-backdrop");
+                if (backdropElement) {
+                    backdropElement.remove();
+                }
+            });
+        });
+    }
 
 //// CALENDAR-START ////
 

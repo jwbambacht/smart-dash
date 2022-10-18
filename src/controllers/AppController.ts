@@ -18,10 +18,10 @@ export class AppController {
 
         try {
             if (page === "devices") {
-                templates.scene = fs.readFileSync(path.join(__dirname, "../views/widgets/devices_scene.ejs"), 'utf8');
-                templates.switch = fs.readFileSync(path.join(__dirname, "../views/widgets/devices_switch.ejs"), 'utf8');
-                templates.dimmer = fs.readFileSync(path.join(__dirname, "../views/widgets/devices_dimmer.ejs"), 'utf8');
-                templates.color = fs.readFileSync(path.join(__dirname, "../views/widgets/devices_color.ejs"), 'utf8');
+                templates.scene = fs.readFileSync(path.join(__dirname, "../views/widgets/devices/devices_scene.ejs"), 'utf8');
+                templates.switch = fs.readFileSync(path.join(__dirname, "../views/widgets/devices/devices_switch.ejs"), 'utf8');
+                templates.dimmer = fs.readFileSync(path.join(__dirname, "../views/widgets/devices/devices_dimmer.ejs"), 'utf8');
+                templates.color = fs.readFileSync(path.join(__dirname, "../views/widgets/devices/devices_color.ejs"), 'utf8');
             }
         } catch (err) {
             this.log.error(err);
