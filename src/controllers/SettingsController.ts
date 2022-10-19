@@ -1,5 +1,5 @@
 import { Container } from "typedi";
-import { BadRequestError, Body, Delete, JsonController, Param, Post, Put } from "routing-controllers";
+import { BadRequestError, Body, Delete, JsonController, Param, Post, Put } from 'routing-controllers';
 import { IsNotEmpty, IsString } from "class-validator";
 
 import { LoggerService } from "../services/LoggerService";
@@ -35,6 +35,7 @@ class UpdateSettingRequest {
 @JsonController("/api/settings")
 export class SettingsController {
     log = Container.get(LoggerService);
+    settingService = Container.get(SettingService);
 
     @Post("/")
     async addSetting(@Body() body: AddSettingRequest): Promise<Setting> {
@@ -55,7 +56,7 @@ export class SettingsController {
         setting.specification = body.specification;
         setting.value = body.value;
 
-        const newSetting = await Container.get(SettingService).create(setting);
+        const newSetting = await this.settingService.create(setting);
         if (newSetting !== undefined) return newSetting;
 
         return undefined;
@@ -72,12 +73,12 @@ export class SettingsController {
         setting.specification = body.specification;
         setting.value = body.value;
 
-        return await Container.get(SettingService).update(setting);
+        return await this.settingService.update(setting);
     }
 
     @Delete("/:id")
     async deleteSetting(@Param("id") id: string): Promise<string> {
-        await Container.get(SettingService).delete(id);
+        await this.settingService.delete(id);
         return "OK";
     }
 }

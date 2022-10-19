@@ -42,8 +42,8 @@ export async function setupExpressApp(logger: LoggerService): Promise<Server> {
             };
             server = https.createServer(credentials, app);
         } catch (err) {
-            logger.error(`Failed to create HTTPS server (${err})`);
-            logger.info('Fallback to HTTP');
+            logger.error("ExpressLoader", `Failed to create HTTPS server (${err})`);
+            logger.info("ExpressLoader", 'Fallback to HTTP');
 
             server = http.createServer(app);
         }
@@ -54,12 +54,13 @@ export async function setupExpressApp(logger: LoggerService): Promise<Server> {
         // Start listening for incoming requests
         const port = process.env.PORT || 3000;
         server.listen(port, () => {
-            logger.info(`App started, listening on port ${port}`);
+            logger.info("ExpressLoader", `App started, listening on port ${port}`);
         });
 
         return io;
 
     } catch (err) {
+        this.logger.error("ExpressLoader", `Failed to start the server (${err})`);
         throw new Error(`Failed to start the server (${err})`);
     }
 }

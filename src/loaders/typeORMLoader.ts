@@ -67,7 +67,7 @@ const defaultSettings = [
  */
 export async function seedDB(logger?: LoggerService): Promise<void> {
     try {
-        if (logger) logger.info("Seeding database...");
+        if (logger) logger.info("TypeORMLoader", "Seeding database...");
         const settingService = Container.get(SettingService);
 
         for (const dSetting of defaultSettings) {
