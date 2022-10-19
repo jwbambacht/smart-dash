@@ -1,0 +1,85 @@
+<div class="d-flex justify-content-between align-items-center mx-3 m-2">
+    <span class="d-flex align-items-center h4 mb-0 font-no-monospace fw-lighter">
+        <span class="d-flex align-items-center justify-content-start">
+            <div>
+                <div class="btn btn-blue ratio ratio-1x1 p-3" data-bs-toggle="modal" data-bs-target="#navigationContainer">
+                    <div class="d-flex justify-content-center align-items-center fs-4">
+                        <i class="bi bi-card-text"></i>
+                    </div>
+                </div>
+            </div>
+            <span class="ms-2">
+                Logs
+                <div class="ms-2 spinner-grow text-success spinner-grow-sm font-size-essm update-spinner d-none"
+                     data-page="settings"
+                     role="status"
+                ></div>
+            </span>
+        </span>
+    </span>
+    <span class="font-size-sm">
+
+        <span class="badge bg-blue-dark">
+            <a href="<%= log.previousLink || "#" %>" class="<%= log.previousLink ? "text-white" : "text-muted" %> sidebar-link text-decoration-none">
+                <i class="bi bi-arrow-left"></i>
+            </a>
+            page <%= pageNumber %>
+            <a href="<%= log.nextLink || "#" %>" class="<%= log.nextLink ? "text-white" : "text-muted" %> sidebar-link text-decoration-none">
+                <i class="bi bi-arrow-right"></i>
+            </a>
+        </span>
+
+        <% if (logNames) { %>
+            <% logNames.forEach(function (logName) { %>
+                <a href="/logs/<%= logName %>/1"
+                   class="badge <%= log.logName === logName ? "btn-blue" : "btn-blue-dark" %> text-decoration-none sidebar-link"
+                >
+                    <i class="bi bi-eye-fill"></i>
+                    <%= logName %>
+                </a>
+            <% }); %>
+        <% } %>
+    </span>
+</div>
+
+<div class="row row-cols-1 g-1 font-size-ssm" id="logsWrapper">
+    <% if (log && log.fileContent) { %>
+        <% if (log.fileContent.length > 0) { %>
+            <% log.fileContent.forEach(function(item) { %>
+                <% const date = new Date(item.timestamp); %>
+                <% const colors = { info: "bg-success", error: "bg-danger", warn: "bg-warning", http: "bg-blue" }; %>
+                <div class="col">
+                    <div class="card bg-blue-dark rounded-10 px-2 py-2">
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-secondary">
+                                <%= ('0' + date.getDate()).slice(-2) %>-<%= ('0' + (date.getMonth() + 1)).slice(-2) %>-<%= date.getFullYear() %>
+                                <%= ('0' + date.getHours()).slice(-2) + ":" + ('0' + date.getMinutes()).slice(-2) %>
+                            </span>
+                            <span class="badge <%= colors[item.level] %> ms-2">
+                                <%= item.level %>
+                            </span>
+                            <span class="ms-2 me-auto">
+                                <%= item.message %>
+                            </span>
+                            <span class="badge bg-info ms-2">
+                                <%= item.label %>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        <% } else { %>
+            <div class="col">
+                <div class="card bg-blue-dark rounded-10 px-x py-2 text-center">
+                    The log file is empty.
+                </div>
+            </div>
+        <% } %>
+    <% } else { %>
+        <div class="col">
+            <div class="card bg-blue-dark rounded-10 px-x py-2 text-center">
+                Log file not found.
+            </div>
+        </div>
+    <% } %>
+</div>

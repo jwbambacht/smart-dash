@@ -20,7 +20,7 @@ import { SpotifySearchResult } from "../types/SpotifyTypes";
 
 @Controller()
 export class RouteController {
-    log = Container.get(LoggerService);
+    loggerService = Container.get(LoggerService);
     weatherService = Container.get(WeatherService);
     spotifyService = Container.get(SpotifyService);
     mapService = Container.get(MapService);
@@ -312,6 +312,29 @@ export class RouteController {
         return {
             page: "settings",
             settings: await this.settingService.findAll()
+        };
+    }
+
+    @Get("/logs")
+    @Redirect("/")
+    async getSettingsLogs(): Promise<string> {
+        const logs = await this.loggerService.getLogFileNames();
+        const logName = logs.length > 0 ? logs[0] : null;
+
+        return "/logs/" + logName + "/1";
+    }
+
+    @Get("/logs/:name/:page")
+    @Render("index.ejs")
+    async getSettingsLogFile(@Param("name") name: string, @Param("page") pageNumber: number): Promise<unknown> {
+        const logs = await this.loggerService.getLogFileNames();
+        const logName = name || (logs.length > 0 ? logs[0] : null);
+
+        return {
+            page: "logs",
+            logNames: logs,
+            log: await this.loggerService.getLog(logName, pageNumber || 1),
+            pageNumber: pageNumber || 1
         };
     }
 }
