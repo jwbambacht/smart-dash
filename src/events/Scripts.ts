@@ -15,15 +15,6 @@ const googlemaps = require('@googlemaps/js-api-loader');
 
 const socket = io();
 
-socket.on("connect", function () {
-    console.log("Connected to server with id: ", socket.id);
-});
-
-socket.on("disconnect", function (reason: string) {
-    console.log("Disconnected from server and reconnecting: ", reason);
-    socket.connect();
-});
-
 function toggleActionSpinner(element: Element): void {
     const load = element.querySelector(".load");
     const loading = element.querySelector(".loading");
@@ -39,7 +30,7 @@ function updateSpinner(page: string): void {
     if (updateSpinner) updateSpinner.classList.remove("d-none");
 }
 
-function stopSpinner(page: string): void {
+function stopUpdateSpinner(page: string): void {
     const updateSpinner = document.querySelector(".update-spinner[data-page='" + page + "']");
     if (updateSpinner) setTimeout(function () {
         updateSpinner.classList.add("d-none");
@@ -111,7 +102,7 @@ function doGetEventsHome(): void {
             });
         }
 
-        stopSpinner("calendar");
+        stopUpdateSpinner("calendar");
     });
 }
 
@@ -142,7 +133,7 @@ function doUpdateCalendarEvents(): void {
             });
         }
 
-        stopSpinner("calendar");
+        stopUpdateSpinner("calendar");
     });
 }
 
@@ -248,7 +239,7 @@ function getUpdateCalendarWindow(element: Element): void {
             });
         }
 
-        stopSpinner("calendar");
+        stopUpdateSpinner("calendar");
     });
 }
 
@@ -343,7 +334,7 @@ function doExecuteSceneAction(event: Event, sceneID: string): void {
     updateSpinner("devices");
 
     fetch("/api/devices/scene/" + sceneID).then(function () {
-        stopSpinner("devices");
+        stopUpdateSpinner("devices");
     });
 }
 
@@ -353,7 +344,7 @@ function doToggleDeviceAction(event: Event, deviceID: string, state: string): vo
     updateSpinner("devices");
 
     fetch("/api/devices/" + deviceID + "/" + state).then(function () {
-        stopSpinner("devices");
+        stopUpdateSpinner("devices");
     });
 }
 
@@ -369,7 +360,7 @@ function doDimDeviceAction(event: Event, deviceID: string, level: string | numbe
             document.querySelector("#name-" + deviceID).classList.remove("d-none");
         }
 
-        stopSpinner("devices");
+        stopUpdateSpinner("devices");
     });
 }
 
@@ -385,7 +376,7 @@ function doColorDeviceAction(event: Event, deviceID: string, level: string | num
             document.querySelector("#name-" + deviceID).classList.remove("d-none");
         }
 
-        stopSpinner("devices");
+        stopUpdateSpinner("devices");
     });
 }
 
@@ -642,7 +633,7 @@ function doGetDevices(data: any): void {
                 toggleDeviceVisibilityListeners();
                 clickAnimationListeners();
 
-                stopSpinner("devices");
+                stopUpdateSpinner("devices");
             });
         }
     });
@@ -850,7 +841,7 @@ function doRenderCharts(): void {
         }
         chart.update();
 
-        stopSpinner("energy");
+        stopUpdateSpinner("energy");
     });
 }
 
@@ -888,7 +879,7 @@ function doGetData(element: Element, next: boolean): void {
             });
         }
 
-        stopSpinner("energy");
+        stopUpdateSpinner("energy");
     });
 }
 
@@ -899,7 +890,7 @@ function doGetLiveEnergyReadings(data: any): void {
     const target = document.querySelector("#liveEnergyReadings");
 
     if (!target) {
-        stopSpinner("energy");
+        stopUpdateSpinner("energy");
         return;
     }
 
@@ -910,7 +901,7 @@ function doGetLiveEnergyReadings(data: any): void {
 
         target.innerHTML = ejs.render(template, {page: page, current: data});
 
-        stopSpinner("energy");
+        stopUpdateSpinner("energy");
 
     });
 }
@@ -1149,7 +1140,7 @@ function followListeners(): void {
                     inverseTarget.classList.remove("d-none");
                 }
 
-                stopSpinner("spotify");
+                stopUpdateSpinner("spotify");
             });
         });
     });
@@ -1169,7 +1160,7 @@ function deviceListeners(): void {
                     deviceID: spotifyDeviceSelect.value,
                 })
             }).then(function () {
-                stopSpinner("spotify");
+                stopUpdateSpinner("spotify");
             });
         });
     }
@@ -1194,7 +1185,7 @@ function doUpdatePlayer(data: object): void {
     const spotifyDeviceTarget = document.querySelector("#spotifyDeviceWrapper");
 
     if (!spotifyTarget) {
-        stopSpinner("spotify");
+        stopUpdateSpinner("spotify");
         return;
     }
 
@@ -1210,7 +1201,7 @@ function doUpdatePlayer(data: object): void {
     });
 
     if (!spotifyDeviceTarget) {
-        stopSpinner("spotify");
+        stopUpdateSpinner("spotify");
         return;
     }
 
@@ -1221,7 +1212,7 @@ function doUpdatePlayer(data: object): void {
         spotifyDeviceTarget.innerHTML = ejs.render(template, {page: page, spotify: data});
 
         deviceListeners();
-        stopSpinner("spotify");
+        stopUpdateSpinner("spotify");
     });
 }
 
@@ -1240,7 +1231,7 @@ function doUpdateDevice(data: object): void {
         deviceListeners();
         clickAnimationListeners();
 
-        stopSpinner("spotify");
+        stopUpdateSpinner("spotify");
     });
 }
 
@@ -1395,7 +1386,7 @@ function doUpdateTasks(data: any): void {
     const targetUnflagged = document.querySelector("#unflaggedTasks");
 
     if (!targetFlagged && !targetUnflagged) {
-        stopSpinner("tasks");
+        stopUpdateSpinner("tasks");
         return;
     }
 
@@ -1420,7 +1411,7 @@ function doUpdateTasks(data: any): void {
 
         doToggleCompletedTasks(document.querySelector(".toggle-task-visibility.d-none").getAttribute("data-toggle"));
 
-        stopSpinner("tasks");
+        stopUpdateSpinner("tasks");
 
     });
 }
@@ -1614,7 +1605,7 @@ function doUpdateNSTrips(data: any): void {
     const target = document.getElementById("travelNSWrapper");
 
     if (!target) {
-        stopSpinner("travel");
+        stopUpdateSpinner("travel");
         return;
     }
 
@@ -1630,7 +1621,7 @@ function doUpdateNSTrips(data: any): void {
         const travelTrainRefreshedAt = document.getElementById("travelTrainRefreshedAt");
         travelTrainRefreshedAt.innerHTML = ('0'+dateTrain.getHours()).slice(-2) + ":" + ('0'+dateTrain.getMinutes()).slice(-2);
 
-        stopSpinner("travel");
+        stopUpdateSpinner("travel");
 
     });
 }
@@ -1642,7 +1633,7 @@ function doUpdateMapRoutes(data: any): void {
     const target = document.getElementById("travelMapWrapper");
 
     if (!target) {
-        stopSpinner("travel");
+        stopUpdateSpinner("travel");
         return;
     }
 
@@ -1658,7 +1649,7 @@ function doUpdateMapRoutes(data: any): void {
         const travelMapRefreshedAt = document.getElementById("travelMapRefreshedAt");
         travelMapRefreshedAt.innerHTML = ('0'+dateMap.getHours()).slice(-2) + ":" + ('0'+dateMap.getMinutes()).slice(-2);
 
-        stopSpinner("travel");
+        stopUpdateSpinner("travel");
 
     });
 }
@@ -2108,7 +2099,7 @@ function doUpdateWeather(data: any): void {
         const weatherTarget = document.querySelector("#weather");
 
         if (!weatherTarget) {
-            stopSpinner("weather");
+            stopUpdateSpinner("weather");
             return;
         }
 
@@ -2118,7 +2109,7 @@ function doUpdateWeather(data: any): void {
         }).then(function (template) {
             weatherTarget.innerHTML = ejs.render(template, {page: page, weather: data});
 
-            stopSpinner("weather");
+            stopUpdateSpinner("weather");
         });
     }
 
@@ -2135,15 +2126,235 @@ function doUpdateWeather(data: any): void {
             weatherRefreshedAt.setAttribute("data-date", data.updatedAt);
             weatherRefreshedAt.innerHTML = ('0'+updatedAt.getHours()).slice(-2) + ":" + ('0'+updatedAt.getMinutes()).slice(-2);
 
-            stopSpinner("weather");
+            stopUpdateSpinner("weather");
         });
     }
 }
 
 //// WEATHER-END ////
 
+//// CRYPTO-START ////
+
+function cryptoEventListener(event: Event): void {
+    event.preventDefault();
+
+    const target = event.target as HTMLElement;
+    if (target.classList.contains("crypto-asset-toggle")) {
+        const id = target.getAttribute("data-id");
+        const state = target.getAttribute("data-state") === "on";
+
+        updateSpinner("crypto");
+
+        fetch("/api/crypto/assets/" + id, {
+            method: state ? "DELETE" : "POST"
+        }).then(function () {
+            stopUpdateSpinner("crypto");
+        });
+    }
+}
+
+function cryptoGetFilterValues(): object {
+    const perPageSelectElement = document.querySelector("select[name='crypto-select-perpage']");
+    const pageSelectElement = document.querySelector("select[name='crypto-select-page']");
+
+    if (!perPageSelectElement || !pageSelectElement) return {};
+
+    return {
+        perPage: perPageSelectElement ? (perPageSelectElement as HTMLSelectElement).value : 20,
+        page: pageSelectElement ? (pageSelectElement as HTMLSelectElement).value : 1
+    };
+}
+
+function doUpdateCrypto(data: any): void {
+    updateSpinner("crypto");
+
+    const page = document.querySelector("body").getAttribute("data-page");
+
+    if (page === "home") {
+        const cryptoTarget = document.querySelector("#cryptoWrapper");
+
+        if (!cryptoTarget) {
+            stopUpdateSpinner("crypto");
+            return;
+        }
+
+        fetch("/views/widgets/crypto/crypto_items_home.ejs").then(function (resp) {
+            return resp.clone().text();
+
+        }).then(function (template) {
+            cryptoTarget.removeEventListener("click", cryptoEventListener);
+
+            cryptoTarget.innerHTML = ejs.render(template, {page: page, crypto: data});
+            cryptoTarget.addEventListener("click", cryptoEventListener);
+
+            const updatedAt = new Date(data.updatedAt);
+            const cryptoRefreshedAt = document.getElementById("cryptoRefreshedAt");
+            cryptoRefreshedAt.setAttribute("data-date", data.updatedAt);
+            cryptoRefreshedAt.innerHTML = ('0'+updatedAt.getHours()).slice(-2) + ":" + ('0'+updatedAt.getMinutes()).slice(-2);
+
+            stopUpdateSpinner("crypto");
+        });
+    }
+
+    if (page === "crypto") {
+        const cryptoTarget = document.querySelector("#cryptoWrapper");
+
+        if (!cryptoTarget) {
+            stopUpdateSpinner("crypto");
+            return;
+        }
+
+        fetch("/views/widgets/crypto/crypto_items.ejs").then(function (resp) {
+            return resp.clone().text();
+
+        }).then(function (template) {
+            cryptoTarget.removeEventListener("click", cryptoEventListener);
+
+            cryptoTarget.innerHTML = ejs.render(template, {page: page, crypto: data});
+            cryptoTarget.addEventListener("click", cryptoEventListener);
+
+            const updatedAt = new Date(data.updatedAt);
+            const cryptoRefreshedAt = document.getElementById("cryptoRefreshedAt");
+            cryptoRefreshedAt.setAttribute("data-date", data.updatedAt);
+            cryptoRefreshedAt.innerHTML = ('0'+updatedAt.getHours()).slice(-2) + ":" + ('0'+updatedAt.getMinutes()).slice(-2);
+
+            stopUpdateSpinner("crypto");
+        });
+    }
+}
+
+//// CRYPTO-END ////
+
+function initialize(page: string): void {
+    if (page === "home" || page === "devices") {
+        socket.emit("init", { service: "DevicesService", type: "devices"});
+
+        socket.on("devices update", function (data: object) {
+            socket.emit("activate", { service: "DevicesService", type: "devices"});
+
+            doGetDevices(data);
+        });
+    }
+
+    if (page === "energy") {
+        socket.emit("init", { service: "DevicesService", type: "energy live"});
+
+        socket.on("energy live update", function (data: object) {
+            socket.emit("activate", { service: "DevicesService", type: "energy live"});
+
+            doGetLiveEnergyReadings(data);
+        });
+    }
+
+    if (page === "home" || page === "spotify") {
+        socket.on("spotify update", function (data: object) {
+            doUpdatePlayer(data);
+
+            if (page === "spotify") doUpdateDevice(data);
+        });
+
+        socket.on("spotify device error", function (data: object) {
+            doUpdatePlayer(data);
+        });
+    }
+
+    if (page === "home" || page === "tasks") {
+        socket.emit("init", { service: "TaskService", type: "tasks"});
+
+        socket.on("tasks update", function (data: object) {
+            socket.emit("activate", { service: "TaskService", type: "tasks"});
+
+            if (!document.activeElement.classList.contains("task-description")) {
+                doUpdateTasks(data);
+            }
+        });
+    }
+
+    if (page === "home" || page === "travel") {
+        socket.emit("init", { service: "NSService", type: "ns trips"});
+        socket.emit("init", { service: "MapService", type: "map routes"});
+
+        socket.on("ns trips update", function (data: object) {
+            socket.emit("activate", { service: "NSService", type: "ns trips"});
+
+            doUpdateNSTrips(data);
+        });
+
+        socket.on("map routes update", function (data: object) {
+            socket.emit("activate", { service: "MapService", type: "map routes"});
+
+            doUpdateMapRoutes(data);
+        });
+    }
+
+    if (page === "home" || page === "weather") {
+        socket.emit("init", { service: "WeatherService", type: "forecast rain"});
+
+        socket.on("forecast update", function (data: object) {
+            socket.emit("activate", { service: "WeatherService", type: "forecast"});
+
+            doUpdateWeather(data);
+        });
+
+        socket.on("rain update", function (data: object) {
+            socket.emit("activate", { service: "WeatherService", type: "rain"});
+
+            doUpdateWeather(data);
+        });
+
+    }
+
+    if (page === "home" || page === "crypto") {
+        socket.emit("init", { service: "CryptoService", type: "crypto", value: cryptoGetFilterValues()});
+
+        socket.on("crypto update", function (data: object) {
+            socket.emit("activate", { service: "CryptoService", type: "crypto", value: cryptoGetFilterValues()});
+
+            doUpdateCrypto(data);
+        });
+    }
+}
+
 function onPageLoad(): void {
     const page = document.querySelector("body").getAttribute("data-page");
+
+    socket.on("connect", function () {
+        console.log("Connected to server with id: ", socket.id);
+
+        initialize(page);
+    });
+
+    socket.on("disconnect", function (reason: string) {
+        console.log("Disconnected from server and reconnecting: ", reason);
+        socket.socket.reconnect();
+    });
+
+    socket.on("connect_error", function (reason: object) {
+        console.log("Connection error: ", reason);
+        socket.socket.reconnect();
+    });
+
+    socket.on("reconnect_error", function (reason: object) {
+        console.log("Reconnect error: ", reason);
+        socket.socket.reconnect();
+    });
+
+    socket.on("reconnect_failed", function () {
+        console.log("Reconnect failed");
+        socket.socket.reconnect();
+    });
+
+    socket.on("reconnecting", function () {
+        console.log("Reconnecting...");
+        alert("Reconnecting...");
+    });
+
+    socket.on("reconnect", function () {
+        console.log("Reconnected");
+        alert("Reconnected");
+
+        initialize(page);
+    });
 
     const tooltipElements = document.querySelectorAll("[data-bs-toggle='tooltip']");
     $.each(tooltipElements, function (_, element) {
@@ -2229,9 +2440,6 @@ function onPageLoad(): void {
         const navigationCloseElements = document.querySelectorAll("[data-bs-dismiss='modal']");
         $.each(navigationCloseElements, function (_, element) {
             element.addEventListener("click", function (event) {
-                // event.preventDefault();
-                // event.stopPropagation();
-
                 const target = navigationMenuButton.getAttribute("data-bs-target");
                 if (!target) return;
 
@@ -2261,7 +2469,7 @@ function onPageLoad(): void {
 
         togglePreviewEventsListeners();
 
-        stopSpinner("calendar");
+        stopUpdateSpinner("calendar");
     }
 
     if (page === "calendar") {
@@ -2271,7 +2479,7 @@ function onPageLoad(): void {
             doUpdateCalendarEvents();
         }, 5 * 60 * 1000);
 
-        stopSpinner("calendar");
+        stopUpdateSpinner("calendar");
 
         // Browse previous or next month calendar view
         const changeMonthElements = document.querySelectorAll(".change-month");
@@ -2314,7 +2522,6 @@ function onPageLoad(): void {
                 doToggleCalendar(element, calendarID, status);
             });
         });
-
 
         const calendarList = document.querySelector("#calendarList");
         const newCalendarWrapper = document.querySelector("#calendarNewUpdateWrapper");
@@ -2405,13 +2612,13 @@ function onPageLoad(): void {
         toggleDeviceTypes();
         clickAnimationListeners();
 
-        socket.emit("init", { service: "DevicesService", type: "devices"});
-
-        socket.on("devices update", function (data: object) {
-            socket.emit("activate", { service: "DevicesService", type: "devices"});
-
-            doGetDevices(data);
-        });
+        // socket.emit("init", { service: "DevicesService", type: "devices"});
+        //
+        // socket.on("devices update", function (data: object) {
+        //     socket.emit("activate", { service: "DevicesService", type: "devices"});
+        //
+        //     doGetDevices(data);
+        // });
     }
 
     const reinitializeDevicesElement = document.querySelector("#reinitializeDevices");
@@ -2441,13 +2648,13 @@ function onPageLoad(): void {
             });
         });
 
-        socket.emit("init", { service: "DevicesService", type: "energy live"});
-
-        socket.on("energy live update", function (data: object) {
-            socket.emit("activate", { service: "DevicesService", type: "energy live"});
-
-            doGetLiveEnergyReadings(data);
-        });
+        // socket.emit("init", { service: "DevicesService", type: "energy live"});
+        //
+        // socket.on("energy live update", function (data: object) {
+        //     socket.emit("activate", { service: "DevicesService", type: "energy live"});
+        //
+        //     doGetLiveEnergyReadings(data);
+        // });
     }
 
 //// ENERGY-END ////
@@ -2519,17 +2726,17 @@ function onPageLoad(): void {
             deviceListeners();
         // }
 
-        socket.on("spotify update", function (data: object) {
-            doUpdatePlayer(data);
-
-            if (page === "spotify") {
-                doUpdateDevice(data);
-            }
-        });
-
-        socket.on("spotify device error", function (data: object) {
-            doUpdatePlayer(data);
-        });
+        // socket.on("spotify update", function (data: object) {
+        //     doUpdatePlayer(data);
+        //
+        //     if (page === "spotify") {
+        //         doUpdateDevice(data);
+        //     }
+        // });
+        //
+        // socket.on("spotify device error", function (data: object) {
+        //     doUpdatePlayer(data);
+        // });
     }
 
     const reinitializeSpotifyElement = document.querySelector("#reinitializeSpotify");
@@ -2546,7 +2753,6 @@ function onPageLoad(): void {
 //// TASKS-START ////
 
     if (page === "home" || page === "tasks") {
-
         const newTaskForm = document.querySelector("#newTaskForm") as HTMLFormElement;
         if (newTaskForm) {
             newTaskForm.addEventListener("submit", function (event) {
@@ -2601,39 +2807,37 @@ function onPageLoad(): void {
         deleteTasksListeners();
         onTaskDescriptionChangeListeners();
 
-        socket.emit("init", { service: "TaskService", type: "tasks"});
-
-        socket.on("tasks update", function (data: object) {
-            socket.emit("activate", { service: "TaskService", type: "tasks"});
-
-            if (!document.activeElement.classList.contains("task-description")) {
-                doUpdateTasks(data);
-            }
-        });
-        
+        // socket.emit("init", { service: "TaskService", type: "tasks"});
+        //
+        // socket.on("tasks update", function (data: object) {
+        //     socket.emit("activate", { service: "TaskService", type: "tasks"});
+        //
+        //     if (!document.activeElement.classList.contains("task-description")) {
+        //         doUpdateTasks(data);
+        //     }
+        // });
     }
 //// TASKS-END ////
 
 //// TRAVEL-START ////
     
     if (page === "home" || page === "travel") {
-
         toggleTravelTypeListeners();
 
-        socket.emit("init", { service: "NSService", type: "ns trips"});
-        socket.emit("init", { service: "MapService", type: "map routes"});
-
-        socket.on("ns trips update", function (data: object) {
-            socket.emit("activate", { service: "NSService", type: "ns trips"});
-
-            doUpdateNSTrips(data);
-        });
-
-        socket.on("map routes update", function (data: object) {
-            socket.emit("activate", { service: "MapService", type: "map routes"});
-
-            doUpdateMapRoutes(data);
-        });
+        // socket.emit("init", { service: "NSService", type: "ns trips"});
+        // socket.emit("init", { service: "MapService", type: "map routes"});
+        //
+        // socket.on("ns trips update", function (data: object) {
+        //     socket.emit("activate", { service: "NSService", type: "ns trips"});
+        //
+        //     doUpdateNSTrips(data);
+        // });
+        //
+        // socket.on("map routes update", function (data: object) {
+        //     socket.emit("activate", { service: "MapService", type: "map routes"});
+        //
+        //     doUpdateMapRoutes(data);
+        // });
 
         if (page === "travel") {
             if (typeof $.fn.collapse === 'undefined') {
@@ -2661,32 +2865,56 @@ function onPageLoad(): void {
             trainRouteListeners();
             toggleTrainTransfersListeners();
         }
-        
     }
 
 //// TRAVEL-END ////
 
 //// WEATHER-START ////
 
-    if (page === "home" || page === "weather") {
-
-        socket.emit("init", { service: "WeatherService", type: "forecast rain"});
-
-        socket.on("forecast update", function (data: object) {
-            socket.emit("activate", { service: "WeatherService", type: "forecast"});
-
-            doUpdateWeather(data);
-        });
-
-        socket.on("rain update", function (data: object) {
-            socket.emit("activate", { service: "WeatherService", type: "rain"});
-
-            doUpdateWeather(data);
-        });
-
-    }
+    // if (page === "home" || page === "weather") {
+    //
+    //     socket.emit("init", { service: "WeatherService", type: "forecast rain"});
+    //
+    //     socket.on("forecast update", function (data: object) {
+    //         socket.emit("activate", { service: "WeatherService", type: "forecast"});
+    //
+    //         doUpdateWeather(data);
+    //     });
+    //
+    //     socket.on("rain update", function (data: object) {
+    //         socket.emit("activate", { service: "WeatherService", type: "rain"});
+    //
+    //         doUpdateWeather(data);
+    //     });
+    //
+    // }
 
 //// WEATHER-END ////
+
+//// CRYPTO-START ////
+
+    if (page === "crypto") {
+
+        const perPageSelectElement = document.querySelector("select[name='crypto-select-perpage']");
+        if (perPageSelectElement) {
+            perPageSelectElement.addEventListener("change", function (event) {
+                event.preventDefault();
+
+                socket.emit("event", { service: "CryptoService", type: "crypto coin pagination", value: cryptoGetFilterValues()});
+            });
+        }
+
+        const pageSelectElement = document.querySelector("select[name='crypto-select-page']");
+        if (pageSelectElement) {
+            pageSelectElement.addEventListener("change", function (event) {
+                event.preventDefault();
+
+                socket.emit("event", { service: "CryptoService", type: "crypto coin pagination", value: cryptoGetFilterValues()});
+            });
+        }
+    }
+
+//// CRYPTO-END ////
     
 }
 
