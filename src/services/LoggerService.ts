@@ -135,4 +135,23 @@ export class LoggerService {
             logName,
         };
     }
+
+    clearLog(logName: string): boolean {
+        const fileName = logName + ".log";
+        const filePath = path.join(__dirname, "/../logs/", fileName);
+
+        if (fs.existsSync(filePath)) {
+            try {
+                fs.writeFileSync(filePath, "");
+            } catch (err) {
+                this.error("LoggerService", `An error occurred while clearing log ${logName}`);
+                return false;
+            }
+            return true;
+        }
+
+        this.error("LoggerService", `An error occurred while clearing log ${logName} because file is not found`);
+
+        return false;
+    }
 }

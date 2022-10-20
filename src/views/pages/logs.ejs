@@ -19,6 +19,11 @@
     </span>
     <span class="font-size-sm">
 
+        <span class="badge btn-blue-dark cursor-pointer animate" id="clearLog" data-name="<%= log.logName %>">
+            <i class="bi bi-trash"></i>
+            Clear Log
+        </span>
+
         <span class="badge bg-blue-dark">
             <a href="<%= log.previousLink || "#" %>" class="<%= log.previousLink ? "text-white" : "text-muted" %> sidebar-link text-decoration-none">
                 <i class="bi bi-arrow-left"></i>

@@ -81,4 +81,9 @@ export class SettingsController {
         await this.settingService.delete(id);
         return "OK";
     }
+
+    @Delete("/logs/:name")
+    async deleteLog(@Param("name") name: string): Promise<boolean> {
+        return this.log.clearLog(name);
+    }
 }

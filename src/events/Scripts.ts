@@ -2711,6 +2711,37 @@ function onPageLoad(): void {
     }
 //// SETTINGS-END ////
 
+
+//// LOGS-START ////
+    if (page === "logs") {
+        clickAnimationListeners();
+
+        const clearLogButton = document.querySelector("#clearLog");
+        if (clearLogButton) {
+            clearLogButton.addEventListener("click", function (event) {
+                event.preventDefault();
+
+                const logName = clearLogButton.getAttribute("data-name");
+
+                fetch("/api/settings/logs/" + logName, {
+                    method: "DELETE"
+                }).then(function (req) {
+                    req.clone().json().then(function (obj) {
+                        if (obj === true) {
+                            clearLogButton.setAttribute("style", "--animate-color: var(--bs-success)");
+                            setTimeout(function () {
+                                document.location.reload();
+                            }, 1000);
+                        } else {
+                            clearLogButton.setAttribute("style", "--animate-color: var(--bs-danger)");
+                        }
+                    });
+                });
+            });
+        }
+    }
+//// LOGS-END ////
+
 //// SPOTIFY-START ////
 
     if (page === "home" || page === "spotify") {
