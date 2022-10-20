@@ -19,7 +19,7 @@
                         </span>
                         <span class="d-flex align-items-center w-100 d-none" id="brightness-<%= device.deviceID%>">
                             <input type="range"
-                                   class="device-slider dim-device"
+                                   class="device-slider-horizontal dim-device"
                                    toggle-type="brightness"
                                    min="<%= device.dim.min %>"
                                    max="<%= device.dim.max %>"
@@ -29,7 +29,7 @@
                         </span>
                         <span class="d-flex align-items-center w-100 d-none" id="color-<%= device.deviceID%>">
                             <input type="range"
-                                   class="device-slider color-device"
+                                   class="device-slider-horizontal color-device"
                                    toggle-type="color"
                                    min="<%= device.color.min %>"
                                    max="<%= device.color.max %>"
@@ -102,7 +102,7 @@
                             <i class="bi bi-brightness-high text-blue fs-2"></i>
                         </div>
                         <input type="range"
-                               class="slider_bar dim-device border border-1 border-blue-dark rounded-10"
+                               class="device-slider-vertical dim-device border border-1 border-blue-dark rounded-10"
                                toggle-type="brightness"
                                min="<%= device.dim.min %>"
                                max="<%= device.dim.max %>"
@@ -118,7 +118,7 @@
                             <i class="bi bi-brightness-alt-high text-warning fs-2"></i>
                         </div>
                         <input type="range"
-                               class="slider_bar color-device border border-1 border-blue-dark rounded-10"
+                               class="device-slider-vertical color-device border border-1 border-blue-dark rounded-10"
                                toggle-type="color"
                                min="<%= device.color.min %>"
                                max="<%= device.color.max %>"

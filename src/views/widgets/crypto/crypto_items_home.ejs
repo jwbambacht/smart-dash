@@ -32,7 +32,7 @@
         <div class="col">
             <div class="card rounded-10 bg-blue-dark">
                 <div class="d-flex justify-content-between align-items-center">
-                    <span class="d-flex justify-content-between align-items-center ps-2 py-2 z-index-100">
+                    <span class="d-flex justify-content-between align-items-center ps-2 py-2">
                         <% if (asset.asset.image) { %>
                             <img src="<%= asset.asset.image %>" style="max-width: 15px; max-height: 15px;" />
                         <% } else { %>
@@ -42,7 +42,7 @@
                             <%= asset.asset.symbol.toUpperCase() %>
                         </span>
                     </span>
-                    <span class="font-size-esm font-no-monospace lh-sm text-end py-2 pe-2 z-index-100">
+                    <span class="font-size-esm font-no-monospace lh-sm text-end py-2 pe-2">
                         <span class="d-block">
                             <%= asset.market.price ? `$${asset.market.price}` : "-" %>
                         </span>

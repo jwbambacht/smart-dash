@@ -3,6 +3,7 @@ const momentt = require("moment");
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const io = require("socket.io-client");
+const socket = io();
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const ejs = require("ejs");
@@ -12,8 +13,6 @@ const chartJS = require("chart.js");
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const googlemaps = require('@googlemaps/js-api-loader');
-
-const socket = io();
 
 function toggleActionSpinner(element: Element): void {
     const load = element.querySelector(".load");
@@ -2320,28 +2319,27 @@ function onPageLoad(): void {
 
     socket.on("connect", function () {
         console.log("Connected to server with id: ", socket.id);
-
         initialize(page);
     });
 
     socket.on("disconnect", function (reason: string) {
         console.log("Disconnected from server and reconnecting: ", reason);
-        socket.socket.reconnect();
+        socket.connect();
     });
 
     socket.on("connect_error", function (reason: object) {
         console.log("Connection error: ", reason);
-        socket.socket.reconnect();
+        socket.connect();
     });
 
     socket.on("reconnect_error", function (reason: object) {
         console.log("Reconnect error: ", reason);
-        socket.socket.reconnect();
+        socket.connect();
     });
 
     socket.on("reconnect_failed", function () {
         console.log("Reconnect failed");
-        socket.socket.reconnect();
+        socket.connect();
     });
 
     socket.on("reconnecting", function () {
@@ -2611,14 +2609,6 @@ function onPageLoad(): void {
         toggleDeviceVisibilityListeners();
         toggleDeviceTypes();
         clickAnimationListeners();
-
-        // socket.emit("init", { service: "DevicesService", type: "devices"});
-        //
-        // socket.on("devices update", function (data: object) {
-        //     socket.emit("activate", { service: "DevicesService", type: "devices"});
-        //
-        //     doGetDevices(data);
-        // });
     }
 
     const reinitializeDevicesElement = document.querySelector("#reinitializeDevices");
@@ -2647,14 +2637,6 @@ function onPageLoad(): void {
                 doGetData(element, element.getAttribute("data-next") === "true");
             });
         });
-
-        // socket.emit("init", { service: "DevicesService", type: "energy live"});
-        //
-        // socket.on("energy live update", function (data: object) {
-        //     socket.emit("activate", { service: "DevicesService", type: "energy live"});
-        //
-        //     doGetLiveEnergyReadings(data);
-        // });
     }
 
 //// ENERGY-END ////
@@ -2752,22 +2734,7 @@ function onPageLoad(): void {
         searchListeners();
         categoryListeners();
         followListeners();
-
-        // if (page === "spotify") {
-            deviceListeners();
-        // }
-
-        // socket.on("spotify update", function (data: object) {
-        //     doUpdatePlayer(data);
-        //
-        //     if (page === "spotify") {
-        //         doUpdateDevice(data);
-        //     }
-        // });
-        //
-        // socket.on("spotify device error", function (data: object) {
-        //     doUpdatePlayer(data);
-        // });
+        deviceListeners();
     }
 
     const reinitializeSpotifyElement = document.querySelector("#reinitializeSpotify");
@@ -2837,16 +2804,6 @@ function onPageLoad(): void {
         flagTasksListeners(true);
         deleteTasksListeners();
         onTaskDescriptionChangeListeners();
-
-        // socket.emit("init", { service: "TaskService", type: "tasks"});
-        //
-        // socket.on("tasks update", function (data: object) {
-        //     socket.emit("activate", { service: "TaskService", type: "tasks"});
-        //
-        //     if (!document.activeElement.classList.contains("task-description")) {
-        //         doUpdateTasks(data);
-        //     }
-        // });
     }
 //// TASKS-END ////
 
@@ -2854,21 +2811,6 @@ function onPageLoad(): void {
     
     if (page === "home" || page === "travel") {
         toggleTravelTypeListeners();
-
-        // socket.emit("init", { service: "NSService", type: "ns trips"});
-        // socket.emit("init", { service: "MapService", type: "map routes"});
-        //
-        // socket.on("ns trips update", function (data: object) {
-        //     socket.emit("activate", { service: "NSService", type: "ns trips"});
-        //
-        //     doUpdateNSTrips(data);
-        // });
-        //
-        // socket.on("map routes update", function (data: object) {
-        //     socket.emit("activate", { service: "MapService", type: "map routes"});
-        //
-        //     doUpdateMapRoutes(data);
-        // });
 
         if (page === "travel") {
             if (typeof $.fn.collapse === 'undefined') {
@@ -2899,28 +2841,6 @@ function onPageLoad(): void {
     }
 
 //// TRAVEL-END ////
-
-//// WEATHER-START ////
-
-    // if (page === "home" || page === "weather") {
-    //
-    //     socket.emit("init", { service: "WeatherService", type: "forecast rain"});
-    //
-    //     socket.on("forecast update", function (data: object) {
-    //         socket.emit("activate", { service: "WeatherService", type: "forecast"});
-    //
-    //         doUpdateWeather(data);
-    //     });
-    //
-    //     socket.on("rain update", function (data: object) {
-    //         socket.emit("activate", { service: "WeatherService", type: "rain"});
-    //
-    //         doUpdateWeather(data);
-    //     });
-    //
-    // }
-
-//// WEATHER-END ////
 
 //// CRYPTO-START ////
 
