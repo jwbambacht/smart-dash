@@ -18,6 +18,21 @@ import { SpotifyService } from "../services/SpotifyService";
 import { CryptoService } from '../services/CryptoService';
 import { SpotifySearchResult } from "../types/SpotifyTypes";
 
+const navItems = [
+    { path: "home", label: "Home", icon: "bi-grid", iconActive: "bi-grid-fill" },
+    { path: "spotify", label: "Spotify", icon: "bi-spotify", iconActive: "bi-spotify" },
+    { path: "weather", label: "Weather", icon: "bi-cloud-sun", iconActive: "bi-cloud-sun-fill" },
+    { path: "travel", label: "Travel", icon: "bi-stoplights", iconActive: "bi-stoplights-fill" },
+    { path: "devices", label: "Devices", icon: "bi-lightbulb", iconActive: "bi-lightbulb-fill" },
+    { path: "energy", label: "Energy", icon: "bi-plug", iconActive: "bi-plug-fill" },
+    { path: "calendar", label: "Calendar", icon: "bi-calendar-date", iconActive: "bi-calendar-date-fill" },
+    { path: "tasks", label: "Tasks", icon: "bi-list-task", iconActive: "bi-list-check" },
+    { path: "crypto", label: "Crypto", icon: "bi-currency-bitcoin", iconActive: "bi-currency-bitcoin" },
+    { path: "settings", label: "Setting", icon: "bi-gear", iconActive: "bi-gear-fill" },
+    { path: "logs", label: "Logs", icon: "bi-card-text", iconActive: "bi-card-text" },
+    { path: "", label: "Refresh", icon: "bi-arrow-clockwise", iconActive: "bi-arrow-clockwise", customClasses: "refresh-page" }
+];
+
 @Controller()
 export class RouteController {
     loggerService = Container.get(LoggerService);
@@ -42,6 +57,7 @@ export class RouteController {
         const now = new Date();
         return {
             page: "home",
+            navItems: navItems,
             now: {
                 date: moment(now).format("D"),
                 dayText: moment(now).format("dddd"),
@@ -73,6 +89,7 @@ export class RouteController {
     async GetSpotifyPlaylists(): Promise<unknown> {
         return {
             page: "spotify",
+            navItems: navItems,
             pageType: "playlists",
             spotify: await this.spotifyService.getState(),
             playlists: await this.spotifyService.getMyPlaylists() || null
@@ -84,6 +101,7 @@ export class RouteController {
     async GetSpotifyPlaylistID(@Param("id") id: string): Promise<unknown> {
         return {
             page: "spotify",
+            navItems: navItems,
             pageType: "playlist",
             spotify: await this.spotifyService.getState(),
             playlist: await this.spotifyService.getPlaylist(id) || null
@@ -95,6 +113,7 @@ export class RouteController {
     async GetSpotifyAlbums(): Promise<unknown> {
         return {
             page: "spotify",
+            navItems: navItems,
             pageType: "albums",
             spotify: await this.spotifyService.getState(),
             albums: await this.spotifyService.getMyAlbums() || null,
@@ -106,6 +125,7 @@ export class RouteController {
     async GetSpotifyAlbumID(@Param("id") id: string): Promise<unknown> {
         return {
             page: "spotify",
+            navItems: navItems,
             pageType: "album",
             spotify: await this.spotifyService.getState(),
             album: await this.spotifyService.getAlbum(id) || null
@@ -117,6 +137,7 @@ export class RouteController {
     async GetSpotifyArtists(): Promise<unknown> {
         return {
             page: "spotify",
+            navItems: navItems,
             pageType: "artists",
             spotify: await this.spotifyService.getState(),
             artists: await this.spotifyService.getMyArtists() || null,
@@ -128,6 +149,7 @@ export class RouteController {
     async GetSpotifyArtistID(@Param("id") id: string): Promise<unknown> {
         return {
             page: "spotify",
+            navItems: navItems,
             pageType: "artist",
             spotify: await this.spotifyService.getState(),
             artist: await this.spotifyService.getArtist(id) || null,
@@ -139,6 +161,7 @@ export class RouteController {
     async GetSpotifyTop(): Promise<unknown> {
         return {
             page: "spotify",
+            navItems: navItems,
             pageType: "top",
             spotify: await this.spotifyService.getState(),
             artists: await this.spotifyService.getMyTopArtists() || null,
@@ -151,6 +174,7 @@ export class RouteController {
     async GetSpotifyLikedTracks(): Promise<unknown> {
         return {
             page: "spotify",
+            navItems: navItems,
             pageType: "liked",
             spotify: await this.spotifyService.getState(),
             liked: await this.spotifyService.getMySavedTracks() || null
@@ -162,6 +186,7 @@ export class RouteController {
     async GetSpotifyRecentlyPlayedTracks(): Promise<unknown> {
         return {
             page: "spotify",
+            navItems: navItems,
             pageType: "recently",
             spotify: await this.spotifyService.getState(),
             recentlyPlayed: await this.spotifyService.getRecentlyPlayedTracks() || null
@@ -173,6 +198,7 @@ export class RouteController {
     async GetSpotifyCategories(): Promise<unknown> {
         return {
             page: "spotify",
+            navItems: navItems,
             pageType: "categories",
             spotify: await this.spotifyService.getState(),
             categories: await this.spotifyService.getCategories() || null
@@ -184,6 +210,7 @@ export class RouteController {
     async GetSpotifyCategory(@Param("id") id: string): Promise<unknown> {
         return {
             page: "spotify",
+            navItems: navItems,
             pageType: "category",
             spotify: await this.spotifyService.getState(),
             category: await this.spotifyService.getCategoryPlaylists(id) || null,
@@ -206,6 +233,7 @@ export class RouteController {
 
         return {
             page: "spotify",
+            navItems: navItems,
             pageType: "search",
             spotify: await this.spotifyService.getState(),
             searchOptions: {
@@ -237,6 +265,7 @@ export class RouteController {
     async GetWeather(): Promise<unknown> {
         return {
             page: "weather",
+            navItems: navItems,
             weather: await this.weatherService.getWeather(),
         };
     }
@@ -246,6 +275,7 @@ export class RouteController {
     async GetTravel(): Promise<unknown> {
         return {
             page: "travel",
+            navItems: navItems,
             map: await this.mapService.getRoutes(),
             train: await this.nsService.getRoutes(),
             mapAddresses: await this.addressService.findAll(),
@@ -260,6 +290,7 @@ export class RouteController {
     async GetDevices(): Promise<unknown> {
         return {
             page: "devices",
+            navItems: navItems,
             devices: await this.devicesService.getDevicesScenes()
         };
     }
@@ -271,6 +302,7 @@ export class RouteController {
 
         return {
             page: "energy",
+            navItems: navItems,
             devicesStatus: await this.devicesService.getStatus(),
             current: await this.devicesService.getLiveEnergyReadings(),
             history: await this.devicesService.getMonthEnergyReadings()
@@ -282,6 +314,7 @@ export class RouteController {
     async GetCalendar(): Promise<unknown> {
         return {
             page: "calendar",
+            navItems: navItems,
             events: await this.calendarService.getCalendarEvents(),
             calendars: await this.calendarService.getCalendars(),
             calendar: this.calendarService.getCalendarMonth()
@@ -293,6 +326,7 @@ export class RouteController {
     async GetTasks(): Promise<unknown> {
         return {
             page: "tasks",
+            navItems: navItems,
             tasks: await this.taskService.getTasks()
         };
     }
@@ -302,6 +336,7 @@ export class RouteController {
     async GetCrypto(): Promise<unknown> {
         return {
             page: "crypto",
+            navItems: navItems,
             crypto: await this.cryptoService.getCrypto(false)
         };
     }
@@ -311,6 +346,7 @@ export class RouteController {
     async GetSettings(): Promise<unknown> {
         return {
             page: "settings",
+            navItems: navItems,
             settings: await this.settingService.findAll()
         };
     }
@@ -332,6 +368,7 @@ export class RouteController {
 
         return {
             page: "logs",
+            navItems: navItems,
             logNames: logs,
             log: await this.loggerService.getLog(logName, pageNumber || 1),
             pageNumber: pageNumber || 1
