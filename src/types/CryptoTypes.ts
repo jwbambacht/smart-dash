@@ -4,7 +4,6 @@ export type Coin = {
 	asset: Asset;
 	market?: Market;
 	isFavorite: boolean;
-	svg?: string;
 };
 
 export type Market = {
@@ -18,7 +17,6 @@ export type Market = {
 	change24h: number;
 	change24hPercentage: number;
 	change7dPercentage: number;
-	sparklines: number[];
 }
 
 export type MarketResponseObj = {
@@ -36,9 +34,6 @@ export type MarketResponseObj = {
 	"price_change_percentage_24h": number;
 	"market_cap_change_24h": number;
 	"market_cap_change_percentage_24h": number;
-	"sparkline_in_7d": {
-		"price": number[];
-	};
 	"price_change_percentage_1h_in_currency": number;
 	"price_change_percentage_24h_in_currency": number;
 	"price_change_percentage_7d_in_currency": number;

@@ -101,28 +101,7 @@ export class CryptoService extends BaseService {
 			.sort((c1, c2) => c1.market.rank - c2.market.rank);
 
 		const filteredAssets = this.coins
-			.filter((coin) => assets.some((asset) => asset.id === coin.asset.id))
-			.map((coin) => {
-				const market = { ...coin.market };
-				delete market.sparklines;
-
-				const svg = this.createSparkLinesSVG(
-					coin.market.sparklines,
-					market.change7dPercentage > 0 ? "#00bc8c" : "#e74c3c",
-					"0.5"
-				);
-
-				return {
-					asset: {
-						...coin.asset
-					},
-					market: {
-						...market
-					},
-					isFavorite: coin.isFavorite,
-					svg: Buffer.from(svg).toString("base64")
-				};
-			});
+			.filter((coin) => assets.some((asset) => asset.id === coin.asset.id));
 
 		return {
 			serviceEnabled: await this.isServiceEnabled(),
@@ -148,7 +127,7 @@ export class CryptoService extends BaseService {
 			"order": "market_cap_desc",
 			"per_page": this.nCoins.toString(),
 			"page": "1",
-			"sparkline": "true",
+			"sparkline": "false",
 			"price_change_percentage": "1h,24h,7d"
 		};
 
@@ -171,12 +150,6 @@ export class CryptoService extends BaseService {
 						asset.image = market.image;
 					}
 
-					// const svg = this.createSparkLines(
-					// 	market.sparkline_in_7d.price,
-					// 	market.price_change_percentage_7d_in_currency > 0 ? "#00bc8c" : "#e74c3c",
-					// 	"0.5"
-					// );
-
 					return {
 						asset: asset,
 						isFavorite: isFavorite,
@@ -191,9 +164,7 @@ export class CryptoService extends BaseService {
 							change24h: market.price_change_24h,
 							change24hPercentage: market.price_change_percentage_24h,
 							change7dPercentage: market.price_change_percentage_7d_in_currency,
-							sparklines: market.sparkline_in_7d.price
 						},
-						// svg: Buffer.from(svg).toString("base64")
 					};
 				});
 
@@ -248,30 +219,5 @@ export class CryptoService extends BaseService {
 		if (deleted) this.emit<object>("crypto update", await this.getCrypto(true));
 
 		return deleted;
-	}
-
-	createSparkLinesSVG(data: number[], strokeColor: string, opacity: string): string {
-		const yMin = Math.min(...data);
-		const yMax = Math.max(...data);
-		const range = yMax - yMin;
-		const width = 250;
-		const height = 50;
-		const spacing = width / (data.length - 1);
-		const pixelsPerUnit = height / range;
-		let x = 0;
-		let y1 = 0;
-		let y2 = 0;
-
-		const lines: string[] = [];
-		for(let i = 0, l = data.length - 1; i < l; i++) {
-			y1 = height - ((data[i] - yMin) * pixelsPerUnit);
-			y2 = height - ((data[i+1] - yMin) * pixelsPerUnit);
-			lines.push(`<line x1="${x}" y1="${y1}" x2="${x + spacing}" y2="${y2}" stroke="${strokeColor}" opacity="${opacity}" stroke-width="2"></line>`);
-			x += spacing;
-		}
-
-		return `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" loading="lazy">` +
-				lines.join('/n') +
-			`</svg>`;
 	}
 }
