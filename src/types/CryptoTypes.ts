@@ -18,6 +18,7 @@ export type Market = {
 	change24h: number;
 	change24hPercentage: number;
 	change7dPercentage: number;
+	sparklines: number[];
 }
 
 export type MarketResponseObj = {

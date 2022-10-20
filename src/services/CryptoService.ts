@@ -91,18 +91,43 @@ export class CryptoService extends BaseService {
 
 		const assets = await this.getAssets();
 
-		let limitedCoins: Coin[] = this.coins;
-		if (!all) limitedCoins = this.coins.slice(
+		let filteredCoins: Coin[] = this.coins;
+		if (!all) filteredCoins = this.coins.slice(
 			(this.filterSettings.page - 1) * this.filterSettings.perPage,
 			this.filterSettings.page * this.filterSettings.perPage
 		);
 
-		limitedCoins = limitedCoins.sort((c1, c2) => c1.market.rank - c2.market.rank);
+		filteredCoins = filteredCoins
+			.sort((c1, c2) => c1.market.rank - c2.market.rank);
+
+		const filteredAssets = this.coins
+			.filter((coin) => assets.some((asset) => asset.id === coin.asset.id))
+			.map((coin) => {
+				const market = { ...coin.market };
+				delete market.sparklines;
+
+				const svg = this.createSparkLinesSVG(
+					coin.market.sparklines,
+					market.change7dPercentage > 0 ? "#00bc8c" : "#e74c3c",
+					"0.5"
+				);
+
+				return {
+					asset: {
+						...coin.asset
+					},
+					market: {
+						...market
+					},
+					isFavorite: coin.isFavorite,
+					svg: Buffer.from(svg).toString("base64")
+				};
+			});
 
 		return {
 			serviceEnabled: await this.isServiceEnabled(),
-			coins: limitedCoins,
-			assets: this.coins.filter((coin) => assets.some((asset) => asset.id === coin.asset.id)),
+			coins: filteredCoins,
+			assets: filteredAssets,
 			perPageOptions: this.filterSettings.perPageOptions,
 			pages: Array.from({
 				length: Math.ceil(this.nCoins / this.filterSettings.perPage)
@@ -151,10 +176,6 @@ export class CryptoService extends BaseService {
 					// 	market.price_change_percentage_7d_in_currency > 0 ? "#00bc8c" : "#e74c3c",
 					// 	"0.5"
 					// );
-					// const svgPath = "/assets/img/" + asset.id + ".svg";
-					// fs.writeFile(path.join(__dirname, "/.."+ svgPath), svg, (err) => {
-					// 	if (err) this.log.error("CryptoService", JSON.stringify(err));
-					// });
 
 					return {
 						asset: asset,
@@ -170,8 +191,9 @@ export class CryptoService extends BaseService {
 							change24h: market.price_change_24h,
 							change24hPercentage: market.price_change_percentage_24h,
 							change7dPercentage: market.price_change_percentage_7d_in_currency,
+							sparklines: market.sparkline_in_7d.price
 						},
-						// svg: svgPath
+						// svg: Buffer.from(svg).toString("base64")
 					};
 				});
 
@@ -228,7 +250,7 @@ export class CryptoService extends BaseService {
 		return deleted;
 	}
 
-	createSparkLines(data: number[], strokeColor: string, opacity: string): string {
+	createSparkLinesSVG(data: number[], strokeColor: string, opacity: string): string {
 		const yMin = Math.min(...data);
 		const yMax = Math.max(...data);
 		const range = yMax - yMin;
