@@ -2,7 +2,7 @@
     <div class="row row-cols-1 <%= weather.serviceEnabled && weather.weather.enabled ? "row-cols-lg-2" : "" %>">
         <div class="col-12 <%= weather.serviceEnabled && weather.weather.enabled ? "col-lg-5 col-xxl-4" : "" %> align-self-center text-start mt-0" id="nowTime">
             <div class="d-flex justify-content-start align-items-center ps-2">
-                <div>
+                <div class="position-absolute start-0 top-0 bottom-0 ms-2 mt-2">
                     <div class="btn btn-blue rounded-5 ratio ratio-1x1 p-4"  data-bs-toggle="modal" data-bs-target="#navigationContainer">
                         <div class="d-flex justify-content-center align-items-center fs-2">
                             <i class="bi bi-grid-fill text-white"></i>
@@ -10,7 +10,7 @@
                     </div>
                 </div>
 
-                <div class="lh-sm font-no-monospace flex-grow-1 pb-2 text-center">
+                <div class="lh-sm font-no-monospace flex-grow-1 pb-2 text-center mx-5">
                     <span class="fw-bolder text-white fs-2" id="nowTimeString">
                         <%= now.time %>
                     </span>
@@ -18,7 +18,7 @@
                         <span class="badge bg-blue text-white" id="nowDateString">
                             <%= now.dayText %>, <%= now.monthText %> <%= now.date %>
                         </span>
-                        <span class="badge bg-blue text-white ms-2">
+                        <span class="badge bg-blue text-white ms-2 d-none d-sm-block">
                             <i class="bi bi-pin-map font-size-esm"></i>
                             <%= weather.location.city %>
                         </span>

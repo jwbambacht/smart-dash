@@ -16,8 +16,6 @@ export async function setupExpressApp(logger: LoggerService): Promise<Server> {
             controllers: [__dirname + "/../controllers/*.js"],
             middlewares: [__dirname + "/../middlewares/*.js"],
             defaultErrorHandler: false,
-            authorizationChecker: null,
-            currentUserChecker: null,
             validation: {
                 validationError: {
                     target: false

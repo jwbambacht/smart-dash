@@ -45,13 +45,11 @@
 <% } %>
 
 <% if (devices.serviceEnabled && devices.enabled) { %>
-    <!--    <div class="row g-1 row-cols-3 row-cols-md-4 row-cols-lg-3 row-cols-xxl-4 device-wrapper d-none" id="deviceSceneList">-->
-    <div class="row g-1 row-cols-5 device-wrapper d-none" id="deviceSceneList">
+    <div class="row g-1 row-cols-3 row-cols-sm-4 row-cols-md-5 row-cols-lg-6 device-wrapper d-none" id="deviceSceneList">
         <%- include('./devices_scene'); %>
     </div>
 
-    <!--    <div class="row g-1 row-cols-2 row-cols-md-3 row-cols-lg-2 row-cols-xxl-3 device-wrapper" id="deviceSwitchDimmerColorList">-->
-    <div class="row g-1 row-cols-6 device-wrapper" id="deviceSwitchDimmerColorList">
+    <div class="row g-1 row-cols-3 row-cols-sm-4 row-cols-md-5 row-cols-lg-6 device-wrapper" id="deviceSwitchDimmerColorList">
         <%- include('./devices_switch'); %>
         <%- include('./devices_dimmer'); %>
         <%- include('./devices_color'); %>
