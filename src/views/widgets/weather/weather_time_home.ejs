@@ -1,7 +1,7 @@
-<div class="card bg-blue-dark border border-2 border-blue bg-gradient rounded-10 px-2">
+<div class="card bg-blue-dark border border-2 border-blue bg-gradient rounded-10">
     <div class="row row-cols-1 <%= weather.serviceEnabled && weather.weather.enabled ? "row-cols-lg-2" : "" %>">
         <div class="col-12 <%= weather.serviceEnabled && weather.weather.enabled ? "col-lg-5 col-xxl-4" : "" %> align-self-center text-start mt-0" id="nowTime">
-            <div class="d-flex justify-content-start align-items-center">
+            <div class="d-flex justify-content-start align-items-center ps-2">
                 <div>
                     <div class="btn btn-blue rounded-5 ratio ratio-1x1 p-4"  data-bs-toggle="modal" data-bs-target="#navigationContainer">
                         <div class="d-flex justify-content-center align-items-center fs-2">

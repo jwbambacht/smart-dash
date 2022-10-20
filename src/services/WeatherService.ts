@@ -312,7 +312,7 @@ export class WeatherService extends BaseService {
             });
 
             this.rainForecast = forecast;
-            this.rainSVG = this.makeSVG(forecast);
+            this.rainSVG = Buffer.from(this.makeSVG(forecast)).toString('base64');
             this.updatedAt = new Date();
             this.rainEnabled = true;
             this.rainError = '';
@@ -333,7 +333,7 @@ export class WeatherService extends BaseService {
         const width = 1000;
         const height = 125;
         const outerHeight = height;
-        const yLabelPosition = height - 10;
+        const yLabelPosition = "95%";
 
         const xSteps: number[] = [];
 
@@ -351,24 +351,27 @@ export class WeatherService extends BaseService {
         const labelIndices = [0, 5, 11, 17, 23];
 
         return `
-        <svg 
-            class="graph" 
-            xmlns="http://www.w3.org/2000/svg" 
-            viewBox="0 0 ${width} ${outerHeight}" preserveAspectRatio="xMidYMid meet"
-        >
-            <defs>
-                <clipPath id="cut-off-bottom"><rect x="0" y="0" width="${width}" height="${height}" /></clipPath>
-            </defs>
-            <g class="surfaces">
-                <path class="first_set" d="${setPoints}" clip-path="url(#cut-off-bottom)"></path>
-            </g>
-            <g class="labels x-labels">
-                <text x="27" y="${yLabelPosition}" >${forecast[labelIndices[0]].time}</text>
-                <text x="${xSteps[labelIndices[1]]}"  y="${yLabelPosition}" >${forecast[labelIndices[1]].time}</text>
-                <text x="${xSteps[labelIndices[2]]}" y="${yLabelPosition}" >${forecast[labelIndices[2]].time}</text>
-                <text x="${xSteps[labelIndices[3]]}" y="${yLabelPosition}" >${forecast[labelIndices[3]].time}</text>
-                <text x="${(width - 27)}" y="${yLabelPosition}" >${forecast[labelIndices[4]].time}</text>
-            </g>
-        </svg>`;
+            <svg xmlns="http://www.w3.org/2000/svg">
+                <svg viewBox="0 0 ${width} ${outerHeight}" preserveAspectRatio="none">
+                    <path d="${setPoints}" clip-path="url(#cut-off-bottom)" style="fill: #375a7f" opacity="0.5" />
+                </svg>
+                
+                <text x="0%" y="${yLabelPosition}" fill="#FFFFFF" font-size="7px" font-family="Arial" text-anchor="start" style="transform: translate(0.5rem, 0);">
+                    ${forecast[labelIndices[0]].time}
+                </text>
+                <text x="25%" y="${yLabelPosition}" fill="#FFFFFF" font-size="7px" text-anchor="middle">
+                    ${forecast[labelIndices[1]].time}
+                </text>
+                <text x="50%" y="${yLabelPosition}" fill="#FFFFFF" font-size="7px" text-anchor="middle">
+                    ${forecast[labelIndices[2]].time}
+                </text>
+                <text x="75%" y="${yLabelPosition}" fill="#FFFFFF" font-size="7px" text-anchor="middle">
+                    ${forecast[labelIndices[3]].time}
+                </text>
+                <text x="100%" y="${yLabelPosition}" fill="#FFFFFF" font-size="7px" text-anchor="end" style="transform: translate(-0.5rem, 0);">
+                    ${forecast[labelIndices[4]].time}
+                </text> 
+            </svg>
+        `;
     }
 }

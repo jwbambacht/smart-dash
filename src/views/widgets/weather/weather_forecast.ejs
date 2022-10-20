@@ -30,8 +30,8 @@
 
 <% if (weather.serviceEnabled && weather.weather.enabled && weather.weather.forecast) { %>
     <% weather.weather.forecast.forEach(function (day, index) { %>
-        <div class="card <%= index === 0 ? "head" : "" %> rounded-10 px-2 mb-1">
-            <div class="row font-monospace <%= index === 0 && weather.rain.total > 0 && weather.rain.svg !== "" ? "pt-2" : "py-2" %>">
+        <div class="card <%= index === 0 ? "head" : "" %> rounded-10 mb-1">
+            <div class="row font-monospace px-2 py-2">
                 <div class="col-auto py-0 my-0">
                     <img src="<%= day.weather[0].icon %>" class="<%= index === 0 ? "bg-blue" : "bg-light" %> rounded-10 w-100p h-auto mw-50p mh-50p">
                 </div>
@@ -127,12 +127,13 @@
             </div>
 
             <% if (index === 0 && weather.rain.total > 0 && weather.rain.svg !== "") { %>
-                <div id="weatherRain" class="position-relative z-index-10 mt-50px">
-                    <div class="w-100">
-                        <div id="rainChart" class="w-100">
-                            <%- weather.rain.svg %>
-                        </div>
-                    </div>
+                <% const rainSVGImage = `
+                    background-image: url("data:image/svg+xml;base64,${weather.rain.svg}");
+                    background-repeat: no-repeat;
+                    background-size: 100%;
+                `%>
+                <div class="row row-cols-1 g-0">
+                    <div class="col w-100 h-50p m-0 p-0" style="<%= rainSVGImage %>"></div>
                 </div>
             <% } %>
         </div>

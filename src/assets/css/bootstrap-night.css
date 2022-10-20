@@ -8228,6 +8228,10 @@ textarea.form-control-lg {
     border-radius: 0.4rem !important;
 }
 
+.rounded-bottom-end-5 {
+    border-bottom-right-radius: 0.4rem !important;
+}
+
 .rounded-10 {
     border-radius: 0.65rem !important;
 }

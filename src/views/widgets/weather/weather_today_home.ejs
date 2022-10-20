@@ -14,14 +14,25 @@
 
 <% if (weather.serviceEnabled && weather.weather.enabled && weather.weather.forecast) { %>
     <% const today = weather.weather.today;  %>
+    <% var rainSVGImage = ""; %>
+    <% if (weather.rain.total > 0 && weather.rain.svg !== "") { %>
+        <% rainSVGImage = `
+            background-image: url("data:image/svg+xml;base64,${weather.rain.svg}");
+            background-repeat: no-repeat;
+            background-size: 100%;
+            `%>
+    <% } %>
 
-    <div id="weatherToday" class="position-relative z-index-100 py-1 mb-2 mb-lg-0">
+    <div id="weatherToday"
+         class="py-2 mb-0 pe-2 rounded-bottom-end-5"
+         style="<%= rainSVGImage %>"
+    >
         <div class="d-flex justify-content-between font-monospace">
             <span class="my-auto">
                 <span class="d-flex align-items-center">
-                    <img src="<%= today.weather[0].icon %>" class="bg-blue rounded-5 w-50p h-50p">
+                    <img src="<%= today.weather[0].icon %>" class="w-50p h-50p">
 
-                    <span class="ms-2">
+                    <span class="ms-2 lh-1">
                         <span class="d-block">
                             <span class="h2 temp-celsius text-muted" data-type="today-temp-min"><%= today.temp.min %></span>
                             <span class="h2">/</span>
@@ -63,14 +74,4 @@
             </span>
         </div>
     </div>
-
-    <% if (weather.rain.total > 0 && weather.rain.svg !== "") { %>
-        <div id="weatherRain" class="position-relative z-index-10 mt-25px">
-            <div class="w-100">
-                <div id="rainChart" class="w-100">
-                    <%- weather.rain.svg %>
-                </div>
-            </div>
-        </div>
-    <% } %>
 <% } %>
