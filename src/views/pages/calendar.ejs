@@ -18,24 +18,21 @@
             </span>
         </span>
     </span>
-    <span class="font-size-sm">
-        <span class="badge p-0 bg-blue-dark rounded pe-2 ms-1 cursor-pointer">
-            <div class="d-flex align-items-center">
-                <select class="p-0 form-control bg-blue-dark border-0 font-size-75r text-white ps-2 pe-1"
-                        name="service-status"
-                        service-type="CalendarService"
-                >
-                    <option value="1" <%= events.serviceEnabled ? "selected" : "" %>>
-                        <%= events.serviceEnabled ? "Enabled" : "Enable" %>
-                    </option>
-                    <option value="0" <%= !events.serviceEnabled ? "selected" : "" %>>
-                        <%= !events.serviceEnabled ? "Disabled" : "Disable" %>
-                    </option>
-                </select>
-                <i class="bi bi-caret-down"></i>
-            </div>
+    <span class="font-size-sm d-flex">
+        <span class="badge d-flex align-items-center p-0 bg-blue-dark rounded me-1">
+            <select class="form-select form-select-sm font-size-75r fw-bold bg-blue-dark border-0 text-white py-0"
+                name="service-status"
+                service-type="CalendarService"
+            >
+                <option value="1" <%= events.serviceEnabled ? "selected" : "" %>>
+                    <%= events.serviceEnabled ? "Enabled" : "Enable" %>
+                </option>
+                <option value="0" <%= !events.serviceEnabled ? "selected" : "" %>>
+                    <%= !events.serviceEnabled ? "Disabled" : "Disable" %>
+                </option>
+            </select>
         </span>
-        <span class="badge bg-blue-dark">
+        <span class="badge bg-blue-dark font-size-sm">
             <i class="bi bi-clock-history"></i>
             <span id="calendarRefreshedAt"
                   class="refresh-badge"
@@ -76,8 +73,8 @@
                     <div class="card rounded-10 px-0 pt-2 pb-0" id="calendarsWrapper">
                         <div class="d-flex justify-content-between align-items-center px-3 mb-1">
                             <span class="fs-6 font-no-monospace fw-lighter mb-0">Calendars</span>
-                            <span class="link-light fs-5" id="newCalendarToggle">
-                                <i class="bi bi-plus-square-fill"></i>
+                            <span id="newCalendarToggle">
+                                <i class="bi bi-plus-square-fill text-blue fs-5 cursor-pointer"></i>
                             </span>
                         </div>
 
@@ -102,11 +99,11 @@
                                 Events Week <span id="calendarEventsWeekNumber"><%= events.week %></span>
                             </span>
                             <span>
-                                <span class="link-light events-change-week fs-5" data-next="false">
-                                    <i class="bi bi-arrow-left-square-fill"></i>
+                                <span class="events-change-week" data-next="false">
+                                    <i class="bi bi-arrow-left-square-fill text-blue fs-5 cursor-pointer"></i>
                                 </span>
-                                <span class="link-light events-change-week fs-5" data-next="true">
-                                    <i class="bi bi-arrow-right-square-fill"></i>
+                                <span class="events-change-week" data-next="true">
+                                    <i class="bi bi-arrow-right-square-fill text-blue fs-5 cursor-pointer"></i>
                                 </span>
                             </span>
                         </div>

@@ -9,8 +9,8 @@
     >
         <div class="d-flex justify-content-between align-items-center">
             <span class="bg-blue-dark input-group input-group-sm rounded-10">
-                <span class="btn btn-sm btn-blue-dark text-white rounded-10 p-1">
-                    <input class="form-check-input font-size-sm m-1 bg-blue border-0 task-complete"
+                <span class="text-white rounded-10 p-0 m-0">
+                    <input class="form-check-input btn btn-sm btn-blue fs-4 border-0 task-complete rounded-10 my-1 ms-1 p-0"
                            id="completeTaskCheck-<%= task.id %>"
                            type="checkbox"
                            name="completed"
@@ -24,18 +24,16 @@
                        placeholder="Task description..."
                 >
                 <span class="input-group-text bg-blue-dark p-0 font-size-sm rounded-end-10 border-0">
-                    <span class="btn btn-sm btn-blue-dark text-white rounded-10">
-                        <i class="bi bi-flag-fill text-warning task-flag <%= !task.flagged ? "d-none" : "" %>"
+                    <span class="btn btn-sm btn-blue-dark task-flag text-white rounded-10" data-id="<%= task.id %>">
+                        <i class="bi bi-flag-fill text-warning flag-child <%= !task.flagged ? "d-none" : "" %>"
                            data-id="<%= task.id %>"
                            data-flagged="true"
                            id="flagTask<%= task.id %>"
-                           data-inverse="#unflagTask<%= task.id %>"
                         ></i>
-                        <i class="bi bi-flag text-white task-flag <%= task.flagged ? "d-none" : "" %>"
+                        <i class="bi bi-flag text-white flag-child <%= task.flagged ? "d-none" : "" %>"
                            data-id="<%= task.id %>"
                            data-flagged="false"
                            id="unflagTask<%= task.id %>"
-                           data-inverse="#flagTask<%= task.id %>"
                         ></i>
                     </span>
                 </span>

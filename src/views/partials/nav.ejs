@@ -10,7 +10,7 @@
                         <% navItems.forEach(function (item) { %>
                             <% const isActive = page === item.path; %>
                             <div class="col text-center mb-3">
-                                <a class="btn btn-blue-dark rounded-10 ratio ratio-1x1 sidebar-link <%= item.customClasses ? item.customClasses : "" %>"
+                                <a class="btn btn-blue-dark rounded-10 ratio ratio-1x1 navigation-link <%= item.customClasses ? item.customClasses : "" %>"
                                    href="/<%= item.path %>" style="max-width: 125px; max-height: 125px;">
                                     <span class="d-flex align-items-center justify-content-center">
                                         <i class="bi <%= isActive ? item.iconActive + " text-blue" : item.icon + " text-white" %> fs-2"></i>

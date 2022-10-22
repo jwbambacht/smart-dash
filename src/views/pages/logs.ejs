@@ -17,19 +17,18 @@
             </span>
         </span>
     </span>
-    <span class="font-size-sm">
-
-        <span class="badge btn-blue-dark cursor-pointer animate" id="clearLog" data-name="<%= log.logName %>">
+    <span class="font-size-sm d-flex">
+        <span class="badge btn-blue-dark font-size-sm cursor-pointer animate me-1" id="clearLog" data-name="<%= log.logName %>">
             <i class="bi bi-trash"></i>
             Clear Log
         </span>
 
-        <span class="badge bg-blue-dark">
-            <a href="<%= log.previousLink || "#" %>" class="<%= log.previousLink ? "text-white" : "text-muted" %> sidebar-link text-decoration-none">
+        <span class="badge bg-blue-dark font-size-sm me-1">
+            <a href="<%= log.previousLink || "#" %>" class="<%= log.previousLink ? "text-white" : "text-muted" %> navigation-link text-decoration-none">
                 <i class="bi bi-arrow-left"></i>
             </a>
             page <%= pageNumber %>
-            <a href="<%= log.nextLink || "#" %>" class="<%= log.nextLink ? "text-white" : "text-muted" %> sidebar-link text-decoration-none">
+            <a href="<%= log.nextLink || "#" %>" class="<%= log.nextLink ? "text-white" : "text-muted" %> navigation-link text-decoration-none">
                 <i class="bi bi-arrow-right"></i>
             </a>
         </span>
@@ -37,7 +36,7 @@
         <% if (logNames) { %>
             <% logNames.forEach(function (logName) { %>
                 <a href="/logs/<%= logName %>/1"
-                   class="badge <%= log.logName === logName ? "btn-blue" : "btn-blue-dark" %> text-decoration-none sidebar-link"
+                   class="badge <%= log.logName === logName ? "btn-blue" : "btn-blue-dark" %> font-size-sm text-decoration-none navigation-link me-1"
                 >
                     <i class="bi bi-eye-fill"></i>
                     <%= logName %>

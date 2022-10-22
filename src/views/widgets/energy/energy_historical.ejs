@@ -9,16 +9,13 @@
             </span>
         </span>
 
-        <% if (history.hasPrevious) { %>
-            <span class="badge btn-blue-dark change-month" data-next="false">
-                <i class="bi bi-arrow-left"></i>
-            </span>
-        <% } %>
-        <% if (history.hasNext) { %>
-            <span class="badge btn-blue-dark change-month" data-next="true">
-                <i class="bi bi-arrow-right change-month"></i>
-            </span>
-        <% } %>
+        <span class="badge <%= history.hasPrevious ? " btn-blue-dark change-month cursor-pointer" : "bg-secondary" %>" data-next="false">
+            <i class="bi bi-arrow-left"></i>
+        </span>
+
+        <span class="badge <%= history.hasNext ? "btn-blue-dark change-month cursor-pointer" : "bg-secondary" %>" data-next="true">
+            <i class="bi bi-arrow-right"></i>
+        </span>
     </span>
 </div>
 

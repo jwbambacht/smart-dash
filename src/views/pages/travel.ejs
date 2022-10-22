@@ -23,8 +23,8 @@
             </span>
         </span>
     </span>
-    <span class="font-size-sm">
-        <span class="badge <%= enabledColor %> cursor-pointer travel-type-toggle"
+    <span class="font-size-sm d-flex">
+        <span class="badge <%= enabledColor %> font-size-sm cursor-pointer travel-type-toggle me-1"
               id="travelNSTypeToggle"
               data-target=".travel-items[data-type='train_route']"
               data-no-target=".travel-items[data-type='map_route']"
@@ -34,7 +34,7 @@
             Train <i class="bi bi-train-front"></i>
         </span>
 
-        <span class="badge <%= disabledColor %> cursor-pointer travel-type-toggle"
+        <span class="badge <%= disabledColor %> font-size-sm cursor-pointer travel-type-toggle me-1"
               id="travelMapTypeToggle"
               data-target=".travel-items[data-type='map_route']"
               data-no-target=".travel-items[data-type='train_route']"
@@ -44,41 +44,35 @@
             Car <i class="bi bi-car-front"></i>
         </span>
 
-        <span class="badge p-0 bg-blue-dark rounded pe-2 cursor-pointer travel-items" data-type="train_route">
-            <div class="d-flex align-items-center">
-                <select class="p-0 form-control bg-blue-dark border-0 font-size-75r text-white ps-2 pe-1"
-                        name="service-status"
-                        service-type="NSService"
-                >
-                    <option value="1" <%= train.serviceEnabled ? "selected" : "" %>>
-                        <%= train.serviceEnabled ? "Enabled" : "Enable" %>
-                    </option>
-                    <option value="0" <%= !train.serviceEnabled ? "selected" : "" %>>
-                        <%= !train.serviceEnabled ? "Disabled" : "Disable" %>
-                    </option>
-                </select>
-                <i class="bi bi-caret-down"></i>
-            </div>
+        <span class="badge d-flex align-items-center p-0 bg-blue-dark rounded me-1 travel-items" data-type="train_route">
+            <select class="form-select form-select-sm font-size-75r fw-bold bg-blue-dark border-0 text-white py-0 shadow-none"
+                name="service-status"
+                service-type="NSService"
+            >
+                <option value="1" <%= train.serviceEnabled ? "selected" : "" %>>
+                    <%= train.serviceEnabled ? "Enabled" : "Enable" %>
+                </option>
+                <option value="0" <%= !train.serviceEnabled ? "selected" : "" %>>
+                    <%= !train.serviceEnabled ? "Disabled" : "Disable" %>
+                </option>
+            </select>
         </span>
 
-        <span class="badge p-0 bg-blue-dark rounded pe-2 cursor-pointer travel-items d-none" data-type="map_route">
-            <div class="d-flex align-items-center">
-                <select class="p-0 form-control bg-blue-dark border-0 font-size-75r text-white ps-2 pe-1"
-                        name="service-status"
-                        service-type="MapService"
-                >
-                    <option value="1" <%= map.serviceEnabled ? "selected" : "" %>>
-                        <%= map.serviceEnabled ? "Enabled" : "Enable" %>
-                    </option>
-                    <option value="0" <%= !map.serviceEnabled ? "selected" : "" %>>
-                        <%= !map.serviceEnabled ? "Disabled" : "Disable" %>
-                    </option>
-                </select>
-                <i class="bi bi-caret-down"></i>
-            </div>
+        <span class="badge d-flex align-items-center p-0 bg-blue-dark rounded me-1 travel-items d-none" data-type="map_route">
+            <select class="form-select form-select-sm font-size-75r fw-bold bg-blue-dark border-0 text-white py-0 shadow-none"
+                name="service-status"
+                service-type="MapService"
+            >
+                <option value="1" <%= map.serviceEnabled ? "selected" : "" %>>
+                    <%= map.serviceEnabled ? "Enabled" : "Enable" %>
+                </option>
+                <option value="0" <%= !map.serviceEnabled ? "selected" : "" %>>
+                    <%= !map.serviceEnabled ? "Disabled" : "Disable" %>
+                </option>
+            </select>
         </span>
 
-        <span class="badge <%= disabledColor %> travel-items" data-type="train_route">
+        <span class="badge <%= disabledColor %> font-size-sm travel-items me-1" data-type="train_route">
             <i class="bi bi-clock-history"></i>
             <span id="travelTrainRefreshedAt"
                   class="refresh-badge"
@@ -88,7 +82,7 @@
             </span>
         </span>
 
-        <span class="badge <%= disabledColor %> travel-items d-none" data-type="map_route">
+        <span class="badge <%= disabledColor %> font-size-sm travel-items me-1 d-none" data-type="map_route">
             <i class="bi bi-clock-history"></i>
             <span id="travelMapRefreshedAt"
                   class="refresh-badge"

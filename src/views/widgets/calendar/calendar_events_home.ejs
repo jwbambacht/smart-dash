@@ -1,7 +1,7 @@
 <% const updatedAt = new Date(events.updatedAt); %>
 
 <div class="d-flex justify-content-between align-items-center me-3 m-2">
-    <a class="sidebar-link text-decoration-none text-blue" href="/calendar">
+    <a class="navigation-link text-decoration-none text-blue" href="/calendar">
         <i class="bi bi-calendar-date fs-5"></i>
         <span class="fs-5 mb-0 font-no-monospace fw-light">
             Events
@@ -12,13 +12,13 @@
         ></div>
     </a>
     <span class="font-size-sm">
-        <span class="badge btn-blue-dark toggle-preview-events cursor-pointer <%= events.events.length <= 3 ? "d-none" : "" %>" data-show="true">
+        <span class="badge btn-blue-dark font-size-sm toggle-preview-events cursor-pointer <%= events.events.length <= 3 ? "d-none" : "" %>" data-show="true">
             More <i class="bi bi-caret-down-fill"></i>
         </span>
-        <span class="badge btn-blue-dark toggle-preview-events cursor-pointer d-none" data-show="false">
+        <span class="badge btn-blue-dark font-size-sm toggle-preview-events cursor-pointer d-none" data-show="false">
             Less <i class="bi bi-caret-up-fill"></i>
         </span>
-        <span class="badge bg-blue-dark">
+        <span class="badge bg-blue-dark font-size-sm">
             <i class="bi bi-clock-history"></i>
             <span id="eventsPreviewRefreshedAt" class="refresh-badge" data-date="<%= updatedAt.getTime() %>"><%= ('0'+updatedAt.getHours()).slice(-2) + ":" + ('0'+updatedAt.getMinutes()).slice(-2); %></span>
         </span>
@@ -35,8 +35,9 @@
     <% } %>
 
     <% events.events.forEach(function (event, index) { %>
+        <% const isNow = new Date().getTime() >= event.start && new Date().getTime() <= event.end; %>
         <div class="col-12 mb-1 preview-event <%= index > 2 ? "d-none" : "" %>">
-            <div class="card rounded-10 p-0 <%= new Date().getTime() >= event.start && new Date().getTime() <= event.end ? "bg-blue" : "bg-blue-dark" %>">
+            <div class="card rounded-10 p-0 bg-blue-dark <%= isNow ? "border border-2 border-blue" : "" %>">
                 <div class="row me-0">
                     <div class="col-auto mt-0 pe-1">
                         <span class="d-flex align-items-center text-white font-size-esm">

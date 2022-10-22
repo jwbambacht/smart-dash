@@ -1,5 +1,5 @@
 <span class="d-flex justify-content-between align-items-center me-3 m-2">
-    <a class="sidebar-link text-decoration-none text-blue" href="/devices">
+    <a class="navigation-link text-decoration-none text-blue" href="/devices">
         <i class="bi bi-lightbulb fs-5"></i>
         <span class="fs-5 mb-0 font-no-monospace fw-light">
             Devices
@@ -12,12 +12,12 @@
 
     <span class="font-size-sm">
         <% if (devices.serviceEnabled && devices.enabled) { %>
-            <span class="badge btn-blue-dark cursor-pointer toggle-device-type"
+            <span class="badge btn-blue-dark font-size-sm cursor-pointer toggle-device-type"
                   data-target="#deviceSceneList"
             >
                 Scenes <i class="bi bi-play-circle"></i>
             </span>
-            <span class="badge btn-blue cursor-pointer toggle-device-type"
+            <span class="badge btn-blue font-size-sm cursor-pointer toggle-device-type"
                   data-target="#deviceSwitchDimmerColorList"
             >
                 Switches/Dimmers <i class="bi bi-lightbulb"></i>

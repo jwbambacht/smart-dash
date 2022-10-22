@@ -19,9 +19,10 @@
             </span>
         </span>
     </span>
-    <span class="font-size-sm">
+    <span class="font-size-sm d-flex">
         <% if (devices.serviceEnabled && devices.enabled) { %>
-            <span id="showDeviceVisibility" class="badge btn-blue-dark toggle-visibility cursor-pointer"
+            <span id="showDeviceVisibility"
+                  class="badge btn-blue-dark font-size-sm toggle-visibility cursor-pointer me-1"
                   data-toggle="show"
                   data-toggle-inverse="#hideDeviceVisibility"
             >
@@ -29,7 +30,7 @@
                 Visibility
             </span>
             <span id="hideDeviceVisibility"
-                  class="badge btn-blue-dark toggle-visibility cursor-pointer d-none"
+                  class="badge btn-blue-dark font-size-sm toggle-visibility cursor-pointer me-1 d-none"
                   data-toggle="hide"
                   data-toggle-inverse="#showDeviceVisibility"
             >
@@ -38,24 +39,21 @@
             </span>
         <% } %>
 
-        <span class="badge p-0 bg-blue-dark rounded pe-2 cursor-pointer">
-            <div class="d-flex align-items-center">
-                <select class="p-0 form-control bg-blue-dark border-0 font-size-75r text-white ps-2 pe-1"
-                        name="service-status"
-                        service-type="DevicesService"
-                >
-                    <option value="1" <%= devices.serviceEnabled ? "selected" : "" %>>
-                        <%= devices.serviceEnabled ? "Enabled" : "Enable" %>
-                    </option>
-                    <option value="0" <%= !devices.serviceEnabled ? "selected" : "" %>>
-                        <%= !devices.serviceEnabled ? "Disabled" : "Disable" %>
-                    </option>
-                </select>
-                <i class="bi bi-caret-down"></i>
-            </div>
+        <span class="badge d-flex align-items-center p-0 bg-blue-dark rounded me-1">
+            <select class="form-select form-select-sm font-size-75r fw-bold bg-blue-dark border-0 text-white py-0 shadow-none"
+                name="service-status"
+                service-type="DevicesService"
+            >
+                <option value="1" <%= devices.serviceEnabled ? "selected" : "" %>>
+                    <%= devices.serviceEnabled ? "Enabled" : "Enable" %>
+                </option>
+                <option value="0" <%= !devices.serviceEnabled ? "selected" : "" %>>
+                    <%= !devices.serviceEnabled ? "Disabled" : "Disable" %>
+                </option>
+            </select>
         </span>
 
-        <span class="badge bg-blue-dark">
+        <span class="badge bg-blue-dark font-size-sm">
             <i class="bi bi-clock-history"></i>
             <span id="devicesRefreshedAt"
                   class="refresh-badge"

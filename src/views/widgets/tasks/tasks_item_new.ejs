@@ -1,18 +1,16 @@
 <div class="col">
     <form class="bg-blue-dark input-group input-group-sm rounded-10" id="newTaskForm">
         <span class="input-group-text bg-blue-dark p-0 font-size-sm rounded-start-10 border-0">
-            <span class="btn btn-sm btn-blue-dark text-white rounded-10">
-                <i class="bi bi-flag-fill text-warning task-flag"
+            <span class="btn btn-sm btn-blue-dark text-white rounded-10 task-flag" data-id="new">
+                <i class="bi bi-flag-fill flag-child text-warning"
                    data-id="new"
                    data-flagged="true"
                    id="flagTaskNew"
-                   data-inverse="#unflagTaskNew"
                 ></i>
-                <i class="bi bi-flag text-white task-flag d-none"
+                <i class="bi bi-flag flag-child text-white d-none"
                    data-id="new"
                    data-flagged="false"
                    id="unflagTaskNew"
-                   data-inverse="#flagTaskNew"
                 ></i>
             </span>
             <input type="hidden" name="newTaskFlagged" value="1">

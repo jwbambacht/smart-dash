@@ -37,7 +37,10 @@
 
             <div class="list-group-flush rounded-10">
                 <% events.events[groupDate].forEach(function (event) { %>
-                    <div class="list-group-item border-blue-gray font-size-ssm px-3 d-flex <%= now.getTime() > event.end ? "opacity-25" : "" %> <%= now.getTime() >= event.start && now.getTime() <= event.end ? "bg-blue" : "bg-blue-dark" %>">
+                    <% const isPrevious = now.getTime() > event.end; %>
+                    <% const isNow = now.getTime() >= event.start && now.getTime() <= event.end; %>
+
+                    <div class="list-group-item bg-blue-dark font-size-ssm px-3 d-flex <%= isPrevious ? "opacity-25" : "" %> <%= isNow ? "border border-2 mt-1 border-blue rounded-10" : "" %>">
                         <div class="me-2">
                             <span class="d-block">
                                 <%= event.startTime %>
