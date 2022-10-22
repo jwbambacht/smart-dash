@@ -9,8 +9,7 @@ import { Coin, MarketResponseObj } from '../types/CryptoTypes';
 
 const defaultFilterSettings = {
 	perPage: 10,
-	page: 1,
-	perPageOptions: [10, 20, 50, 100, 200]
+	page: 1
 };
 
 @Service()
@@ -40,12 +39,11 @@ export class CryptoService extends BaseService {
 		});
 	}
 
-	setFilterSettings(value: { page?: number; perPage?: number }): void {
+	setFilterSettings(value: { page?: number }): void {
 		this.filterSettings.page = value?.page || defaultFilterSettings.page;
-		this.filterSettings.perPage = value?.perPage || defaultFilterSettings.perPage;
 	}
 
-	async init(type: string, value: { page?: number; perPage?: number }): Promise<void> {
+	async init(type: string, value: { page?: number }): Promise<void> {
 		await super.init(type, value);
 
 		if (type === "crypto") {
@@ -55,7 +53,7 @@ export class CryptoService extends BaseService {
 		}
 	}
 
-	activate(type: string, value: { page?: number; perPage?: number }): void {
+	activate(type: string, value: { page?: number }): void {
 		super.activate(type, value);
 
 		if (type === "crypto") {
@@ -64,7 +62,7 @@ export class CryptoService extends BaseService {
 		}
 	}
 
-	async event(type: string, value: { page?: number; perPage?: number }): Promise<void> {
+	async event(type: string, value: { page?: number }): Promise<void> {
 		await super.event(type, value);
 
 		if (type === "crypto coin pagination") {
@@ -107,7 +105,6 @@ export class CryptoService extends BaseService {
 			serviceEnabled: await this.isServiceEnabled(),
 			coins: filteredCoins,
 			assets: filteredAssets,
-			perPageOptions: this.filterSettings.perPageOptions,
 			pages: Array.from({
 				length: Math.ceil(this.nCoins / this.filterSettings.perPage)
 			}, (_, i) => i + 1),

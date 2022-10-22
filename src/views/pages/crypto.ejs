@@ -20,18 +20,9 @@
         </span>
     </span>
     <span class="font-size-sm d-flex">
-        <span class="badge d-flex align-items-center bg-blue-dark rounded align-items-center py-0 me-1 cursor-pointer">
-            <select class="p-0 form-control bg-blue-dark border-0 font-size-75r text-white pe-1"
-                    name="crypto-select-perpage"
-            >
-                <% crypto.perPageOptions.forEach(function (number, index) { %>
-                    <option value="<%= number %>" <%= index === 0 ? "selected" : "" %>>
-                        <%= number %>
-                    </option>
-                <% }); %>
-            </select>
-            <i class="bi bi-caret-down"></i>
-        </span>
+        <span class="badge d-flex align-items-center p-0 bg-blue-dark rounded me-1">
+            <select class="form-select form-select-sm font-size-75r fw-bold bg-blue-dark border-0 text-white py-0 shadow-none"
+                name="crypto-select-page"
         <span class="badge d-flex align-items-center bg-blue-dark rounded align-items-center py-0 me-1 cursor-pointer">
             <select class="p-0 form-control bg-blue-dark border-0 font-size-75r text-white pe-1"
                     name="crypto-select-page"

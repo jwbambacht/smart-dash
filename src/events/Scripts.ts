@@ -2153,13 +2153,11 @@ function cryptoEventListener(event: Event): void {
 }
 
 function cryptoGetFilterValues(): object {
-    const perPageSelectElement = document.querySelector("select[name='crypto-select-perpage']");
     const pageSelectElement = document.querySelector("select[name='crypto-select-page']");
 
-    if (!perPageSelectElement || !pageSelectElement) return {};
+    if (!pageSelectElement) return {};
 
     return {
-        perPage: perPageSelectElement ? (perPageSelectElement as HTMLSelectElement).value : 20,
         page: pageSelectElement ? (pageSelectElement as HTMLSelectElement).value : 1
     };
 }
