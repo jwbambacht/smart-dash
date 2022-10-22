@@ -14,6 +14,10 @@ const chartJS = require("chart.js");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const googlemaps = require('@googlemaps/js-api-loader');
 
+/**
+ * Toggles the action spinner element that is defined by the load and loading classes
+ * @param element the element that contains children with these classes
+ */
 function toggleActionSpinner(element: Element): void {
     const load = element.querySelector(".load");
     const loading = element.querySelector(".loading");
@@ -24,18 +28,30 @@ function toggleActionSpinner(element: Element): void {
     }
 }
 
-function updateSpinner(page: string): void {
+/**
+ * General function that shows the update spinner
+ * @param page the page for which the spinner must be stopped
+ */
+function showUpdateSpinner(page: string): void {
     const updateSpinner = document.querySelector(".update-spinner[data-page='" + page + "']");
     if (updateSpinner) updateSpinner.classList.remove("d-none");
 }
 
-function stopUpdateSpinner(page: string): void {
+/**
+ * General function that hides the update spinner
+ * @param page the page for which the spinner must be stopped
+ */
+function hideUpdateSpinner(page: string): void {
     const updateSpinner = document.querySelector(".update-spinner[data-page='" + page + "']");
     if (updateSpinner) setTimeout(function () {
         updateSpinner.classList.add("d-none");
     }, 500);
 }
 
+/**
+ * General function that animates a button that has the animate class attached to it, in combination with the 
+ * style="--animate-color: var(--bs-danger)" attribute
+ */
 function clickAnimationListeners(): void {
     const animateElements = document.querySelectorAll(".animate");
     $.each(animateElements, function (_, element) {
@@ -50,8 +66,10 @@ function clickAnimationListeners(): void {
 }
 
 //// CALENDAR-START ////
-
-function togglePreviewEventsListeners(): void {
+/**
+ * Event listeners for toggling more or less calendar events on the homepage widget
+ */
+function onCalendarToggleEventsHomeListeners(): void {
     const previewEvents = document.querySelectorAll(".preview-event");
     const togglePreviewEvents = document.querySelectorAll(".toggle-preview-events");
 
@@ -80,8 +98,11 @@ function togglePreviewEventsListeners(): void {
     });
 }
 
-function doGetEventsHome(): void {
-    updateSpinner("calendar");
+/**
+ * Fetch calendar events and update the DOM on the homepage widget
+ */
+function calendarUpdateEventsHome(): void {
+    showUpdateSpinner("calendar");
 
     const page = document.querySelector("body").getAttribute("data-page");
     const target = document.querySelector("#calendarEventsWrapper");
@@ -96,17 +117,21 @@ function doGetEventsHome(): void {
 
                     target.innerHTML = ejs.render(template, {page: page, events: obj});
 
-                    togglePreviewEventsListeners();
+                    onCalendarToggleEventsHomeListeners();
                 });
             });
         }
 
-        stopUpdateSpinner("calendar");
+        hideUpdateSpinner("calendar");
     });
 }
 
-function doUpdateCalendarEvents(): void {
-    updateSpinner("calendar");
+/**
+ * Fetch calendar events and update the DOM on the calendar page. 
+ * Obtains the currently set year and week from the DOM to use in the request.
+ */
+function calendarUpdateEvents(): void {
+    showUpdateSpinner("calendar");
 
     const page = document.querySelector("body").getAttribute("data-page");
     const target = document.getElementById("calendarEventsWrapper");
@@ -132,11 +157,14 @@ function doUpdateCalendarEvents(): void {
             });
         }
 
-        stopUpdateSpinner("calendar");
+        hideUpdateSpinner("calendar");
     });
 }
 
-function doDeleteCalendarAction(): void {
+/**
+ * Action for deleting a calendar
+ */
+function doCalendarDeleteAction(): void {
     const form = document.getElementById("newUpdateCalendarForm") as HTMLFormElement;
     const calendarID = (form.querySelector("[name='id']") as HTMLInputElement).value;
 
@@ -156,13 +184,18 @@ function doDeleteCalendarAction(): void {
         new Promise(function (resolve) {
             setTimeout(resolve, 1000);
         }).then(function () {
-            doUpdateCalendarEvents();
+            calendarUpdateEvents();
         });
     });
 
 }
 
-function doAddUpdateCalendarAction(event: Event, element: HTMLFormElement): void {
+/**
+ * Action for adding or updating a calendar
+ * @param event form submission event
+ * @param element form contents upon submission
+ */
+function doCalendarAddEditCalendarAction(event: Event, element: HTMLFormElement): void {
     event.preventDefault();
 
     const customName = (element.querySelector("[name='customName']") as HTMLInputElement).value;
@@ -210,13 +243,17 @@ function doAddUpdateCalendarAction(event: Event, element: HTMLFormElement): void
         new Promise(function (resolve) {
             setTimeout(resolve, 1000);
         }).then(function () {
-            doUpdateCalendarEvents();
+            calendarUpdateEvents();
         });
     });
 }
 
-function getUpdateCalendarWindow(element: Element): void {
-    updateSpinner("calendar");
+/**
+ * Open and fill the edit form for a calendar
+ * @param element the button that is clicked 
+ */
+function calendarShowUpdateCalendarWindow(element: Element): void {
+    showUpdateSpinner("calendar");
 
     const calendarID = element.getAttribute("data-id");
 
@@ -238,11 +275,16 @@ function getUpdateCalendarWindow(element: Element): void {
             });
         }
 
-        stopUpdateSpinner("calendar");
+        hideUpdateSpinner("calendar");
     });
 }
 
-function doGetNextPreviousEvents(element: Element, next: boolean): void {
+/**
+ * Set the year and week values as attributes when the next or previous week button is clicked
+ * @param element the button that is clicked
+ * @param next boolean that denotes to propagate to the next or previous week
+ */
+function calendarSetNextPreviousEvents(element: Element, next: boolean): void {
     const target = document.getElementById("calendarEventsWrapper");
     const year = Number(target.getAttribute("data-year"));
     const week = Number(target.getAttribute("data-week"));
@@ -256,11 +298,16 @@ function doGetNextPreviousEvents(element: Element, next: boolean): void {
         target.setAttribute("data-week", newWeek.toString());
     }
 
-    doUpdateCalendarEvents();
+    calendarUpdateEvents();
 }
 
-function doToggleCalendar(element: Element, id: string, status: boolean): void {
-
+/**
+ * Enable or disable the visibility of a calendar and its events
+ * @param element the checkbox input element
+ * @param id the id of the calendar
+ * @param status the status of the checkbox 
+ */
+function doCalendarToggleCalendarAction(element: Element, id: string, status: boolean): void {
     fetch("/api/calendar/toggle/" + id + "/" + status, {
         method: "POST"
     }).then(function (req) {
@@ -268,13 +315,18 @@ function doToggleCalendar(element: Element, id: string, status: boolean): void {
             new Promise(function (resolve) {
                 setTimeout(resolve, 1000);
             }).then(function () {
-                doUpdateCalendarEvents();
+                calendarUpdateEvents();
             });
         }
     });
 }
 
-function doGetMonth(element: Element, next: boolean): void {
+/**
+ * Fetch calendar month data for next or previous month
+ * @param element the button that is clicked
+ * @param next boolean that denotes next or previous month
+ */
+function calendarUpdateMonth(element: Element, next: boolean): void {
     const page = document.querySelector("body").getAttribute("data-page");
     const target = document.getElementById("calendarWrapper");
     const container = document.getElementById("calendarMonthContainer");
@@ -297,7 +349,7 @@ function doGetMonth(element: Element, next: boolean): void {
                     const changeMonthElements = document.querySelectorAll(".change-month");
                     $.each(changeMonthElements, function (_, element) {
                         element.addEventListener("click", function () {
-                            doGetMonth(element, element.getAttribute("data-next") === "true");
+                            calendarUpdateMonth(element, element.getAttribute("data-next") === "true");
                         });
                     });
 
@@ -312,7 +364,7 @@ function doGetMonth(element: Element, next: boolean): void {
                             targetEvents.setAttribute("data-year", year.toString());
                             targetEvents.setAttribute("data-week", week.toString());
 
-                            doUpdateCalendarEvents();
+                            calendarUpdateEvents();
                         });
                     });
 
@@ -321,36 +373,50 @@ function doGetMonth(element: Element, next: boolean): void {
         }
     });
 }
-
 ///// CALENDAR-END ////
 
-
 ///// DEVICES-START ////
-
-function doExecuteSceneAction(event: Event, sceneID: string): void {
+/**
+ * Action to execute a scene for devices
+ * @param event the event of clicking the scene action button
+ * @param sceneID the id of the corresponding scene
+ */
+function doDevicesExecuteSceneAction(event: Event, sceneID: string): void {
     event.preventDefault();
 
-    updateSpinner("devices");
+    showUpdateSpinner("devices");
 
     fetch("/api/devices/scene/" + sceneID).then(function () {
-        stopUpdateSpinner("devices");
+        hideUpdateSpinner("devices");
     });
 }
 
-function doToggleDeviceAction(event: Event, deviceID: string, state: string): void {
+/**
+ * Action to toggle the state of a device
+ * @param event the event of clicking the toggle device action button
+ * @param deviceID the id of the corresponding device
+ * @param state the new state of the device
+ */
+function doDevicesToggleAction(event: Event, deviceID: string, state: string): void {
     event.preventDefault();
 
-    updateSpinner("devices");
+    showUpdateSpinner("devices");
 
     fetch("/api/devices/" + deviceID + "/" + state).then(function () {
-        stopUpdateSpinner("devices");
+        hideUpdateSpinner("devices");
     });
 }
 
-function doDimDeviceAction(event: Event, deviceID: string, level: string | number | string[]): void {
+/**
+ * Action to dim a device
+ * @param event the event of clicking the dim device action button
+ * @param deviceID the id of the corresponding device
+ * @param level the new dimming level of the device 
+ */
+function doDevicesDimAction(event: Event, deviceID: string, level: string | number | string[]): void {
     event.preventDefault();
 
-    updateSpinner("devices");
+    showUpdateSpinner("devices");
 
     fetch("/api/devices/" + deviceID + "/dim/" + level).then(function (req) {
         if (req.status === 200) {
@@ -359,14 +425,20 @@ function doDimDeviceAction(event: Event, deviceID: string, level: string | numbe
             document.querySelector("#name-" + deviceID).classList.remove("d-none");
         }
 
-        stopUpdateSpinner("devices");
+        hideUpdateSpinner("devices");
     });
 }
 
-function doColorDeviceAction(event: Event, deviceID: string, level: string | number | string[]): void {
+/**
+ * Action to color a device
+ * @param event the event of clicking the color device action button
+ * @param deviceID the id of the corresponding device
+ * @param level the new coloring level of the device
+ */
+function doDevicesColorAction(event: Event, deviceID: string, level: string | number | string[]): void {
     event.preventDefault();
 
-    updateSpinner("devices");
+    showUpdateSpinner("devices");
 
     fetch("/api/devices/" + deviceID + "/color/" + level).then(function (req) {
         if (req.status === 200) {
@@ -375,23 +447,29 @@ function doColorDeviceAction(event: Event, deviceID: string, level: string | num
             document.querySelector("#name-" + deviceID).classList.remove("d-none");
         }
 
-        stopUpdateSpinner("devices");
+        hideUpdateSpinner("devices");
     });
 }
 
-function sceneListeners(): void {
+/**
+ * Event listeners for the scene actions
+ */
+function onDevicesSceneListeners(): void {
     const sceneElements = document.querySelectorAll(".execute-scene");
     $.each(sceneElements, function (index, element) {
         const sceneID = $(this).attr("scene-id");
 
         element.addEventListener("click", function (event) {
             event.stopPropagation();
-            doExecuteSceneAction(event, sceneID);
+            doDevicesExecuteSceneAction(event, sceneID);
         });
     });
 }
 
-function switchListeners(): void {
+/**
+ * Event listeners for the device toggle actions
+ */
+function onDevicesSwitchListeners(): void {
     const switchElements = document.querySelectorAll(".switch-device");
     $.each(switchElements, function (index, element) {
         const deviceID = $(this).attr("device-id");
@@ -400,12 +478,15 @@ function switchListeners(): void {
         element.addEventListener("click", function (event) {
             event.stopPropagation();
 
-            doToggleDeviceAction(event, deviceID, state);
+            doDevicesToggleAction(event, deviceID, state);
         });
     });
 }
 
-function dimListeners(): void {
+/**
+ * Event listeners for the device dimming actions
+ */
+function onDevicesDimListeners(): void {
     const dimElements = document.querySelectorAll(".dim-device");
     $.each(dimElements, function (index, element) {
         const deviceID = $(this).attr("device-id");
@@ -414,19 +495,22 @@ function dimListeners(): void {
             event.stopPropagation();
 
             const level = $(this).val();
-            doDimDeviceAction(event, deviceID, level);
+            doDevicesDimAction(event, deviceID, level);
         });
 
         element.addEventListener("click", function (event) {
             event.stopPropagation();
 
             const level = $(this).val();
-            doDimDeviceAction(event, deviceID, level);
+            doDevicesDimAction(event, deviceID, level);
         });
     });
 }
 
-function brightnessColorShowListeners(): void {
+/**
+ * Event listeners for showing/hiding the device dimming or coloring sliders in the DOM
+ */
+function onDevicesToggleBrightnessColorListeners(): void {
     const dimColorToggleElements = document.querySelectorAll(".toggle-brightness-color");
     $.each(dimColorToggleElements, function (index, element) {
         const deviceID = $(this).attr("device-id");
@@ -460,7 +544,10 @@ function brightnessColorShowListeners(): void {
     });
 }
 
-function colorListeners(): void {
+/**
+ * Event listeners for the device coloring actions
+ */
+function onDevicesColorListeners(): void {
     const colorElements = document.getElementsByClassName("color-device");
     $.each(colorElements, function (index, element) {
         const deviceID = $(this).attr("device-id");
@@ -468,18 +555,22 @@ function colorListeners(): void {
         element.addEventListener("change", function (event) {
             event.stopPropagation();
 
-            doColorDeviceAction(event, deviceID, $(this).val());
+            doDevicesColorAction(event, deviceID, $(this).val());
         });
 
         element.addEventListener("click", function (event) {
             event.stopPropagation();
 
-            doColorDeviceAction(event, deviceID, $(this).val());
+            doDevicesColorAction(event, deviceID, $(this).val());
         });
     });
 }
 
-function toggleDevices(toggle: string): void {
+/**
+ * Toggles the blacklist buttons on every device on the devices page
+ * @param toggle the toggle state
+ */
+function devicesToggleBlacklistedDevices(toggle: string): void {
     const deviceVisibilityButtons = document.querySelectorAll(".device-visibility");
     $.each(deviceVisibilityButtons, function (_, el) {
         if (toggle === "hide") {
@@ -499,7 +590,10 @@ function toggleDevices(toggle: string): void {
     });
 }
 
-function toggleVisibilityListeners(): void {
+/**
+ * Event listeners to toggle the blacklist state of every device on the devices page
+ */
+function onDevicesToggleVisibilityListeners(): void {
     const toggleVisibilityButtons = document.querySelectorAll(".toggle-visibility");
 
     $.each(toggleVisibilityButtons, function (_, element) {
@@ -507,7 +601,7 @@ function toggleVisibilityListeners(): void {
             element.classList.add("d-none");
             document.querySelector(element.getAttribute("data-toggle-inverse")).classList.remove("d-none");
 
-            toggleDevices(element.getAttribute("data-toggle"));
+            devicesToggleBlacklistedDevices(element.getAttribute("data-toggle"));
 
             const hiddenDevices = document.querySelectorAll(".device-hidden");
             $.each(hiddenDevices, function (_, el) {
@@ -517,7 +611,10 @@ function toggleVisibilityListeners(): void {
     });
 }
 
-function toggleDeviceVisibilityListeners(): void {
+/**
+ * Event listeners to toggle the blacklist state of a device on the devices page 
+ */
+function onDevicesToggleDeviceVisibilityListeners(): void {
     const toggleDeviceVisibilityButtons = document.querySelectorAll(".toggle-devices-visibility");
 
     $.each(toggleDeviceVisibilityButtons, function (_, element) {
@@ -567,8 +664,12 @@ function toggleDeviceVisibilityListeners(): void {
     });
 }
 
-function doGetDevices(data: any): void {
-    updateSpinner("devices");
+/**
+ * Update the devices using their template files
+ * @param data the data consisting of all devices
+ */
+function devicesUpdate(data: any): void {
+    showUpdateSpinner("devices");
 
     fetch("/api/app/templates/devices").then(function (req) {
         if (req.status === 200) {
@@ -624,21 +725,24 @@ function doGetDevices(data: any): void {
                     devicesRefreshedAt.innerHTML = ('0'+updatedAt.getHours()).slice(-2) + ":" + ('0'+updatedAt.getMinutes()).slice(-2);
                 }
 
-                sceneListeners();
-                switchListeners();
-                dimListeners();
-                brightnessColorShowListeners();
-                colorListeners();
-                toggleDeviceVisibilityListeners();
+                onDevicesSceneListeners();
+                onDevicesSwitchListeners();
+                onDevicesDimListeners();
+                onDevicesToggleBrightnessColorListeners();
+                onDevicesColorListeners();
+                onDevicesToggleDeviceVisibilityListeners();
                 clickAnimationListeners();
 
-                stopUpdateSpinner("devices");
+                hideUpdateSpinner("devices");
             });
         }
     });
 }
 
-function toggleDeviceTypes(): void {
+/**
+ * Event listeners to toggle between the scenes and switch/dim/color devices on the home page widget
+ */
+function devicesToggleDeviceTypes(): void {
     const toggleDeviceTypeElements = document.querySelectorAll(".toggle-device-type");
     $.each(toggleDeviceTypeElements, function (_, element) {
         element.addEventListener("click", function () {
@@ -658,13 +762,14 @@ function toggleDeviceTypes(): void {
         });
     });
 }
-
 //// DEVICES-END ////
 
 //// ENERGY-START ////
-
-function doRenderCharts(): void {
-    updateSpinner("energy");
+/**
+ * Create the historical energy charts on the energy page
+ */
+function energyRenderCharts(): void {
+    showUpdateSpinner("energy");
 
     const data = JSON.parse(document.getElementById("energyData").innerText);
 
@@ -840,12 +945,17 @@ function doRenderCharts(): void {
         }
         chart.update();
 
-        stopUpdateSpinner("energy");
+        hideUpdateSpinner("energy");
     });
 }
 
-function doGetData(element: Element, next: boolean): void {
-    updateSpinner("energy");
+/**
+ * Update the live energy readings on the energy page 
+ * @param element the clicked button
+ * @param next the next or previous month state
+ */
+function energyUpdateHistoricalReadings(element: Element, next: boolean): void {
+    showUpdateSpinner("energy");
 
     const page = document.querySelector("body").getAttribute("data-page");
     const target = document.getElementById("energyWrapper");
@@ -866,30 +976,34 @@ function doGetData(element: Element, next: boolean): void {
                 }).then(function (template) {
                     target.innerHTML = ejs.render(template, {page: page, history: obj});
 
-                    doRenderCharts();
+                    energyRenderCharts();
 
                     const changeMonthElements = document.querySelectorAll(".change-month");
                     $.each(changeMonthElements, function (_, element) {
                         element.addEventListener("click", function () {
-                            doGetData(element, element.getAttribute("data-next") === "true");
+                            energyUpdateHistoricalReadings(element, element.getAttribute("data-next") === "true");
                         });
                     });
                 });
             });
         }
 
-        stopUpdateSpinner("energy");
+        hideUpdateSpinner("energy");
     });
 }
 
-function doGetLiveEnergyReadings(data: any): void {
-    updateSpinner("energy");
+/**
+ * Fetch and update the live energy readings on the energy page
+ * @param data the data consisting of the energy readings
+ */
+function energyUpdateLiveReadings(data: any): void {
+    showUpdateSpinner("energy");
 
     const page = document.querySelector("body").getAttribute("data-page");
     const target = document.querySelector("#liveEnergyReadings");
 
     if (!target) {
-        stopUpdateSpinner("energy");
+        hideUpdateSpinner("energy");
         return;
     }
 
@@ -900,17 +1014,21 @@ function doGetLiveEnergyReadings(data: any): void {
 
         target.innerHTML = ejs.render(template, {page: page, current: data});
 
-        stopUpdateSpinner("energy");
+        hideUpdateSpinner("energy");
 
     });
 }
-
 //// ENERGY-END ////
 
 //// SETTINGS-START ////
-
-function settingsFetchRequest(addToURL: string, method: string, body: object): void {
-    fetch("/api/settings" + addToURL, {
+/**
+ * Boilerplate API fetch request for settings
+ * @param urlAddon to be added after the default url
+ * @param method the fetch request method
+ * @param body the body of the request
+ */
+function settingsFetchRequestBuilder(urlAddon: string, method: string, body: object): void {
+    fetch("/api/settings" + urlAddon, {
         method: method,
         headers: {
             "Content-Type": "application/json"
@@ -918,8 +1036,6 @@ function settingsFetchRequest(addToURL: string, method: string, body: object): v
         body: JSON.stringify(body)
     }).then(function (req) {
         if (req.status !== 200) {
-            console.log("AN ERROR OCCURRED");
-            console.log(req.status);
             return;
         }
 
@@ -927,7 +1043,12 @@ function settingsFetchRequest(addToURL: string, method: string, body: object): v
     });
 }
 
-function doAddSettingAction(event: Event, element: HTMLFormElement): void {
+/**
+ * Post setting request to the API
+ * @param event the event form submission
+ * @param element the submitted form contents
+ */
+function doSettingsAddAction(event: Event, element: HTMLFormElement): void {
     event.preventDefault();
 
     const description = (element.elements.namedItem("description") as HTMLInputElement).value;
@@ -935,71 +1056,81 @@ function doAddSettingAction(event: Event, element: HTMLFormElement): void {
     const specification = (element.elements.namedItem("specification") as HTMLInputElement).value;
     const value = (element.elements.namedItem("value") as HTMLInputElement).value;
 
-    settingsFetchRequest("", "POST", { description, type, specification, value });
+    settingsFetchRequestBuilder("", "POST", { description, type, specification, value });
 }
 
-function doUpdateSettingAction(event: Event, element: HTMLFormElement): void {
+/**
+ * Put/Update setting request to the API
+ * @param event the event form submission
+ * @param element the submitted form contents
+ */
+function doSettingsUpdateAction(event: Event, element: HTMLFormElement): void {
     event.preventDefault();
 
     const id = element.getAttribute("data-id");
     const specification = (element.elements.namedItem("specification") as HTMLInputElement).value;
     const value = (element.elements.namedItem("value") as HTMLInputElement).value;
 
-    settingsFetchRequest("/" + id, "PUT", { specification, value });
+    settingsFetchRequestBuilder("/" + id, "PUT", { specification, value });
 }
 
-function doDeleteSettingAction(event: Event, element: Element): void {
+/**
+ * Delete setting request to the API
+ * @param event the clicked button event
+ * @param element the clicked button
+ */
+function doSettingsDeleteAction(event: Event, element: Element): void {
     event.preventDefault();
 
     const id = element.getAttribute("data-id");
 
-    fetch("/api/settings/"+id, {
-        method: "DELETE",
-        headers: {
-            "Content-Type": "application/json"
-        }
-    }).then(function (req) {
-        if (req.status !== 200) {
-            console.log("AN ERROR OCCURRED");
-            console.log(req.status);
-            return;
-        }
-
-        document.location.reload();
-    });
+    settingsFetchRequestBuilder(`/${id}`, "DELETE", {});
 }
-
 //// SETTINGS-END ////
 
 //// SPOTIFY-START ////
-
-function doOpenCollection(element: Element): void {
+/**
+ * Navigate to a spotify collection url
+ * @param element the clicked button
+ */
+function doSpotifyNavigateToCollectionAction(element: Element): void {
     const collectionType = element.getAttribute("collection-type");
     const collectionID = element.getAttribute("collection-id");
 
     location.href = "/spotify/" + collectionType + "/" + collectionID;
 }
 
-function doPlayCollectionAction(element: Element): void {
-    updateSpinner("spotify");
+/**
+ * Action to set playback of spotify collection
+ * @param element the clicked button
+ */
+function doSpotifyPlayCollectionAction(element: Element): void {
+    showUpdateSpinner("spotify");
     const uri = element.getAttribute("collection-uri");
     const offset = element.getAttribute("collection-offset");
 
     fetch("/api/spotify/playback/uri/" + uri + "/" + offset, { method: "PUT" });
 }
 
-function doPlaybackAction(element: Element): void {
-    updateSpinner("spotify");
+/**
+ * Action to set playback of spotify player
+ * @param element the clicked button
+ */
+function doSpotifyPlaybackAction(element: Element): void {
+    showUpdateSpinner("spotify");
     const type = element.getAttribute("action-type");
 
     fetch("/api/spotify/playback/" + type, { method: "PUT" });
 }
 
-function playListeners(): void {
+/**
+ * Event listeners to set playback of spotify player and collection
+ */
+function onSpotifyPlayerListeners(): void {
     const playbackButtons = document.querySelectorAll(".spotify-playback-button");
     $.each(playbackButtons, function (_, element) {
         element.addEventListener("click", function () {
-            doPlaybackAction(element);
+            doSpotifyPlaybackAction(element);
         });
     });
 
@@ -1008,34 +1139,15 @@ function playListeners(): void {
         element.addEventListener("click", function (event) {
             event.stopPropagation();
 
-            doPlayCollectionAction(element);
-        });
-    });
-
-    const hoverActionElements = document.querySelectorAll(".hover-action");
-    $.each(hoverActionElements, function (_, element) {
-        const fromValue = element.getAttribute("value-from");
-        const toValue = element.getAttribute("value-to");
-
-        const enterEvents = ["mouseenter", "touchenter"];
-        $.each(enterEvents, function (_, event) {
-            element.addEventListener(event, function () {
-                element.classList.remove(fromValue);
-                element.classList.add(toValue);
-            });
-        });
-
-        const leaveEvents = ["mouseleave", "touchleave"];
-        $.each(leaveEvents, function (_, event) {
-            element.addEventListener(event, function () {
-                element.classList.add(fromValue);
-                element.classList.remove(toValue);
-            });
+            doSpotifyPlayCollectionAction(element);
         });
     });
 }
 
-function volumeListeners(): void {
+/**
+ * Event listeners for setting the volume of spotify player
+ */
+function onSpotifyVolumeListeners(): void {
     const volumeButtons = document.querySelectorAll(".spotify-volume-button");
     $.each(volumeButtons, function (_, element) {
         element.addEventListener("click", function (event) {
@@ -1050,18 +1162,24 @@ function volumeListeners(): void {
     });
 }
 
-function collectionListeners(): void {
+/**
+ * Event listeners for navigating to spotify collections
+ */
+function onSpotifyCollectionListeners(): void {
     const collectionOpenButtons = document.querySelectorAll(".collection-open");
     $.each(collectionOpenButtons, function (_, element) {
         element.addEventListener("click", function (event) {
             event.stopPropagation();
 
-            doOpenCollection(element);
+            doSpotifyNavigateToCollectionAction(element);
         });
     });
 }
 
-function searchListeners(): void {
+/**
+ * Event listeners for searching spotify
+ */
+function onSpotifySearchListeners(): void {
     const searchCategoryButtons = document.querySelectorAll(".search-category-toggle");
     $.each(searchCategoryButtons, function (_, element) {
         element.addEventListener("click", function (event) {
@@ -1098,7 +1216,10 @@ function searchListeners(): void {
     });
 }
 
-function categoryListeners(): void {
+/**
+ * Event listeners for toggling categories on spotify search, artist, and top list
+ */
+function onSpotifyCategoryListeners(): void {
     const categoryToggles = document.querySelectorAll(".toggle-category");
     $.each(categoryToggles, function (_, element) {
         element.addEventListener("click", function () {
@@ -1121,12 +1242,15 @@ function categoryListeners(): void {
     });
 }
 
-function followListeners(): void {
+/**
+ * Event listeners for following a spotify track, artist, album, playlist, ...
+ */
+function onSpotifyFollowListeners(): void {
     const followPlaylistButtons = document.querySelectorAll(".collection-follow");
     $.each(followPlaylistButtons, function (_, element) {
         element.addEventListener("click", function (event) {
             event.stopPropagation();
-            updateSpinner("spotify");
+            showUpdateSpinner("spotify");
 
             const type = element.getAttribute("collection-type");
             const id = element.getAttribute("collection-id");
@@ -1139,17 +1263,21 @@ function followListeners(): void {
                     inverseTarget.classList.remove("d-none");
                 }
 
-                stopUpdateSpinner("spotify");
+                hideUpdateSpinner("spotify");
             });
         });
     });
 }
 
-function deviceListeners(): void {
+/**
+ * Event listeners for setting device as spotify device and power it on/off 
+ */
+function onSpotifyDeviceListeners(): void {
     const spotifyDeviceSelect = document.querySelector("select[name='select-device']") as HTMLSelectElement;
     if (spotifyDeviceSelect) {
         spotifyDeviceSelect.addEventListener("change", function () {
-            updateSpinner("spotify");
+            showUpdateSpinner("spotify");
+            
             fetch("/api/spotify/device", {
                 method: "PUT",
                 headers: {
@@ -1159,7 +1287,7 @@ function deviceListeners(): void {
                     deviceID: spotifyDeviceSelect.value,
                 })
             }).then(function () {
-                stopUpdateSpinner("spotify");
+                hideUpdateSpinner("spotify");
             });
         });
     }
@@ -1167,24 +1295,30 @@ function deviceListeners(): void {
     const spotifyDeviceSwitches = document.querySelectorAll(".spotify-device-switch");
     $.each(spotifyDeviceSwitches, function (_, element) {
         element.addEventListener("click", function () {
-            toggleActionSpinner(element);
+            showUpdateSpinner("spotify");
+            
+            const state = element.getAttribute("state") === "on";
 
-            const state = element.getAttribute("state");
-
-            fetch("/api/spotify/power/" + (state === "on").toString(), { method: "PUT" });
+            fetch("/api/spotify/power/" + state.toString(), { method: "PUT" }).then(function () {
+                hideUpdateSpinner("spotify");
+            });
         });
     });
 }
 
-function doUpdatePlayer(data: object): void {
-    updateSpinner("spotify");
+/**
+ * Update the spotify player on the home and spotify page
+ * @param data the data consisting of spotify player data
+ */
+function spotifyUpdatePlayer(data: object): void {
+    showUpdateSpinner("spotify");
 
     const page = document.querySelector("body").getAttribute("data-page");
     const spotifyTarget = document.querySelector("#spotifyPlayerWrapper");
     const spotifyDeviceTarget = document.querySelector("#spotifyDeviceWrapper");
 
     if (!spotifyTarget) {
-        stopUpdateSpinner("spotify");
+        hideUpdateSpinner("spotify");
         return;
     }
 
@@ -1194,13 +1328,13 @@ function doUpdatePlayer(data: object): void {
 
         spotifyTarget.innerHTML = ejs.render(template, {page: page, spotify: data});
 
-        playListeners();
-        volumeListeners();
-        followListeners();
+        onSpotifyPlayerListeners();
+        onSpotifyVolumeListeners();
+        onSpotifyFollowListeners();
     });
 
     if (!spotifyDeviceTarget) {
-        stopUpdateSpinner("spotify");
+        hideUpdateSpinner("spotify");
         return;
     }
 
@@ -1210,13 +1344,17 @@ function doUpdatePlayer(data: object): void {
 
         spotifyDeviceTarget.innerHTML = ejs.render(template, {page: page, spotify: data});
 
-        deviceListeners();
-        stopUpdateSpinner("spotify");
+        onSpotifyDeviceListeners();
+        hideUpdateSpinner("spotify");
     });
 }
 
-function doUpdateDevice(data: object): void {
-    updateSpinner("spotify");
+/**
+ * Updates the spotify device template
+ * @param data the data consisting of the spotify device data
+ */
+function spotifyUpdateDevice(data: object): void {
+    showUpdateSpinner("spotify");
 
     const page = document.querySelector("body").getAttribute("data-page");
     const target = document.querySelector("#spotifyDeviceWrapper");
@@ -1227,18 +1365,20 @@ function doUpdateDevice(data: object): void {
 
         target.innerHTML = ejs.render(template, {page: page, spotify: data});
 
-        deviceListeners();
+        onSpotifyDeviceListeners();
         clickAnimationListeners();
 
-        stopUpdateSpinner("spotify");
+        hideUpdateSpinner("spotify");
     });
 }
-
 //// SPOTIFY-END ////
 
 //// TASKS-START ////
-
-function doToggleUnflaggedTasks(state: string): void {
+/**
+ * Toggles the visibility of unflagged tasks
+ * @param state the visibility state
+ */
+function tasksToggleUnflagged(state: string): void {
     const toggleState = state === "show";
     const unflaggedTasksWrapper = document.querySelector("#unflaggedTasks");
 
@@ -1249,7 +1389,11 @@ function doToggleUnflaggedTasks(state: string): void {
     }
 }
 
-function doToggleDeleteButtons(state: string): void {
+/**
+ * Toggles the visibility of the task delete buttons
+ * @param state the visibility state
+ */
+function tasksToggleDeleteButtons(state: string): void {
     const toggleState = state === "show";
     const taskDeleteElements = document.querySelectorAll(".task-delete");
 
@@ -1262,7 +1406,11 @@ function doToggleDeleteButtons(state: string): void {
     });
 }
 
-function doToggleCompletedTasks(state: string): void {
+/**
+ * Toggles the visibility of the completed tasks
+ * @param state the visibility state
+ */
+function tasksToggleCompleted(state: string): void {
     const toggleState = state === "show";
     const taskElements = document.querySelectorAll(".task-item");
 
@@ -1287,14 +1435,21 @@ function doToggleCompletedTasks(state: string): void {
 }
 
 /**
- * Complete task api action
+ * Sets the complete or flag status of a new or existing task
+ * @param id the id of the task
+ * @param toggle the new flag state of the task
+ * @param type the type of the task (new, flag, or complete)
  */
-function doCompleteFlagTaskAction(id: string, toggle: boolean, type: string): void {
-
+function doTasksCompleteFlagAction(id: string, toggle: boolean, type: string): void {
     if (id === "new" && type === "flag") {
-        document.querySelector(".task-flag[data-id='" + id + "'][data-flagged='true']").classList.toggle("d-none");
-        document.querySelector(".task-flag[data-id='" + id + "'][data-flagged='false']").classList.toggle("d-none");
-        (document.querySelector("input[name='newTaskFlagged']") as HTMLInputElement).value = toggle ? "1" : "0";
+        const flagElement = document.querySelector(".task-flag[data-id='" + id + "']");
+        const flagChildElements = flagElement.querySelectorAll(".flag-child");
+        $.each(flagChildElements, function (_, element) {
+            element.classList.toggle("d-none");
+        });
+
+        const newTaskFlaggedInputElement = (document.querySelector("input[name='newTaskFlagged']") as HTMLInputElement);
+        newTaskFlaggedInputElement.value = toggle ? "1" : "0";
 
         return;
     }
@@ -1302,7 +1457,11 @@ function doCompleteFlagTaskAction(id: string, toggle: boolean, type: string): vo
     fetch("/api/tasks/" + type + "/" + id + "/" + (toggle ? "true" : "false"), { method: "POST" });
 }
 
-function doDeleteTask(id: string): void {
+/**
+ * Delete a task
+ * @param id the id of the task
+ */
+function doTasksDeleteAction(id: string): void {
 
     fetch("/api/tasks/" + id, {
         method: "DELETE",
@@ -1313,47 +1472,56 @@ function doDeleteTask(id: string): void {
 }
 
 /**
- * Listeners for deletion of tasks
+ * Event listeners for deleting tasks
  */
-function deleteTasksListeners(): void {
+function onTasksDeleteListeners(): void {
     const deleteTaskElements = document.querySelectorAll(".task-delete");
     $.each(deleteTaskElements, function (index, element: HTMLInputElement) {
         element.addEventListener("click", function () {
-            doDeleteTask(element.getAttribute("data-id"));
+            doTasksDeleteAction(element.getAttribute("data-id"));
         });
     });
 }
 
 /**
- * Listeners for completion of tasks
+ * Event listeners for completing tasks
  */
-function completeTasksListeners(): void {
+function onTasksCompleteListeners(): void {
     const completeTaskElements = document.querySelectorAll(".task-complete");
     $.each(completeTaskElements, function (index, element: HTMLInputElement) {
         element.addEventListener("click", function () {
-            doCompleteFlagTaskAction(element.getAttribute("data-id"), element.checked, "complete");
+            doTasksCompleteFlagAction(element.getAttribute("data-id"), element.checked, "complete");
         });
     });
 }
 
 /**
- * Listeners for flags of tasks
+ * Event listeners for flagging tasks
  */
-function flagTasksListeners(init: boolean): void {
+function onTasksFlagListeners(init: boolean): void {
     const flagTaskElements = document.querySelectorAll(".task-flag");
     $.each(flagTaskElements, function (index, element: HTMLElement) {
 
         if (!init && element.getAttribute("data-id") === "new") return;
 
         element.addEventListener("click", function () {
-            const fromFlagged = element.getAttribute("data-flagged");
+            const flagChild = element.querySelector(".flag-child:not(.d-none)");
+            if (!flagChild) return;
 
-            doCompleteFlagTaskAction(element.getAttribute("data-id"), fromFlagged !== "true", "flag");
+            const flagStatus = flagChild.getAttribute("data-flagged") === "true";
+            doTasksCompleteFlagAction(
+                element.getAttribute("data-id"),
+                !flagStatus,
+                "flag"
+            );
         });
     });
 }
 
-function onTaskDescriptionChangeListeners(): void {
+/**
+ * Post updated task description to API
+ */
+function onTasksDescriptionChangeListeners(): void {
     const taskDescriptions = document.querySelectorAll(".task-description");
     $.each(taskDescriptions, function (_, element: HTMLInputElement) {
         element.addEventListener("input", function (event) {
@@ -1376,8 +1544,12 @@ function onTaskDescriptionChangeListeners(): void {
     });
 }
 
-function doUpdateTasks(data: any): void {
-    updateSpinner("tasks");
+/**
+ * Update tasks in DOM
+ * @param data the data consisting out of tasks data
+ */
+function tasksUpdate(data: any): void {
+    showUpdateSpinner("tasks");
 
     const page = document.querySelector("body").getAttribute("data-page");
 
@@ -1385,7 +1557,7 @@ function doUpdateTasks(data: any): void {
     const targetUnflagged = document.querySelector("#unflaggedTasks");
 
     if (!targetFlagged && !targetUnflagged) {
-        stopUpdateSpinner("tasks");
+        hideUpdateSpinner("tasks");
         return;
     }
 
@@ -1397,25 +1569,29 @@ function doUpdateTasks(data: any): void {
         targetFlagged.innerHTML = ejs.render(template, {page: page, tasks: data, isFlagged: true});
         targetUnflagged.innerHTML = ejs.render(template, {page: page, tasks: data, isFlagged: false});
 
-        completeTasksListeners();
-        flagTasksListeners(false);
-        deleteTasksListeners();
-        onTaskDescriptionChangeListeners();
+        onTasksCompleteListeners();
+        onTasksFlagListeners(false);
+        onTasksDeleteListeners();
+        onTasksDescriptionChangeListeners();
 
-        doToggleDeleteButtons(document.querySelector(".toggle-delete.d-none").getAttribute("data-toggle"));
+        tasksToggleDeleteButtons(document.querySelector(".toggle-delete.d-none").getAttribute("data-toggle"));
 
         if (page === "home") {
-            doToggleUnflaggedTasks(document.querySelector(".toggle-unflagged.d-none").getAttribute("data-toggle"));
+            tasksToggleUnflagged(document.querySelector(".toggle-unflagged.d-none").getAttribute("data-toggle"));
         }
 
-        doToggleCompletedTasks(document.querySelector(".toggle-task-visibility.d-none").getAttribute("data-toggle"));
+        tasksToggleCompleted(document.querySelector(".toggle-task-visibility.d-none").getAttribute("data-toggle"));
 
-        stopUpdateSpinner("tasks");
+        hideUpdateSpinner("tasks");
 
     });
 }
 
-function doAddTask(event: Event): void {
+/**
+ * Post new task to API
+ * @param event the event form submission
+ */
+function doTasksAddAction(event: Event): void {
     event.preventDefault();
     const newTaskDescription = (document.querySelector("input[name='newTaskDescription']") as HTMLInputElement);
     const newTaskFlagged = (document.querySelector("input[name='newTaskFlagged']") as HTMLInputElement);
@@ -1442,12 +1618,14 @@ function doAddTask(event: Event): void {
         });
     }
 }
-
 //// TASKS-END ////
 
 //// TRAVEL-START ////
-
-function doGetMaps(element: Element): void {
+/**
+ * Update the embedded maps depending on the element's id and direction 
+ * @param element the element that is clicked
+ */
+function travelUpdateEmbeddedMap(element: Element): void {
     const parentID = element.getAttribute("data-parent-id");
     const routeDirection = element.getAttribute("data-direction");
     const allMapElements = document.querySelectorAll(".travel-map");
@@ -1550,7 +1728,10 @@ function doGetMaps(element: Element): void {
     });
 }
 
-function toggleTravelTypeListeners(): void {
+/**
+ * Event listeners for changing between train and maps
+ */
+function onTravelTypeListeners(): void {
     const travelTypeToggleButtons = document.querySelectorAll(".travel-type-toggle");
     $.each(travelTypeToggleButtons, function (_, element) {
         element.addEventListener("click", function (event) {
@@ -1577,16 +1758,22 @@ function toggleTravelTypeListeners(): void {
     });
 }
 
-function openMapListeners(): void {
+/**
+ * Event listeners for opening an embedded map
+ */
+function onTravelOpenMapListeners(): void {
     const openMapElements = document.querySelectorAll(".open-map");
     $.each(openMapElements, function (_, element) {
         element.addEventListener("click", function () {
-            doGetMaps(element);
+            travelUpdateEmbeddedMap(element);
         });
     });
 }
 
-function toggleTrainTransfersListeners(): void {
+/**
+ * Event listeners for toggling detailed transfer information about a train route 
+ */
+function onTravelToggleTrainTransfersListeners(): void {
     const toggleTrainTransfersElements = document.querySelectorAll(".toggle-train-transfers");
     $.each(toggleTrainTransfersElements, function (_, element) {
         element.addEventListener("click", function () {
@@ -1597,14 +1784,18 @@ function toggleTrainTransfersListeners(): void {
     });
 }
 
-function doUpdateNSTrips(data: any): void {
-    updateSpinner("travel");
+/**
+ * Update train data in DOM
+ * @param data the data consisting of train data
+ */
+function travelUpdateTrain(data: any): void {
+    showUpdateSpinner("travel");
 
     const page = document.querySelector("body").getAttribute("data-page");
     const target = document.getElementById("travelNSWrapper");
 
     if (!target) {
-        stopUpdateSpinner("travel");
+        hideUpdateSpinner("travel");
         return;
     }
 
@@ -1614,25 +1805,29 @@ function doUpdateNSTrips(data: any): void {
 
         target.innerHTML = ejs.render(template, { page: page, train: data });
 
-        toggleTrainTransfersListeners();
+        onTravelToggleTrainTransfersListeners();
 
         const dateTrain = new Date(data.updatedAt);
         const travelTrainRefreshedAt = document.getElementById("travelTrainRefreshedAt");
         travelTrainRefreshedAt.innerHTML = ('0'+dateTrain.getHours()).slice(-2) + ":" + ('0'+dateTrain.getMinutes()).slice(-2);
 
-        stopUpdateSpinner("travel");
+        hideUpdateSpinner("travel");
 
     });
 }
 
-function doUpdateMapRoutes(data: any): void {
-    updateSpinner("travel");
+/**
+ * Update maps data in DOM
+ * @param data the data consisting of maps data
+ */
+function travelUpdateMaps(data: any): void {
+    showUpdateSpinner("travel");
 
     const page = document.querySelector("body").getAttribute("data-page");
     const target = document.getElementById("travelMapWrapper");
 
     if (!target) {
-        stopUpdateSpinner("travel");
+        hideUpdateSpinner("travel");
         return;
     }
 
@@ -1642,21 +1837,23 @@ function doUpdateMapRoutes(data: any): void {
 
         target.innerHTML = ejs.render(template, { page: page, map: data });
 
-        openMapListeners();
+        onTravelOpenMapListeners();
 
         const dateMap = new Date(data.updatedAt);
         const travelMapRefreshedAt = document.getElementById("travelMapRefreshedAt");
         travelMapRefreshedAt.innerHTML = ('0'+dateMap.getHours()).slice(-2) + ":" + ('0'+dateMap.getMinutes()).slice(-2);
 
-        stopUpdateSpinner("travel");
+        hideUpdateSpinner("travel");
 
     });
 }
 
 /**
- * MAP ADDRESS ACTIONS
+ * Add address to travel maps
+ * @param event the event for the submitted form
+ * @param element the submitted form content
  */
-function doAddAddressAction(event: Event, element: Element): void {
+function doTravelAddAddressAction(event: Event, element: Element): void {
     event.preventDefault();
 
     element.querySelector(".error-message").innerHTML = "";
@@ -1686,7 +1883,12 @@ function doAddAddressAction(event: Event, element: Element): void {
     });
 }
 
-function doUpdateAddressAction(event: Event, element: Element): void {
+/**
+ * Update address to travel maps
+ * @param event the event for the submitted form
+ * @param element the submitted form content
+ */
+function doTravelUpdateAddressAction(event: Event, element: Element): void {
     event.preventDefault();
 
     const id = (element.querySelector("[name='id']") as HTMLInputElement).value;
@@ -1718,7 +1920,12 @@ function doUpdateAddressAction(event: Event, element: Element): void {
     });
 }
 
-function doDeleteAddressAction(event: Event, element: Element): void {
+/**
+ * Delete address to travel maps
+ * @param event the event for the submitted form
+ * @param element the clicked element
+ */
+function doTravelDeleteAddressAction(event: Event, element: Element): void {
     event.preventDefault();
 
     const id = element.getAttribute("data-id");
@@ -1748,35 +1955,37 @@ function doDeleteAddressAction(event: Event, element: Element): void {
 }
 
 /**
- * MAP ADDRESS LISTENERS
+ * Event listeners for travel maps addresses
  */
-function addressListeners(): void {
+function onTravelAddressListeners(): void {
     const addAddressForm = document.getElementById("addAddressForm");
     if (addAddressForm) {
         addAddressForm.addEventListener("submit", function (event) {
-            doAddAddressAction(event, this);
+            doTravelAddAddressAction(event, this);
         });
     }
 
     const updateAddressForms = document.querySelectorAll(".updateAddressForm");
     $.each(updateAddressForms, function (_, element) {
         element.addEventListener("submit", function (event) {
-            doUpdateAddressAction(event, element);
+            doTravelUpdateAddressAction(event, element);
         });
     });
 
     const deleteAddressButtons = document.querySelectorAll(".delete-address");
     $.each(deleteAddressButtons, function (_, element) {
         element.addEventListener("click", function (event) {
-            doDeleteAddressAction(event, element);
+            doTravelDeleteAddressAction(event, element);
         });
     });
 }
 
 /**
- * MAP ROUTE ACTIONS
+ * Add a travel maps route
+ * @param event the event for the submitted form
+ * @param element the submitted form content
  */
-function doAddMapRouteAction(event: Event, element: Element): void {
+function doTravelAddMapRouteAction(event: Event, element: Element): void {
     event.preventDefault();
 
     element.querySelector(".error-message").innerHTML = "";
@@ -1807,7 +2016,12 @@ function doAddMapRouteAction(event: Event, element: Element): void {
     });
 }
 
-function doUpdateMapRouteAction(event: Event, element: Element): void {
+/**
+ * Update a travel maps route
+ * @param event the event for the submitted form
+ * @param element the submitted form content
+ */
+function doTravelUpdateMapRouteAction(event: Event, element: Element): void {
     event.preventDefault();
 
     const id = (element.querySelector("[name='id']") as HTMLInputElement).value;
@@ -1840,7 +2054,12 @@ function doUpdateMapRouteAction(event: Event, element: Element): void {
     });
 }
 
-function doDeleteMapRouteAction(event: Event, element: Element): void {
+/**
+ * Delete a travel maps route
+ * @param event the event for the submitted form
+ * @param element the clicked element
+ */
+function doTravelDeleteMapRouteAction(event: Event, element: Element): void {
     event.preventDefault();
 
     const id = element.getAttribute("data-id");
@@ -1864,35 +2083,37 @@ function doDeleteMapRouteAction(event: Event, element: Element): void {
 }
 
 /**
- * MAP ROUTE LISTENERS
+ * Event listeners for travel maps routes
  */
-function mapRouteListeners(): void {
+function onTravelMapRouteListeners(): void {
     const addMapRouteForm = document.getElementById("addMapRouteForm");
     if (addMapRouteForm) {
         addMapRouteForm.addEventListener("submit", function (event) {
-            doAddMapRouteAction(event, this);
+            doTravelAddMapRouteAction(event, this);
         });
     }
 
     const updateMapRouteForms = document.querySelectorAll(".updateMapRouteForm");
     $.each(updateMapRouteForms, function (_, element) {
         element.addEventListener("submit", function (event) {
-            doUpdateMapRouteAction(event, element);
+            doTravelUpdateMapRouteAction(event, element);
         });
     });
 
     const deleteMapRouteButtons = document.querySelectorAll(".delete-maproute");
     $.each(deleteMapRouteButtons, function (_, element) {
         element.addEventListener("click", function (event) {
-            doDeleteMapRouteAction(event, element);
+            doTravelDeleteMapRouteAction(event, element);
         });
     });
 }
 
 /**
- * TRAIN STATIONS ACTIONS
+ * Add a trainstation to travel train
+ * @param event the form submitted event
+ * @param element the submitted form content
  */
-function doAddTrainStationAction(event: Event, element: Element): void {
+function doTravelAddTrainStationAction(event: Event, element: Element): void {
     event.preventDefault();
 
     element.querySelector(".error-message").innerHTML = "";
@@ -1921,7 +2142,12 @@ function doAddTrainStationAction(event: Event, element: Element): void {
     });
 }
 
-function doDeleteTrainStationAction(event: Event, element: Element): void {
+/**
+ * Delete a trainstation to travel train
+ * @param event the click event 
+ * @param element the clicked element
+ */
+function doTravelDeleteTrainStationAction(event: Event, element: Element): void {
     event.preventDefault();
 
     const id = element.getAttribute("data-id");
@@ -1951,28 +2177,30 @@ function doDeleteTrainStationAction(event: Event, element: Element): void {
 }
 
 /**
- * TRAIN STATIONS LISTENERS
+ * Event listeners for travel train stations 
  */
-function trainStationListeners(): void {
+function onTravelTrainStationListeners(): void {
     const addTrainStationForm = document.getElementById("addTrainStationForm");
     if (addTrainStationForm) {
         addTrainStationForm.addEventListener("submit", function (event) {
-            doAddTrainStationAction(event, this);
+            doTravelAddTrainStationAction(event, this);
         });
     }
 
     const deleteTrainStationButtons = document.querySelectorAll(".delete-trainstation");
     $.each(deleteTrainStationButtons, function (_, element) {
         element.addEventListener("click", function (event) {
-            doDeleteTrainStationAction(event, element);
+            doTravelDeleteTrainStationAction(event, element);
         });
     });
 }
 
 /**
- * TRAIN ROUTE ACTIONS
+ * Add a train route to travel train
+ * @param event the form submitted event
+ * @param element the submitted form content
  */
-function doAddTrainRouteAction(event: Event, element: Element): void {
+function doTravelAddTrainRouteAction(event: Event, element: Element): void {
     event.preventDefault();
 
     element.querySelector(".error-message").innerHTML = "";
@@ -2003,7 +2231,12 @@ function doAddTrainRouteAction(event: Event, element: Element): void {
     });
 }
 
-function doUpdateTrainRouteAction(event: Event, element: Element): void {
+/**
+ * Update a train route to travel train
+ * @param event the form submitted event
+ * @param element the submitted form content
+ */
+function doTravelUpdateTrainRouteAction(event: Event, element: Element): void {
     event.preventDefault();
 
     const id = (element.querySelector("[name='id']") as HTMLInputElement).value;
@@ -2036,7 +2269,12 @@ function doUpdateTrainRouteAction(event: Event, element: Element): void {
     });
 }
 
-function doDeleteTrainRouteAction(event: Event, element: Element): void {
+/**
+ * Delete a train route to travel train
+ * @param event the click event
+ * @param element the clicked element
+ */
+function doTravelDeleteTrainRouteAction(event: Event, element: Element): void {
     event.preventDefault();
 
     const id = element.getAttribute("data-id");
@@ -2060,37 +2298,39 @@ function doDeleteTrainRouteAction(event: Event, element: Element): void {
 }
 
 /**
- * TRAIN ROUTE LISTENERS
+ * Event listeners for travel train routes
  */
-function trainRouteListeners(): void {
+function onTravelTrainRouteListeners(): void {
     const updateTrainRouteForms = document.querySelectorAll(".updateTrainRouteForm");
     $.each(updateTrainRouteForms, function (_, element) {
         element.addEventListener("submit", function (event) {
-            doUpdateTrainRouteAction(event, element);
+            doTravelUpdateTrainRouteAction(event, element);
         });
     });
 
     const deleteTrainRouteButtons = document.querySelectorAll(".delete-trainroute");
     $.each(deleteTrainRouteButtons, function (_, element) {
         element.addEventListener("click", function (event) {
-            doDeleteTrainRouteAction(event, element);
+            doTravelDeleteTrainRouteAction(event, element);
         });
     });
 
     const addTrainRouteForm = document.getElementById("addTrainRouteForm");
     if (addTrainRouteForm) {
         addTrainRouteForm.addEventListener("submit", function (event) {
-            doAddTrainRouteAction(event, this);
+            doTravelAddTrainRouteAction(event, this);
         });
     }
 }
-
 //// TRAVEL-END ////
 
 //// WEATHER-START ////
-
-function doUpdateWeather(data: any): void {
-    updateSpinner("weather");
+/**
+ * Update the weather in DOM
+ * @param data the data consisting of weather data
+ */
+function weatherUpdate(data: any): void {
+    showUpdateSpinner("weather");
 
     const page = document.querySelector("body").getAttribute("data-page");
 
@@ -2098,7 +2338,7 @@ function doUpdateWeather(data: any): void {
         const weatherTarget = document.querySelector("#weather");
 
         if (!weatherTarget) {
-            stopUpdateSpinner("weather");
+            hideUpdateSpinner("weather");
             return;
         }
 
@@ -2108,7 +2348,7 @@ function doUpdateWeather(data: any): void {
         }).then(function (template) {
             weatherTarget.innerHTML = ejs.render(template, {page: page, weather: data});
 
-            stopUpdateSpinner("weather");
+            hideUpdateSpinner("weather");
         });
     }
 
@@ -2125,16 +2365,18 @@ function doUpdateWeather(data: any): void {
             weatherRefreshedAt.setAttribute("data-date", data.updatedAt);
             weatherRefreshedAt.innerHTML = ('0'+updatedAt.getHours()).slice(-2) + ":" + ('0'+updatedAt.getMinutes()).slice(-2);
 
-            stopUpdateSpinner("weather");
+            hideUpdateSpinner("weather");
         });
     }
 }
-
 //// WEATHER-END ////
 
 //// CRYPTO-START ////
-
-function cryptoEventListener(event: Event): void {
+/**
+ * Event delegation listeners for crypto 
+ * @param event the clicked event
+ */
+function onCryptoListeners(event: Event): void {
     event.preventDefault();
 
     const target = event.target as HTMLElement;
@@ -2142,16 +2384,19 @@ function cryptoEventListener(event: Event): void {
         const id = target.getAttribute("data-id");
         const state = target.getAttribute("data-state") === "on";
 
-        updateSpinner("crypto");
+        showUpdateSpinner("crypto");
 
         fetch("/api/crypto/assets/" + id, {
             method: state ? "DELETE" : "POST"
         }).then(function () {
-            stopUpdateSpinner("crypto");
+            hideUpdateSpinner("crypto");
         });
     }
 }
 
+/**
+ * Get the selected filter values for crypto page (coins per page and page number)
+ */
 function cryptoGetFilterValues(): object {
     const pageSelectElement = document.querySelector("select[name='crypto-select-page']");
 
@@ -2162,8 +2407,12 @@ function cryptoGetFilterValues(): object {
     };
 }
 
-function doUpdateCrypto(data: any): void {
-    updateSpinner("crypto");
+/**
+ * Update crypto in DOM
+ * @param data the data consisting of crypto data
+ */
+function cryptoUpdate(data: any): void {
+    showUpdateSpinner("crypto");
 
     const page = document.querySelector("body").getAttribute("data-page");
 
@@ -2171,7 +2420,7 @@ function doUpdateCrypto(data: any): void {
         const cryptoTarget = document.querySelector("#cryptoWrapper");
 
         if (!cryptoTarget) {
-            stopUpdateSpinner("crypto");
+            hideUpdateSpinner("crypto");
             return;
         }
 
@@ -2179,17 +2428,17 @@ function doUpdateCrypto(data: any): void {
             return resp.clone().text();
 
         }).then(function (template) {
-            cryptoTarget.removeEventListener("click", cryptoEventListener);
+            cryptoTarget.removeEventListener("click", onCryptoListeners);
 
             cryptoTarget.innerHTML = ejs.render(template, {page: page, crypto: data});
-            cryptoTarget.addEventListener("click", cryptoEventListener);
+            cryptoTarget.addEventListener("click", onCryptoListeners);
 
             const updatedAt = new Date(data.updatedAt);
             const cryptoRefreshedAt = document.getElementById("cryptoRefreshedAt");
             cryptoRefreshedAt.setAttribute("data-date", data.updatedAt);
             cryptoRefreshedAt.innerHTML = ('0'+updatedAt.getHours()).slice(-2) + ":" + ('0'+updatedAt.getMinutes()).slice(-2);
 
-            stopUpdateSpinner("crypto");
+            hideUpdateSpinner("crypto");
         });
     }
 
@@ -2197,7 +2446,7 @@ function doUpdateCrypto(data: any): void {
         const cryptoTarget = document.querySelector("#cryptoWrapper");
 
         if (!cryptoTarget) {
-            stopUpdateSpinner("crypto");
+            hideUpdateSpinner("crypto");
             return;
         }
 
@@ -2205,31 +2454,34 @@ function doUpdateCrypto(data: any): void {
             return resp.clone().text();
 
         }).then(function (template) {
-            cryptoTarget.removeEventListener("click", cryptoEventListener);
+            cryptoTarget.removeEventListener("click", onCryptoListeners);
 
             cryptoTarget.innerHTML = ejs.render(template, {page: page, crypto: data});
-            cryptoTarget.addEventListener("click", cryptoEventListener);
+            cryptoTarget.addEventListener("click", onCryptoListeners);
 
             const updatedAt = new Date(data.updatedAt);
             const cryptoRefreshedAt = document.getElementById("cryptoRefreshedAt");
             cryptoRefreshedAt.setAttribute("data-date", data.updatedAt);
             cryptoRefreshedAt.innerHTML = ('0'+updatedAt.getHours()).slice(-2) + ":" + ('0'+updatedAt.getMinutes()).slice(-2);
 
-            stopUpdateSpinner("crypto");
+            hideUpdateSpinner("crypto");
         });
     }
 }
-
 //// CRYPTO-END ////
 
-function initialize(page: string): void {
+/**
+ * Initialize websockets listeners and transmitters for each service and page
+ * @param page the current page
+ */
+function initializeSockets(page: string): void {
     if (page === "home" || page === "devices") {
         socket.emit("init", { service: "DevicesService", type: "devices"});
 
         socket.on("devices update", function (data: object) {
             socket.emit("activate", { service: "DevicesService", type: "devices"});
 
-            doGetDevices(data);
+            devicesUpdate(data);
         });
     }
 
@@ -2239,19 +2491,19 @@ function initialize(page: string): void {
         socket.on("energy live update", function (data: object) {
             socket.emit("activate", { service: "DevicesService", type: "energy live"});
 
-            doGetLiveEnergyReadings(data);
+            energyUpdateLiveReadings(data);
         });
     }
 
     if (page === "home" || page === "spotify") {
         socket.on("spotify update", function (data: object) {
-            doUpdatePlayer(data);
+            spotifyUpdatePlayer(data);
 
-            if (page === "spotify") doUpdateDevice(data);
+            if (page === "spotify") spotifyUpdateDevice(data);
         });
 
         socket.on("spotify device error", function (data: object) {
-            doUpdatePlayer(data);
+            spotifyUpdatePlayer(data);
         });
     }
 
@@ -2262,7 +2514,7 @@ function initialize(page: string): void {
             socket.emit("activate", { service: "TaskService", type: "tasks"});
 
             if (!document.activeElement.classList.contains("task-description")) {
-                doUpdateTasks(data);
+                tasksUpdate(data);
             }
         });
     }
@@ -2274,13 +2526,13 @@ function initialize(page: string): void {
         socket.on("ns trips update", function (data: object) {
             socket.emit("activate", { service: "NSService", type: "ns trips"});
 
-            doUpdateNSTrips(data);
+            travelUpdateTrain(data);
         });
 
         socket.on("map routes update", function (data: object) {
             socket.emit("activate", { service: "MapService", type: "map routes"});
 
-            doUpdateMapRoutes(data);
+            travelUpdateMaps(data);
         });
     }
 
@@ -2290,13 +2542,13 @@ function initialize(page: string): void {
         socket.on("forecast update", function (data: object) {
             socket.emit("activate", { service: "WeatherService", type: "forecast"});
 
-            doUpdateWeather(data);
+            weatherUpdate(data);
         });
 
         socket.on("rain update", function (data: object) {
             socket.emit("activate", { service: "WeatherService", type: "rain"});
 
-            doUpdateWeather(data);
+            weatherUpdate(data);
         });
 
     }
@@ -2307,17 +2559,20 @@ function initialize(page: string): void {
         socket.on("crypto update", function (data: object) {
             socket.emit("activate", { service: "CryptoService", type: "crypto", value: cryptoGetFilterValues()});
 
-            doUpdateCrypto(data);
+            cryptoUpdate(data);
         });
     }
 }
 
+/**
+ * Method that is executed when the DOM has been loaded completely
+ */
 function onPageLoad(): void {
     const page = document.querySelector("body").getAttribute("data-page");
 
     socket.on("connect", function () {
         console.log("Connected to server with id: ", socket.id);
-        initialize(page);
+        initializeSockets(page);
     });
 
     socket.on("disconnect", function (reason: string) {
@@ -2342,32 +2597,21 @@ function onPageLoad(): void {
 
     socket.on("reconnecting", function () {
         console.log("Reconnecting...");
-        alert("Reconnecting...");
     });
 
     socket.on("reconnect", function () {
         console.log("Reconnected");
-        alert("Reconnected");
-
-        initialize(page);
+        initializeSockets(page);
     });
 
-    const tooltipElements = document.querySelectorAll("[data-bs-toggle='tooltip']");
-    $.each(tooltipElements, function (_, element) {
-        element.addEventListener("click", function () {
-            alert(element.getAttribute("title"));
-        });
-    });
+    // Check if the socket is still active and reconnect otherwise
+    window.setInterval(function () {
+        if (!socket.connected) socket.connect();
+    }, 60 * 1000);
 
-    const refreshPageButtons = document.querySelectorAll(".refresh-page");
-    $.each(refreshPageButtons, function (_, element) {
-        element.addEventListener("click", function() {
-            document.location.reload();
-        });
-    });
-
-    const sidebarLinks = document.querySelectorAll(".sidebar-link");
-    $.each(sidebarLinks, function (index, element) {
+    // Override default html links to be handled by JavaScript
+    const navLinkElements = document.querySelectorAll(".navigation-link");
+    $.each(navLinkElements, function (index, element) {
         element.addEventListener("click", function (event) {
             event.preventDefault();
 
@@ -2375,6 +2619,7 @@ function onPageLoad(): void {
         });
     });
 
+    // Update time and date every second on the homepage
     const nowTimeElement = document.querySelector("#nowTimeString");
     const nowDateElement = document.querySelector("#nowDateString");
     if (nowTimeElement && nowDateElement) {
@@ -2384,6 +2629,7 @@ function onPageLoad(): void {
         }, 1000);
     }
 
+    // Event listener to enable/disable the status of a service
     const serviceStatusElements = document.querySelectorAll("select[name='service-status']");
     $.each(serviceStatusElements, function(_, element: HTMLSelectElement) {
         element.addEventListener("change", function () {
@@ -2412,6 +2658,7 @@ function onPageLoad(): void {
         });
     });
 
+    // Mimic Bootstrap modal behavior for unsupported/older JavaScript browsers 
     if (typeof $.fn.modal === 'undefined') {
         const navigationMenuButton = document.querySelector("[data-bs-toggle='modal']");
         if (navigationMenuButton) {
@@ -2454,161 +2701,175 @@ function onPageLoad(): void {
         });
     }
 
-//// CALENDAR-START ////
+    // Mimic Bootstrap accordion behavior for unsupported/older JavaScript browsers 
+    if (typeof $.fn.collapse === 'undefined') {
+        const accordionElements = document.querySelectorAll("[data-bs-toggle='collapse']");
+        $.each(accordionElements, function (_, element) {
+            element.addEventListener("click", function () {
+                const targetID = element.getAttribute("data-bs-target");
+                const targetAccordion = document.querySelector(targetID);
+                targetAccordion.classList.toggle("show");
 
-    if (page === "home") {
-        updateSpinner("calendar");
+                const parentID = element.getAttribute("data-bs-parent");
+                const parentChilds = document.querySelector(parentID).querySelectorAll(".accordion-collapse:not(" + targetID + ")");
+                $.each(parentChilds, function (_, child) {
+                    child.classList.remove("show");
+                });
+            });
+        });
+    }
+
+//// CALENDAR-START ////
+    if (page === "home" || page === "calendar") {
+        showUpdateSpinner("calendar");
 
         window.setInterval(function () {
-            doGetEventsHome();
+            calendarUpdateEventsHome();
         }, 5 * 60 * 1000);
 
-        togglePreviewEventsListeners();
+        onCalendarToggleEventsHomeListeners();
 
-        stopUpdateSpinner("calendar");
-    }
+        hideUpdateSpinner("calendar");
 
-    if (page === "calendar") {
-        updateSpinner("calendar");
+        if (page === "calendar") {
 
-        window.setInterval(function(){
-            doUpdateCalendarEvents();
-        }, 5 * 60 * 1000);
+            window.setInterval(function () {
+                calendarUpdateEvents();
+            }, 5 * 60 * 1000);
 
-        stopUpdateSpinner("calendar");
+            hideUpdateSpinner("calendar");
 
-        // Browse previous or next month calendar view
-        const changeMonthElements = document.querySelectorAll(".change-month");
-        $.each(changeMonthElements, function (_, element) {
-            element.addEventListener("click", function () {
-                doGetMonth(element, element.getAttribute("data-next") === "true");
-            });
-        });
-
-        // Browse previous or next week events
-        const changeWeekEventsElements = document.querySelectorAll(".events-change-week");
-        $.each(changeWeekEventsElements, function (_, element) {
-            element.addEventListener("click", function () {
-                doGetNextPreviousEvents(element, element.getAttribute("data-next") === "true");
-            });
-        });
-
-        // Go to events of week by clicking the week nunber in the month calendar
-        const showEventsWeekNumber = document.querySelectorAll(".show-events-week-number");
-        $.each(showEventsWeekNumber, function (_, element) {
-            element.addEventListener("click", function () {
-                const targetEvents = document.getElementById("calendarEventsWrapper");
-                const targetMonth = document.getElementById("calendarMonthContainer");
-                const year = targetMonth.getAttribute("data-year");
-                const week = element.getAttribute("data-week");
-
-                targetEvents.setAttribute("data-year", year.toString());
-                targetEvents.setAttribute("data-week", week.toString());
-
-                doUpdateCalendarEvents();
-            });
-        });
-
-        // Click to toggle calendar and events
-        const calendarToggleElements = document.querySelectorAll(".calendar-toggle");
-        $.each(calendarToggleElements, function (_, element) {
-            element.addEventListener("click", function () {
-                const calendarID = element.getAttribute("data-id");
-                const status = (element as HTMLInputElement).checked;
-                doToggleCalendar(element, calendarID, status);
-            });
-        });
-
-        const calendarList = document.querySelector("#calendarList");
-        const newCalendarWrapper = document.querySelector("#calendarNewUpdateWrapper");
-        const deleteCalendarButton = document.querySelector("#deleteCalendar");
-
-        // Submit add/update calendar form
-        const newUpdateCalendarForm = document.querySelector("#newUpdateCalendarForm") as HTMLFormElement;
-        if (newUpdateCalendarForm) {
-            newUpdateCalendarForm.addEventListener("submit", function (event) {
-                doAddUpdateCalendarAction(event, newUpdateCalendarForm);
-
-                newUpdateCalendarForm.reset();
-            });
-        }
-
-        // Toggle new calendar
-        const newCalendarToggle = document.querySelector("#newCalendarToggle");
-        if (newCalendarToggle) {
-            newCalendarToggle.addEventListener("click", function () {
-                newUpdateCalendarForm.reset();
-                newCalendarWrapper.classList.remove("d-none");
-                deleteCalendarButton.classList.add("d-none");
-                calendarList.classList.add("d-none");
-            });
-        }
-
-        // Cancel add/update calendar
-        const cancelCalenderElement = document.querySelector("#cancelCalendar");
-        if (cancelCalenderElement) {
-            cancelCalenderElement.addEventListener("click", function () {
-                newUpdateCalendarForm.reset();
-                newCalendarWrapper.classList.add("d-none");
-                deleteCalendarButton.classList.add("d-none");
-                calendarList.classList.remove("d-none");
-            });
-        }
-
-        // Delete a calendar
-        const deleteCalendarElement = document.querySelector("#deleteCalendar");
-        if (deleteCalendarElement) {
-            deleteCalendarElement.addEventListener("click", function () {
-                doDeleteCalendarAction();
-
-                newUpdateCalendarForm.reset();
-                newCalendarWrapper.classList.add("d-none");
-                deleteCalendarButton.classList.add("d-none");
-                calendarList.classList.remove("d-none");
-            });
-        }
-
-        // Choose the color of the calendar in the form
-        const calendarColorToggleElements = document.querySelectorAll(".calendar-color-toggle");
-        $.each(calendarColorToggleElements, function (_, element: HTMLInputElement) {
-            const color = element.getAttribute("data-color");
-
-            element.addEventListener("click", function () {
-                $.each(calendarColorToggleElements, function (_, el: HTMLInputElement) {
-                    el.checked = false;
+            // Browse previous or next month calendar view
+            const changeMonthElements = document.querySelectorAll(".change-month");
+            $.each(changeMonthElements, function (_, element) {
+                element.addEventListener("click", function () {
+                    calendarUpdateMonth(element, element.getAttribute("data-next") === "true");
                 });
-                element.checked = true;
-                (document.querySelector("#selectedCalendarColor") as HTMLInputElement).value = color;
             });
-        });
 
-        // Show the calendar update window
-        const calendarUpdateElements = document.querySelectorAll(".calendar-update");
-        $.each(calendarUpdateElements, function (_, element) {
-            element.addEventListener("click", function () {
-                getUpdateCalendarWindow(element);
-                deleteCalendarButton.classList.remove("d-none");
+            // Browse previous or next week events
+            const changeWeekEventsElements = document.querySelectorAll(".events-change-week");
+            $.each(changeWeekEventsElements, function (_, element) {
+                element.addEventListener("click", function () {
+                    calendarSetNextPreviousEvents(element, element.getAttribute("data-next") === "true");
+                });
             });
-        });
+
+            // Go to events of week by clicking the week nunber in the month calendar
+            const showEventsWeekNumber = document.querySelectorAll(".show-events-week-number");
+            $.each(showEventsWeekNumber, function (_, element) {
+                element.addEventListener("click", function () {
+                    const targetEvents = document.getElementById("calendarEventsWrapper");
+                    const targetMonth = document.getElementById("calendarMonthContainer");
+                    const year = targetMonth.getAttribute("data-year");
+                    const week = element.getAttribute("data-week");
+
+                    targetEvents.setAttribute("data-year", year.toString());
+                    targetEvents.setAttribute("data-week", week.toString());
+
+                    calendarUpdateEvents();
+                });
+            });
+
+            // Click to toggle calendar and events
+            const calendarToggleElements = document.querySelectorAll(".calendar-toggle");
+            $.each(calendarToggleElements, function (_, element) {
+                element.addEventListener("click", function () {
+                    const calendarID = element.getAttribute("data-id");
+                    const status = (element as HTMLInputElement).checked;
+                    doCalendarToggleCalendarAction(element, calendarID, status);
+                });
+            });
+
+            const calendarList = document.querySelector("#calendarList");
+            const newCalendarWrapper = document.querySelector("#calendarNewUpdateWrapper");
+            const deleteCalendarButton = document.querySelector("#deleteCalendar");
+
+            // Submit add/update calendar form
+            const newUpdateCalendarForm = document.querySelector("#newUpdateCalendarForm") as HTMLFormElement;
+            if (newUpdateCalendarForm) {
+                newUpdateCalendarForm.addEventListener("submit", function (event) {
+                    doCalendarAddEditCalendarAction(event, newUpdateCalendarForm);
+
+                    newUpdateCalendarForm.reset();
+                });
+            }
+
+            // Toggle new calendar
+            const newCalendarToggle = document.querySelector("#newCalendarToggle");
+            if (newCalendarToggle) {
+                newCalendarToggle.addEventListener("click", function () {
+                    newUpdateCalendarForm.reset();
+                    newCalendarWrapper.classList.remove("d-none");
+                    deleteCalendarButton.classList.add("d-none");
+                    calendarList.classList.add("d-none");
+                });
+            }
+
+            // Cancel add/update calendar
+            const cancelCalenderElement = document.querySelector("#cancelCalendar");
+            if (cancelCalenderElement) {
+                cancelCalenderElement.addEventListener("click", function () {
+                    newUpdateCalendarForm.reset();
+                    newCalendarWrapper.classList.add("d-none");
+                    deleteCalendarButton.classList.add("d-none");
+                    calendarList.classList.remove("d-none");
+                });
+            }
+
+            // Delete a calendar
+            const deleteCalendarElement = document.querySelector("#deleteCalendar");
+            if (deleteCalendarElement) {
+                deleteCalendarElement.addEventListener("click", function () {
+                    doCalendarDeleteAction();
+
+                    newUpdateCalendarForm.reset();
+                    newCalendarWrapper.classList.add("d-none");
+                    deleteCalendarButton.classList.add("d-none");
+                    calendarList.classList.remove("d-none");
+                });
+            }
+
+            // Choose the color of the calendar in the form
+            const calendarColorToggleElements = document.querySelectorAll(".calendar-color-toggle");
+            $.each(calendarColorToggleElements, function (_, element: HTMLInputElement) {
+                const color = element.getAttribute("data-color");
+
+                element.addEventListener("click", function () {
+                    $.each(calendarColorToggleElements, function (_, el: HTMLInputElement) {
+                        el.checked = false;
+                    });
+                    element.checked = true;
+                    (document.querySelector("#selectedCalendarColor") as HTMLInputElement).value = color;
+                });
+            });
+
+            // Show the calendar update window
+            const calendarUpdateElements = document.querySelectorAll(".calendar-update");
+            $.each(calendarUpdateElements, function (_, element) {
+                element.addEventListener("click", function () {
+                    calendarShowUpdateCalendarWindow(element);
+                    deleteCalendarButton.classList.remove("d-none");
+                });
+            });
+        }
     }
-
 //// CALENDAR-END ////
 
-    
 //// DEVICES-START ////
-
     if (page === "home" || page === "devices") {
-        sceneListeners();
-        switchListeners();
-        dimListeners();
-        brightnessColorShowListeners();
-        colorListeners();
-        toggleVisibilityListeners();
-        toggleDeviceVisibilityListeners();
-        toggleDeviceTypes();
+        onDevicesSceneListeners();
+        onDevicesSwitchListeners();
+        onDevicesDimListeners();
+        onDevicesToggleBrightnessColorListeners();
+        onDevicesColorListeners();
+        onDevicesToggleVisibilityListeners();
+        onDevicesToggleDeviceVisibilityListeners();
+        devicesToggleDeviceTypes();
         clickAnimationListeners();
     }
 
+    // Button to reinitialize devices when enabled service
     const reinitializeDevicesElement = document.querySelector("#reinitializeDevices");
     if (reinitializeDevicesElement) {
         reinitializeDevicesElement.addEventListener("click", function (event) {
@@ -2621,48 +2882,50 @@ function onPageLoad(): void {
             });
         });
     }
-    
 //// DEVICES-END ////
 
 //// ENERGY-START ////
-    
     if (page === "energy") {
-        doRenderCharts();
+        energyRenderCharts();
 
+        // Event listeners for setting the next or previous month for historical readings
         const changeMonthElements = document.querySelectorAll(".change-month");
         $.each(changeMonthElements, function (_, element) {
             element.addEventListener("click", function () {
-                doGetData(element, element.getAttribute("data-next") === "true");
+                energyUpdateHistoricalReadings(element, element.getAttribute("data-next") === "true");
             });
         });
     }
-
 //// ENERGY-END ////
 
 //// SETTINGS-START ////
-    
     if (page === "settings") {
+        
+        // Event listeners to add settings
         const addSettingFormElements = document.querySelectorAll(".addSettingForm");
         $.each(addSettingFormElements, function (_, element: HTMLFormElement) {
             element.addEventListener("submit", function (event) {
-                doAddSettingAction(event, element);
+                doSettingsAddAction(event, element);
             });
         });
 
+        // Event listeners to update settings
         const updateSettingFormElements = document.querySelectorAll(".updateSettingForm");
         $.each(updateSettingFormElements, function (_, element: HTMLFormElement) {
             element.addEventListener("submit", function (event) {
-                doUpdateSettingAction(event, element);
+                doSettingsUpdateAction(event, element);
             });
         });
 
+        // Event listeners to delete settings
         const deleteSettingButtonElements = document.querySelectorAll(".delete-setting");
         $.each(deleteSettingButtonElements, function (_, element: Element) {
             element.addEventListener("click", function (event) {
-                doDeleteSettingAction(event, element);
+                doSettingsDeleteAction(event, element);
             });
         });
 
+        // Event listener to restart the server programmatically
         const restartServerElement = document.querySelector("#restartServer");
         if (restartServerElement) {
             restartServerElement.addEventListener("click", function () {
@@ -2671,31 +2934,14 @@ function onPageLoad(): void {
                 });
             });
         }
-
-        if (typeof $.fn.collapse === 'undefined') {
-            const accordionElements = document.querySelectorAll("[data-bs-toggle='collapse']");
-            $.each(accordionElements, function (_, element) {
-                element.addEventListener("click", function () {
-                    const targetID = element.getAttribute("data-bs-target");
-                    const targetAccordion = document.querySelector(targetID);
-                    targetAccordion.classList.toggle("show");
-
-                    const parentID = element.getAttribute("data-bs-parent");
-                    const parentChilds = document.querySelector(parentID).querySelectorAll(".accordion-collapse:not(" + targetID + ")");
-                    $.each(parentChilds, function (_, child) {
-                        child.classList.remove("show");
-                    });
-                });
-            });
-        }
     }
 //// SETTINGS-END ////
-
 
 //// LOGS-START ////
     if (page === "logs") {
         clickAnimationListeners();
 
+        // Event listener to clear a log
         const clearLogButton = document.querySelector("#clearLog");
         if (clearLogButton) {
             clearLogButton.addEventListener("click", function (event) {
@@ -2723,18 +2969,18 @@ function onPageLoad(): void {
 //// LOGS-END ////
 
 //// SPOTIFY-START ////
-
     if (page === "home" || page === "spotify") {
 
-        playListeners();
-        volumeListeners();
-        collectionListeners();
-        searchListeners();
-        categoryListeners();
-        followListeners();
-        deviceListeners();
+        onSpotifyPlayerListeners();
+        onSpotifyVolumeListeners();
+        onSpotifyCollectionListeners();
+        onSpotifySearchListeners();
+        onSpotifyCategoryListeners();
+        onSpotifyFollowListeners();
+        onSpotifyDeviceListeners();
     }
 
+    // Event listener for reinitializing spotify after enabling the server
     const reinitializeSpotifyElement = document.querySelector("#reinitializeSpotify");
     if (reinitializeSpotifyElement) {
         reinitializeSpotifyElement.addEventListener("click", function (event) {
@@ -2743,26 +2989,28 @@ function onPageLoad(): void {
             fetch("/api/spotify/reinit", { method: "POST" });
         });
     }
-    
 //// SPOTIFY-END ////
 
 //// TASKS-START ////
-
     if (page === "home" || page === "tasks") {
+        
+        // Event listener for adding a new task
         const newTaskForm = document.querySelector("#newTaskForm") as HTMLFormElement;
         if (newTaskForm) {
             newTaskForm.addEventListener("submit", function (event) {
-                doAddTask(event);
+                doTasksAddAction(event);
             });
         }
 
+        // Event listeners for completing tasks
         const toggleCompletedButtons = document.querySelectorAll(".toggle-task-visibility");
         $.each(toggleCompletedButtons, function (_, element) {
             element.addEventListener("click", function () {
-                doToggleCompletedTasks(element.getAttribute("data-toggle"));
+                tasksToggleCompleted(element.getAttribute("data-toggle"));
             });
         });
 
+        // Event listeners for toggling unflagged tasks
         const toggleUnflaggedButtons = document.querySelectorAll(".toggle-unflagged");
         $.each(toggleUnflaggedButtons, function (_, element) {
             element.addEventListener("click", function () {
@@ -2779,6 +3027,7 @@ function onPageLoad(): void {
             });
         });
 
+        // Event listeners for toggle delete buttons for tasks
         const toggleDeleteButtons = document.querySelectorAll(".toggle-delete");
         $.each(toggleDeleteButtons, function (_, element) {
             element.addEventListener("click", function () {
@@ -2798,61 +3047,32 @@ function onPageLoad(): void {
             });
         });
 
-        completeTasksListeners();
-        flagTasksListeners(true);
-        deleteTasksListeners();
-        onTaskDescriptionChangeListeners();
+        onTasksCompleteListeners();
+        onTasksFlagListeners(true);
+        onTasksDeleteListeners();
+        onTasksDescriptionChangeListeners();
     }
 //// TASKS-END ////
 
 //// TRAVEL-START ////
-    
     if (page === "home" || page === "travel") {
-        toggleTravelTypeListeners();
+        onTravelTypeListeners();
 
         if (page === "travel") {
-            if (typeof $.fn.collapse === 'undefined') {
-                const accordionElements = document.querySelectorAll("[data-bs-toggle='collapse']");
-                $.each(accordionElements, function (_, element) {
-                    element.addEventListener("click", function () {
-
-                        const targetID = element.getAttribute("data-bs-target");
-                        const targetAccordion = document.querySelector(targetID);
-                        targetAccordion.classList.toggle("show");
-
-                        const parentID = element.getAttribute("data-bs-parent");
-                        const parentChilds = document.querySelector(parentID).querySelectorAll(".accordion-collapse:not(" + targetID + ")");
-                        $.each(parentChilds, function (_, child) {
-                            child.classList.remove("show");
-                        });
-                    });
-                });
-            }
-
-            addressListeners();
-            mapRouteListeners();
-            openMapListeners();
-            trainStationListeners();
-            trainRouteListeners();
-            toggleTrainTransfersListeners();
+            onTravelAddressListeners();
+            onTravelMapRouteListeners();
+            onTravelOpenMapListeners();
+            onTravelTrainStationListeners();
+            onTravelTrainRouteListeners();
+            onTravelToggleTrainTransfersListeners();
         }
     }
-
 //// TRAVEL-END ////
 
 //// CRYPTO-START ////
-
     if (page === "crypto") {
 
-        const perPageSelectElement = document.querySelector("select[name='crypto-select-perpage']");
-        if (perPageSelectElement) {
-            perPageSelectElement.addEventListener("change", function (event) {
-                event.preventDefault();
-
-                socket.emit("event", { service: "CryptoService", type: "crypto coin pagination", value: cryptoGetFilterValues()});
-            });
-        }
-
+        // Event change listener for selecting page number value
         const pageSelectElement = document.querySelector("select[name='crypto-select-page']");
         if (pageSelectElement) {
             pageSelectElement.addEventListener("change", function (event) {
@@ -2862,9 +3082,7 @@ function onPageLoad(): void {
             });
         }
     }
-
 //// CRYPTO-END ////
-    
 }
 
 document.addEventListener("DOMContentLoaded", onPageLoad);
