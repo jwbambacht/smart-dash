@@ -2,7 +2,7 @@
 A Smart Home Dashboard that is designed to display data and information in the browser of any device. An alternative to solutions like [Home Assistant](https://github.com/home-assistant/core) to let the client completely customize layouts and easily create any service/integration themselves in TypeScript. The features of the application can be integrated in a modular manner with/without dependencies to other features or services.
 
 <center>
-    <img src="https://user-images.githubusercontent.com/31626076/195676679-a847c984-1c6c-4aa0-9caa-133c89d5269e.gif" width="100%" height="auto" style="border: 2px solid #375a7f; border-radius: 10px;" />
+    <img src="https://user-images.githubusercontent.com/31626076/198883144-3bb77df8-c66a-47f4-bc1e-02706d6b03a0.gif" width="100%" height="auto" style="border: 2px solid #375a7f; border-radius: 10px;" />
 </center>
 
 The NodeJS backend makes use of modern JavaScript/TypeScript functionalities. The frontend is designed to work with older JavaScript browsers as well (ECMA2016+). Therefore, devices as old tablets are able to run the application as well. If support for older browsers is not an issue, modern syntax or even using frontend frameworks like [React](https://github.com/facebook/react) or [Angular](https://github.com/angular/angular) should be no problem. The application is unauthenticated and unidentified, meaning that every client that visits the application in the browser will see exactly the same.
@@ -30,6 +30,7 @@ WebSockets have been integrated using the [socket.io](https://github.com/socketi
 * Home automation control of various [KlikAanKlikUit (KaKu)](https://klikaanklikuit.nl) switches, dimmers, or coloring devices and energy usage/production monitoring using KaKu ICS-2000 and Smart Meter (with P1 port)
 * Calendars and events browsing
 * Tasks/Todo list
+* Cryptocurrencies price tracker
 
 ## Application Setup
 ### Installation instructions
@@ -44,33 +45,34 @@ WebSockets have been integrated using the [socket.io](https://github.com/socketi
 ### Environment variables
 Most environment variables are required to execute the application. To enable HTTPS you have to place the `key` and `certificate` files inside the `SSL_CERT_SRC_DIR` folder and edit the `SSL_KEY` and `SSL_CERT` variables to match the file names. The server will automatically try to find and use the files, and setup an HTTPS or HTTP based on the outcome.
 
-| VARIABLE NAME  | VARIABLE VALUE | TYPE | DEFAULT VALUE | 
-| :------------- |:-------------- |:-----|:--------------|
-| IP | IP address of the server | string | |
-| PORT | preferred port | number | 3002 |
-| WEBSITE_TITLE | title of the application | string | ### DASH ### |
-| SSL_CERT_SRC_DIR | directory of the SSL key/certificate | string | src |
-| SSL_KEY | SSL key file name | string | key.pem |
-| SSL_CERT | SSL certificate file name | string | cert.pem |
-| TYPEORM_HOST | Host for the Postgres database | string | localhost |
-| TYPEORM_USERNAME | Database username | string | |
-| TYPEORM_PASSWORD | Database password | string | | 
-| TYPEORM_DATABASE | Database name | string | nodets_dash_dev |
-| TYPEORM_PORT | Database port | number | 5432 |
-| TYPEORM_SYNCHRONIZE | Sync entity with the database upon application execution | boolean | true |
-| TYPEORM_LOGGING | Database logging [options](https://orkhan.gitbook.io/typeorm/docs/logging) | boolean, string, string[], Logger | true |
-| NS_TRIPS_URL | NS API Trips url | string | https://gateway.apiportal.ns.nl/reisinformatie-api/api/v3/trips |
-| SPOTIFY_TOKEN_URL | Spotify API Token url | string | https://accounts.spotify.com/api/token |
-| SPOTIFY_PLAYER_URL | Spotify API Player url | string | https://api.spotify.com/v1/me/player/ |
-| GOOGLE_DISTANCE_URL | Google API Distance url | string | https://maps.googleapis.com/maps/api/distancematrix/json |
-| GOOGLE_GEOCODE_URL | Google API Geocode url | string | https://maps.googleapis.com/maps/api/geocode/json |
-| WEATHER_LOCATION_URL | Location url based on external IP address | string | http://ip-api.com/json/ |
-| WEATHER_FORECAST_URL | OpenWeatherMap API url | string | https://api.openweathermap.org/data/2.5/onecall |
-| WEATHER_RAIN_URL | Buienradar url | string | https://gpsgadget.buienradar.nl/data/raintext/ |
-| KAKU_ACCOUNT_URL | KlikAanKlikUit API Account url | string | https://trustsmartcloud2.com/ics2000_api/account.php |
-| KAKU_GATEWAY_URL | KlikAanKlikUit API Gateway url (if local HTTP requests, put `./tools/gateway.php` on some server to bypass CORS issue) | string | https://trustsmartcloud2.com/ics2000_api/gateway.php or `./tools/gateway.php` in repo |
-| KAKU_ENTITY_URL | KlikAanKlikUit API Entity url | string | https://trustsmartcloud2.com/ics2000_api/entity.php |
-| KAKU_P1_URL | KlikAanKlikUit API Energy url | string | https://trustsmartcloud2.com/ics2000_api/p1.php |
+| VARIABLE NAME  | VARIABLE VALUE                                                                                                         | TYPE                                                  | DEFAULT VALUE                                                                         | 
+| :------------- |:-----------------------------------------------------------------------------------------------------------------------|:------------------------------------------------------|:--------------------------------------------------------------------------------------|
+| IP | IP address of the server                                                                                               | string                                                |                                                                                       |
+| PORT | preferred port                                                                                                         | number                                                | 3002                                                                                  |
+| WEBSITE_TITLE | title of the application in the browser                                                                                | string                                                |                                                                                       |
+| SSL_CERT_SRC_DIR | directory of the SSL key/certificate                                                                                   | string                                                | src                                                                                   |
+| SSL_KEY | SSL key file name                                                                                                      | string                                                | key.pem                                                                               |
+| SSL_CERT | SSL certificate file name                                                                                              | string                                                | cert.pem                                                                              |
+| TYPEORM_HOST | Host for the Postgres database                                                                                         | string                                                | localhost                                                                             |
+| TYPEORM_USERNAME | Database username                                                                                                      | string                                                |                                                                                       |
+| TYPEORM_PASSWORD | Database password                                                                                                      | string                                                |                                                                                       | 
+| TYPEORM_DATABASE | Database name                                                                                                          | string                                                | nodets_dash_dev                                                                       |
+| TYPEORM_PORT | Database port                                                                                                          | number                                                | 5432                                                                                  |
+| TYPEORM_SYNCHRONIZE | Sync entity with the database upon application execution                                                               | boolean                                               | true                                                                                  |
+| TYPEORM_LOGGING | Database logging [options](https://orkhan.gitbook.io/typeorm/docs/logging)                                             | boolean, string, string[], Logger                     | true                                                                                  |
+| NS_TRIPS_URL | NS API Trips url                                                                                                       | string                                                | https://gateway.apiportal.ns.nl/reisinformatie-api/api/v3/trips                       |
+| SPOTIFY_TOKEN_URL | Spotify API Token url                                                                                                  | string                                                | https://accounts.spotify.com/api/token                                                |
+| SPOTIFY_PLAYER_URL | Spotify API Player url                                                                                                 | string                                                | https://api.spotify.com/v1/me/player/                                                 |
+| GOOGLE_DISTANCE_URL | Google API Distance url                                                                                                | string                                                | https://maps.googleapis.com/maps/api/distancematrix/json                              |
+| GOOGLE_GEOCODE_URL | Google API Geocode url                                                                                                 | string                                                | https://maps.googleapis.com/maps/api/geocode/json                                     |
+| WEATHER_LOCATION_URL | Location url based on external IP address                                                                              | string                                                | http://ip-api.com/json/                                                               |
+| WEATHER_FORECAST_URL | OpenWeatherMap API url                                                                                                 | string                                                | https://api.openweathermap.org/data/2.5/onecall                                       |
+| WEATHER_RAIN_URL | Buienradar url                                                                                                         | string                                                | https://gpsgadget.buienradar.nl/data/raintext/                                        |
+| CRYPTO_MARKETS_URL | Coingecko API url | string | https://api.coingecko.com/api/v3/coins/markets                                        |
+| KAKU_ACCOUNT_URL | KlikAanKlikUit API Account url                                                                                         | string                                                | https://trustsmartcloud2.com/ics2000_api/account.php                                  |
+| KAKU_GATEWAY_URL | KlikAanKlikUit API Gateway url (if local HTTP requests, put `./tools/gateway.php` on some server to bypass CORS issue) | string                                                | https://trustsmartcloud2.com/ics2000_api/gateway.php or `./tools/gateway.php` in repo |
+| KAKU_ENTITY_URL | KlikAanKlikUit API Entity url                                                                                          | string                                                | https://trustsmartcloud2.com/ics2000_api/entity.php                                   |
+| KAKU_P1_URL | KlikAanKlikUit API Energy url                                                                                          | string                                                | https://trustsmartcloud2.com/ics2000_api/p1.php                                       |
 
 ### Scripts
 The following scripts can run using `npm run ${script}` except `npm start` which reserved by `npm`.
@@ -95,14 +97,14 @@ The following scripts can run using `npm run ${script}` except `npm start` which
 The `index.ts` file contains imports and definitions to start the server, connect to the database and initialize to the services.
 
 ### Loaders <span style='float: right;'>`/loaders`</span>
-The loaders are used to add and setup functionality to the server and application. This application uses three such loaders. The first loader `typeORMLoader` makes the connection with the database using `typeORM`. It connects to the database and synchronizes all TypeScript models with the PostgresQL database entities. After this, it automatically seeds the database with some predefined settings (if missing) as defined in the same file that are deemed required by the application or services.
+The loaders are used to add and setup functionality to the server and application. This application uses three such loaders and are executed in `index.ts`. All loaders are required to successfully start the application. 
 
-Another loader `expressLoader` sets the `Express` server up with all controllers, middleware, HTTPS/HTTP, sockets, and listens for incoming requests.
-
-The third loader `serviceLoader` makes sure that all services that require initializion, i.e. must be constructed before it is usable, are available inside a `typedi Container`. Every service that must explicitly be initialized must be defined inside this loader using `Container.get(...)`.
+* `typeORMLoader` makes the connection with the database using `typeORM`. It connects to the database and synchronizes all TypeScript models with the PostgresQL database entities. After this, it automatically seeds the database with some predefined settings (if missing) as defined in the same file that are deemed required by the application or services.
+* `expressLoader` sets the `Express` server up with all controllers, middleware, HTTPS/HTTP, sockets, and listens for incoming requests.
+* `serviceLoader` makes sure that all services that require initialization, i.e. must be constructed before it is usable, are available inside a `typedi Container`. Every service that must explicitly be initialized before it is used somewhere must be defined inside this loader using `Container.get(...)`.
 
 ### Middleware <span style='float: right;'>`/middlewares`</span>
-The middleware functions add functionality to the Express server before a request is sent or after a response is received. The application only uses a middleware that is fired after receipt of a response to handle errors.
+The middleware functions add functionality to the Express server after a request is received or before a response is sent. This application only uses a middleware that is fired after receipt of a response for error handling.
 
 ### Models <span style='float: right;'>`/models` & `/repositories`</span>
 The models describe and handle the entities with the database. TypeORM makes sure the TypeScript models are automatically adjusted in the database during initialization when the `synchronize` property is set to true in the `/loaders/typeORMLoader.ts` file. Each model, as defined in the `expressLoader.ts` file, is added to and synchronized with the database using typeORM.
@@ -122,7 +124,7 @@ export class SettingService {
 }
 ```
 
-As the application is modular, new services can easily be created and integrated. A service can extend the `BaseService` class that includes integration for for example sockets. When the service should only handle ORM functionalities it must include the repository import the corresponding respoitory file in the constructor using `constructor(@OrmRepository() private modelRepository: ModelRepository) {}`. To create a service execute the following steps.
+As the application is modular, new services can easily be created and integrated. A service can extend the `BaseService` class that includes basic access to general functions and integration for sockets. When the service should only handle ORM functionalities it must include the repository import the corresponding repository file in the constructor using `constructor(@OrmRepository() private modelRepository: ModelRepository) {}`. To create a service execute the following steps.
 
 1. Create a file `NameService.ts` inside the `services` directory
 2. Initialize the service in the `/loaders/serviceLoader.ts` file by adding `Container.get(NameService)` to the `initializeServices` method
@@ -138,22 +140,35 @@ export class NameService {                  export class NameService extends Bas
                                             }
 ```
 
-4. By extending the `BaseService`, you can choose to communicate with clients through sockets and get access to some reusable methods. The `BaseService` automatically registers the service to the `SocketService` that handles the setup of the sockets and actions like emitting and listening for messages between server and client. In your custom service you therefore have to extend the `init` and `activate` methods from the `BaseService` to add your own functionality.
+4. By extending the `BaseService`, you can choose to communicate with clients through sockets and get access to some reusable methods. The `BaseService` automatically registers the service to the `SocketService` that handles the setup of the sockets and actions like emitting and listening for messages between server and client. In your custom service you therefore have to extend the `init`, `activate`, and `event` methods from the `BaseService` to add your own functionality.
 * The `init` method contains the code that is executed everytime the client announces itself to the service, e.g. enables periodic data fetching.
 * The `activate` method contains the code that is executed everytime the client acknowledges receipt of the previous emitted data/information by the server. It is therefore perfectly suited to let the corresponding service know that a client is still interested to keep updating and receiving the data. Instead of periodically fetching data from public APIs, the service is able to temporarily stop fetching the data while there is no client currently expecting or listening to this data.
+* The `event` method contains the code that is executed upon receipt of such a message from the frontend/client. This message additionally contains a payload value object to transmit information from the client to the server. The `event` message is completely optional and does not clash with the `init` and `activate` methods. 
 * The client JavaScript code must contain the code to receive and emit messages from/to the server. Upon the page load the client emits the `init` message to the server with data that consists out of the service name and a message identifier that can be recognized by the server. When the client receives a message from the server it firstly acknowledges it by emitting an `activate` message and secondly do something with the received data.
 
 ```typescript
-socket.emit("init", { service: "NameService", type: "message emit id..."});
+socket.emit("init", { 
+	service: "NameService", 
+    type: "message emit id..."
+});
 
 socket.on("message receive id...", function (data: object) {
-    socket.emit("activate", { service: "NameService", type: "message emit id..."});
+    socket.emit("activate", { 
+		service: "NameService", 
+        type: "message emit id..."
+	});
 
     ... // do something with the received data
 });
+
+socket.emit("event", { 
+	service: "NameService", 
+    type: "message emit event id...", 
+    value: { ... }
+});
 ```
 
-5. If you want to communicate with the database using ORM you can inject the repository of the corresponding as properties. You have then access to the repository methods like `this.repository.find()` or `this.repository.save(new Calendar(...))` from the `Repository` class from `typeORM`.
+5. If you want to communicate with the database using ORM you can inject the repository of the corresponding as properties. You then have access to repository methods like `this.repository.find()` or `this.repository.save(new Calendar(...))` from the `Repository` class from `typeORM`.
 
 ```typescript
 @Service()
@@ -171,17 +186,15 @@ export class CalendarService extends BaseService {
 The Application Services are required as it provides functionality for other services.
 
 ##### BaseService
-The `BaseService` contains basic functionality with regard to the `SocketService`. Every service that extends this service will be able to communicate with clients using WebSockets. The service will register itself as a listener to the `SocketService` upon initialization. Then, the incoming messages will only be forwarded to this service when the message is designated for it. The service that extends the `SocketService` must extend the `init` and `activate` methods to add it's own logic. To send a message to a client the service can execute the `emit` method with the event name (string) and data (generic type) as arguments.
+The `BaseService` contains basic functionality with regard to the `SocketService`. Every service that extends this service will be able to communicate with clients using WebSockets. The service will register itself as a listener to the `SocketService` upon initialization. Then, the incoming messages will only be forwarded to this service when the message is designated for it. The service that extends the `SocketService` must extend the `init`, `activate`, and `event` methods to add its own logic. To send a message to a client the service can execute the `emit` method with the event name (string) and data (generic type) as arguments.
 
-Every service can be enabled or disabled using an HTTP request from the frontend to the backend API. The `BaseService` provides a method `isServiceEnabled()` that returns the current state of the service, stored in the database. It furthermore contains methods to get or set settings in the database and a direct method to get an API key from the database as well.
-
-The `BaseService` provides entrypoints for the `LoggerService` and `SettingService` such that childs of the `BaseService` have direct access to them as well. It can easily be extended or modified to provide default functionality for its child services.
+The `BaseService` provides entrypoints for the `LoggerService` and `SettingService` such that children of the `BaseService` have direct access to them as well. Every (feature) service can be enabled or disabled using an HTTP request from the frontend to the backend API. The `BaseService` provides a method `isServiceEnabled()` that returns the current state of the service, stored in the database. It furthermore contains methods to get or set settings in the database and a direct method to get an API key from the database as well. Additional functionality can easily be added to provide even more default functionality for its child services.
 
 ##### SocketService
 The `SocketService` setups the sockets with clients and exists out of several socket listeners. To connect with clients it listens for `connection` requests and keeps track of the currently connected clients. It will register `disconnect` events as well. Requests on the `init` and `activate` events will be forwarded to one of the registered services, if available.
 
 ##### LoggerService
-The `LoggerService` enables server-side logging using the `winston` module. There are multiple levels of logging available: error, warn, info, debug, and http.
+The `LoggerService` enables server-side logging using the `winston` module. There are multiple levels of logging available: error, warn, info, and http. All log entries are added to the corresponding file in the `logs` folder. These logs can be displayed on the `logs` page on the frontend as well. 
 
 ##### SettingService
 The `SettingService` handles the ORM of the `Setting` model. It is used to store data that is required by the application and services. On the settings page every piece of information can be created, edited or deleted. With the default integrated services is stores:
@@ -265,33 +278,63 @@ The `TaskService` handles the ORM of the `Task` model and is independent from an
 
 This service can be enabled or disabled manually using the `service` setting.
 
+##### CryptoService <span style='float: right;'>BaseService | API | Socket</span>
+The `CryptoService` fetches information about cryptocurrencies from the `CoinGecko` API. The API does not require authentication in form of keys. It also provides functionality to add or delete coins to/from the database using the `Asset` model. These assets can be shown on for example the home page. 
+
+This service can be enabled or disabled manually using the `service` setting. When fetching of data fails it will automatically be disabled.
+
 ### Controllers  <span style='float: right;'>`/controllers`</span>
-The controllers define the routes inside the application for the pages and API. The frontend routes are defined in `RouteController` and contain routes that are conveniently composed using decorators with the `routing-controllers` module. The return object contains all the data that is required in the view template. All routes either use the `@Render("index.ejs")` decorator to set the view template of the response or redirects to another route using the `@Redirect()` decorator. The request method must be set using `@Get(path)` decorator (or other HTTP method) with its path as argument.
+The controllers define the routes inside the application for the pages and API. The frontend routes are defined in `RouteController` and contain routes that are conveniently composed using decorators with the `routing-controllers` module. The return object contains all the data that is required in the view template. All routes either use the `@Render("index.ejs")` decorator to set the view template of the response or redirects to another route using the `@Redirect()` decorator. The request method must be set using `@Get(path)` decorator (or other HTTP method) with its path as argument. The navigation items for links to other pages used in the AppSwitcher must be defined in this controller as well and each item takes a `path`, `label`, `icon`, `iconActive`, and an optional `customClasses` value.
 
 For every other service, apart from services that do not need an API or it has a parent service, a separate controller is defined. Each controller is setup using the `@JsonController()` decorator which returns serialized JSON data with the content type of the response set to `application/json`. The `AppController` contains API endpoints for the application itself. The `TravelController` is responsible for the API endpoints of both the `MapService` and `NSService`, and its dependents `AddressService`, `MapRouteService`, `TrainStationService`, and `TrainRouteService`. The other controllers are responsible for the endpoints of the corresponding service.
 
 ### Events <span style='float: right;'>`/events`</span>
-The event script define the JavaScript functionality for the frontend pages. These scripts are compiled, bundled and placed in the `dist/events` directory. To not execute the JavaScript code before the entire page has been loaded we have added an event listener for the `DOMContentLoaded` event. Unfortunately, the script currently does not use event delegation. This should increase the performance of the application as less event listeners have to be added and re-added after the DOM has been updated with new data. The frontend script must connect and reconnect to sockets before it is able to emit and receive messages. These listeners can be defined when the page hasn't been loaded yet.
+The event script define the JavaScript functionality for the frontend pages. These scripts are compiled, bundled and placed in the `dist/events` directory. To not execute the JavaScript code before the entire page has been loaded we have added an event listener for the `DOMContentLoaded` event. Unfortunately, the script currently does not use event delegation. This should increase the performance of the application as less event listeners have to be added and re-added after the DOM has been updated with new data. The frontend script must connect and reconnect to sockets before it is able to emit and receive messages.
 
 ```typescript
 const io = require("socket.io-client");
-
 const socket = io();
 
-socket.on("connect", function () {
-    console.log("Connected to server with id: ", socket.id);
-});
-
-socket.on("disconnect", function (reason: string) {
-    console.log("Disconnected from server and reconnecting: ", reason);
-    socket.connect();
-});
-
-function ...() {}
-
-function ...() {}
+// Functions
+...
 
 function onPageLoad(): void {
+	const page = document.querySelector("body").getAttribute("data-page");
+
+	socket.on("connect", function () {
+		console.log("Connected to server with id: ", socket.id);
+		initializeSockets(page);
+	});
+
+	socket.on("disconnect", function (reason: string) {
+		console.log("Disconnected from server and reconnecting: ", reason);
+		socket.connect();
+	});
+
+	socket.on("connect_error", function (reason: object) {
+		console.log("Connection error: ", reason);
+		socket.connect();
+	});
+
+	socket.on("reconnect_error", function (reason: object) {
+		console.log("Reconnect error: ", reason);
+		socket.connect();
+	});
+
+	socket.on("reconnect_failed", function () {
+		console.log("Reconnect failed");
+		socket.connect();
+	});
+
+	socket.on("reconnecting", function () {
+		console.log("Reconnecting...");
+	});
+
+	socket.on("reconnect", function () {
+		console.log("Reconnected");
+		initializeSockets(page);
+	});
+	
     // do something when the page has been loaded
     ...
 }
@@ -302,14 +345,14 @@ document.addEventListener("DOMContentLoaded", onPageLoad);
 This application is build to support older browsers (ECMA2016+), and therefore arrow functions and other modern functionalities cannot be used. If you don't care about older browsers you could use modern JavaScript syntax and functionalities.
 
 ### Views <span style='float: right;'>`/views`</span>
-The fronted views are defined in the `/views` directory. The `index.ejs` acts as entrypoint for all pages. It defines the basic page structure and inserts partial files like the `head` and `nav`, and the dynamic templates based on the current page. The `/views/pages` directory contains the templates of the individual pages that are inserted in the `index.ejs` file. The `/views/widgets` directory contains all templates that are inserted an re-used in other page or widget templates. These templates are also fetched and rendered in the DOM in the frontend scripts.
+The fronted views are defined in the `/views` directory. The `index.ejs` acts as entrypoint for all pages. It defines the basic page structure and inserts partial files like the `head` and `nav`, and the dynamic templates based on the current page. The `/views/pages` directory contains the templates of the individual pages that are inserted in the `index.ejs` file. The `/views/widgets` directory contains all page templates in subfolders that are inserted an re-used in other page or widget templates. These templates are also fetched and rendered in the DOM in the frontend scripts.
 
-| DIRECTORY  | DESCRIPTION | 
-| :------------- |:-------------- |
+| DIRECTORY  | DESCRIPTION                                                                                               | 
+| :------------- |:----------------------------------------------------------------------------------------------------------|
 | `/views/` | contains `index.ejs` and all template files in the subfolders, copied to the `dist` directory after build |
-| `/views/partials` | contains partial template files to be included in the general layout (`head`, `nav`, `footer`, ...) |
-| `/views/pages` | contains the page template files |
-| `/views/widgets` | contains small element template files |
+| `/views/partials` | contains partial template files to be included in the general layout (`head`, `nav`, `footer`, ...)       |
+| `/views/pages` | contains the page template files                                                                          |
+| `/views/widgets` | contains subfolders with template files of corresponding page/service                                     |
 
 ### Assets <span style='float: right;'>`/assets`</span>
 Contains static files like `css`, `fonts`, `img`, and `js`. The entire directory is copied to the `/dist` folder during the build process of the application. The files are then included in the template views.
